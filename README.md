@@ -93,6 +93,7 @@ The local foundation does not yet provide the full managed-project lifecycle, re
 ## Development and design
 
 - [Development workflow](docs/development.md)
+- [Implementation plan and work orders](docs/implementation-plan.md)
 - [System design and scope](docs/system-design.md)
 - [Symfony and UXor setup reference](docs/symfony-uxor-setup.md)
 - [Agent instructions](AGENTS.md)
