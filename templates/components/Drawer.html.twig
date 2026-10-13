@@ -1,0 +1,23 @@
+{%- props
+    ## string Unique identifier used to generate the drawer's ids.
+    id,
+    ## boolean Whether the drawer is open on initial render.
+    open = false,
+    ## boolean Whether the drawer is modal (page inert, focus trapped, backdrop) or sits beside the page.
+    modal = true,
+    ## 'left'|'right'|'top'|'bottom' The side of the viewport the drawer is docked to.
+    placement = 'left'
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+{%- set _drawer_id = 'drawer-' ~ id -%}
+{%- set _drawer_title_id = _drawer_id ~ '-title' -%}
+{%- set _drawer_placement = placement -%}
+<div
+    data-drawer-open-value="{{ open ? 'true' : 'false' }}"
+    data-drawer-modal-value="{{ modal ? 'true' : 'false' }}"
+    {{ attributes.defaults({'data-controller': 'drawer'}) }}
+>
+    {##- The drawer structure: `Drawer:Trigger` and `Drawer:Content`. -#}
+    {%- block content %}{% endblock -%}
+</div>

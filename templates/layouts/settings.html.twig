@@ -1,0 +1,18 @@
+{% extends 'layouts/app.html.twig' %}
+
+{##- The settings layout: the section navigation and the panels. -#}
+{% block content %}
+    {%- set _settings_nav_label %}{##- The accessible name of the settings navigation. -#}{% block settings_nav_label %}Settings{% endblock %}{% endset -%}
+    <div class="grid gap-6 lg:grid-cols-[14rem_minmax(0,1fr)]">
+        <twig:SectionNav :label="_settings_nav_label|trim">
+            {##- The settings sections: one `SectionNav:Item` per settings page, e.g. `<twig:SectionNav:Item href="…" route="…">Profile</twig:SectionNav:Item>`. -#}
+            {{- block(outerBlocks.settings_nav) -}}
+        </twig:SectionNav>
+        <div class="min-w-0 space-y-6">
+            {##- The section's panels, e.g. the `settings-profile` block. -#}
+            {%- block settings_content %}{% endblock -%}
+        </div>
+    </div>
+{% endblock %}
+
+{% block settings_nav %}{% endblock %}

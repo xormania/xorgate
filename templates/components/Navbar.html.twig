@@ -1,0 +1,39 @@
+{%- props
+    ## string|null The id of the `Sidebar` the menu button opens on small screens; no button without it.
+    sidebarId = null,
+    ## string The accessible name of the menu button.
+    menuLabel = 'Open menu',
+    ## string The accessible name of the navigation in the `nav` block.
+    navLabel = 'Site'
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+{%- set _navbar_nav %}{##- The site's navigation, typically a `NavMenu`, shown from Tailwind's `md` breakpoint up (render it in a `MobileNav` for small screens). -#}{% block nav %}{% endblock %}{% endset -%}
+{%- set _navbar_search %}{##- A search form or other central content; below Tailwind's `sm` breakpoint, a row of its own under the brand and actions. -#}{% block search %}{% endblock %}{% endset -%}
+{#- one row of 4rem. On a phone the brand takes the room left between the menu button and the actions (a long one wraps), and the
+    search a row of its own below them: nothing pushes the actions out of the bar. `!` on basis-full: Flowbite's stylesheet
+    compiles its own `flex-1` after Tailwind's variants (docs/NOTES.md). -#}
+<header {{ attributes.defaults({class: 'flex min-h-16 flex-wrap items-center gap-x-3 gap-y-2 border-b border-default bg-neutral-primary-soft px-4 max-sm:py-2'|tailwind_classes, 'data-controller': 'navbar'}) }}>
+    {%- if sidebarId %}
+        <button type="button" data-action="navbar#toggleSidebar" data-navbar-sidebar-param="{{ sidebarId }}" data-sidebar-trigger="{{ sidebarId }}" aria-controls="{{ sidebarId }}" aria-expanded="false" aria-label="{{ menuLabel }}"
+                class="inline-flex size-11 shrink-0 items-center justify-center rounded-base text-body hover:bg-neutral-secondary-medium hover:text-heading focus:outline-none focus:ring-2 focus:ring-brand-medium md:hidden">
+            <twig:ux:icon name="flowbite:bars-outline" class="size-6" aria-hidden="true" />
+        </button>
+    {%- endif %}
+    {##- The menu button of small screens holding the app's navigation, typically a `MobileNav` (in place of `sidebarId`). -#}
+    {%- block menu %}{% endblock -%}
+    <div class="flex min-w-0 items-center wrap-anywhere max-sm:flex-1 max-sm:basis-0">
+        {##- The brand: logo and product name, usually a link home. -#}
+        {%- block brand %}{% endblock -%}
+    </div>
+    {%- if _navbar_nav|trim is not empty %}
+        <nav aria-label="{{ navLabel }}" class="flex shrink-0 items-center max-md:hidden!">{{ _navbar_nav }}</nav>
+    {%- endif %}
+    {%- if _navbar_search|trim is not empty %}
+        <div class="flex min-w-0 flex-1 justify-center max-sm:order-last max-sm:basis-full!">{{ _navbar_search }}</div>
+    {%- endif %}
+    <div class="ms-auto flex shrink-0 items-center gap-2">
+        {##- Actions on the right: notifications, theme toggle, user menu. -#}
+        {%- block actions %}{% endblock -%}
+    </div>
+</header>

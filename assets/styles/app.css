@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+@import '../vendor/flowbite/dist/flowbite.min.css';
+@import './uxor.css';
+
+@source '../../templates';
+@source '../../src';

@@ -1,0 +1,14 @@
+{
+    "uxor": {
+        "repository": "https://github.com/xormania/uxor",
+        "commit": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+        "recipes": ["theme", "layouts"]
+    },
+    "symfony_docker_reference": "422756611d61e0108600ed7ec1370ec677d0e8d0",
+    "frankenphp": "dunglas/frankenphp:1-php8.5@sha256:a052ae7cccd4a025eca17767e7acac57a4fc660a4f3dfc790be9b9cd5182d6e6",
+    "xorder": {
+        "repository": "https://github.com/xormania/xorder",
+        "php_dev": "ghcr.io/xormania/php-dev@sha256:cd670b7c7b9624ce7dc7ee6b7b2a4d5b19ce36d6226f077a417667ae8505e000",
+        "verified_platform": "linux/amd64"
+    }
+}

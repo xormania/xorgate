@@ -1,0 +1,31 @@
+{%- props
+    ## boolean Whether to display the close button in the top-right corner.
+    showCloseButton = true
+-%}
+{%- set style = html_cva(
+    base: 'fixed z-50 m-0 overflow-y-auto bg-neutral-primary-soft p-4 text-body shadow-lg border-default backdrop:bg-dark-backdrop/70',
+    variants: {
+        placement: {
+            left: 'inset-y-0 left-0 right-auto h-full max-h-none w-80 max-w-[calc(100%-3rem)] border-e',
+            right: 'inset-y-0 right-0 left-auto h-full max-h-none w-80 max-w-[calc(100%-3rem)] border-s',
+            top: 'inset-x-0 top-0 bottom-auto w-full max-w-none border-b',
+            bottom: 'inset-x-0 bottom-0 top-auto w-full max-w-none border-t',
+        },
+    },
+) -%}
+<dialog
+    id="{{ _drawer_id }}"
+    aria-labelledby="{{ _drawer_title_id }}"
+    data-drawer-target="dialog"
+    data-action="keydown.esc->drawer#close:prevent click->drawer#closeOnClickOutside close->drawer#closed"
+    class="{{ (style.apply({placement: _drawer_placement}) ~ ' ' ~ attributes.render('class'))|tailwind_merge }}"
+>
+    {##- The drawer content, typically `Drawer:Header` and `Drawer:Body`. -#}
+    {%- block content %}{% endblock -%}
+    {%- if showCloseButton %}
+        <twig:Button type="button" variant="ghost" size="icon-xs" class="absolute top-4 right-4" data-action="click->drawer#close">
+            <twig:ux:icon name="flowbite:close-outline" class="size-4" aria-hidden="true" />
+            <span class="sr-only">Close</span>
+        </twig:Button>
+    {%- endif %}
+</dialog>

@@ -1,0 +1,63 @@
+{% extends 'layouts/base.html.twig' %}
+
+{##- The body classes of this layout. -#}
+{% block body_class %}min-h-svh bg-neutral-secondary-soft text-body antialiased{% endblock %}
+
+{##- The layout around the page content. -#}
+{% block body %}
+    {#- rendered here, apart from the sidebar's copy: `outerBlocks` does not reach into a component inside a component -#}
+    {%- set _mobile_nav_brand %}{{ block('brand') }}{% endset -%}
+    {#- the navbar's menu renders twice, in the bar and in the drawer: each NavMenu gives its submenus their own ids -#}
+    {%- set _has_navbar_nav = block('navbar_nav')|trim is not empty -%}
+    {%- set _navbar_nav %}{% if _has_navbar_nav %}<twig:NavMenu id="navbar-nav">{{ block(outerBlocks.navbar_nav) }}</twig:NavMenu>{% endif %}{% endset -%}
+    {%- set _mobile_nav_content -%}
+        {{ block('sidebar') }}
+        {%- if _has_navbar_nav %}
+            <div class="mt-4 border-t border-default pt-4"><twig:NavMenu id="mobile-nav-menu" orientation="vertical">{{ block(outerBlocks.navbar_nav) }}</twig:NavMenu></div>
+        {%- endif %}
+    {%- endset -%}
+    <div class="flex min-h-svh">
+        {#- the document scrolls (keyboard scrolling, Turbo's scroll restoration); the sidebar sticks -#}
+        <twig:Sidebar id="sidebar" data-turbo-permanent class="md:sticky md:top-0 md:h-svh!">
+            <twig:block name="header">{##- The brand at the top of the sidebar and the navbar. -#}{{ block(outerBlocks.brand) }}</twig:block>
+            {##- The sidebar navigation: `Sidebar:Group`s of `Sidebar:Item`s. -#}
+            {{- block(outerBlocks.sidebar) -}}
+        </twig:Sidebar>
+        <div class="flex min-w-0 flex-1 flex-col">
+            <twig:Navbar class="sticky top-0 z-30">
+                <twig:block name="menu">
+                    {#- small screens: the same navigation in a modal drawer, opened by the menu button -#}
+                    <twig:MobileNav>
+                        <twig:block name="header">{{ _mobile_nav_brand }}</twig:block>
+                        {{- _mobile_nav_content -}}
+                    </twig:MobileNav>
+                </twig:block>
+                <twig:block name="brand"><span class="md:hidden">{{ block(outerBlocks.brand) }}</span></twig:block>
+                <twig:block name="nav">{{ _navbar_nav }}</twig:block>
+                <twig:block name="search">{##- A search form in the navbar. -#}{{ block(outerBlocks.navbar_search) }}</twig:block>
+                <twig:block name="actions">{##- Actions on the right of the navbar; by default the theme toggle. -#}{{ block(outerBlocks.navbar_actions) }}</twig:block>
+            </twig:Navbar>
+            <main id="main" class="flex-1 p-4 md:p-6">
+                {%- set _page_title %}{##- The page title in the page header (the header is left out when empty). -#}{% block page_title %}{% endblock %}{% endset -%}
+                {%- set _page_description %}{##- A line under the page title. -#}{% block page_description %}{% endblock %}{% endset -%}
+                {%- if _page_title|trim is not empty %}
+                    <twig:PageHeader :title="_page_title|trim" :description="_page_description|trim ?: null" class="mb-6">
+                        <twig:block name="before">{##- Above the title, e.g. a `Breadcrumb`. -#}{{ block(outerBlocks.page_before) }}</twig:block>
+                        <twig:block name="actions">{##- Buttons on the right of the page header. -#}{{ block(outerBlocks.page_actions) }}</twig:block>
+                    </twig:PageHeader>
+                {%- endif %}
+                {##- The page content. -#}
+                {%- block content %}{% endblock -%}
+            </main>
+        </div>
+    </div>
+{% endblock %}
+
+{% block brand %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{##- The navbar's menu: `NavMenu:Link`s and `NavMenu:Submenu`s, in the navbar from md, in the mobile nav's drawer below. -#}
+{% block navbar_nav %}{% endblock %}
+{% block navbar_search %}{% endblock %}
+{% block navbar_actions %}<twig:ThemeToggle />{% endblock %}
+{% block page_before %}{% endblock %}
+{% block page_actions %}{% endblock %}

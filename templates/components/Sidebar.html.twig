@@ -1,0 +1,34 @@
+{%- props
+    ## string The sidebar's id: required by `data-turbo-permanent`, and targeted by the `Navbar` toggle.
+    id = 'sidebar',
+    ## string The accessible name of the navigation.
+    label = 'Main',
+    ## string The localStorage key of the collapsed state.
+    storageKey = 'sidebar-collapsed'
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+<aside
+    id="{{ id }}"
+    data-sidebar-storage-key-value="{{ storageKey }}"
+    {{ attributes.defaults({
+        class: 'group/sidebar flex h-full w-64 shrink-0 flex-col border-e border-default bg-neutral-primary-soft transition-[width] duration-200 motion-reduce:transition-none! data-collapsed:w-16 max-md:not-data-mobile-open:hidden max-md:data-mobile-open:fixed max-md:data-mobile-open:inset-y-0 max-md:data-mobile-open:left-0 max-md:data-mobile-open:z-40 max-md:data-mobile-open:shadow-lg'|tailwind_classes,
+        'data-controller': 'sidebar',
+        'data-action': 'sidebar:toggle@window->sidebar#toggleMobile keydown.esc->sidebar#closeMobile',
+    }) }}
+>
+    <div class="flex items-center gap-2 px-3 py-3">
+        <div class="min-w-0 flex-1 group-data-collapsed/sidebar:hidden">
+            {##- The top of the sidebar, typically the brand. -#}
+            {%- block header %}{% endblock -%}
+        </div>
+        <button type="button" data-action="sidebar#toggle" data-sidebar-target="toggle" aria-controls="{{ id }}" aria-expanded="true" aria-label="Collapse sidebar"
+                class="inline-flex size-11 shrink-0 items-center justify-center rounded-base text-body hover:bg-neutral-secondary-medium hover:text-heading focus:outline-none focus:ring-2 focus:ring-brand-medium max-md:hidden!">
+            <twig:ux:icon name="flowbite:chevron-left-outline" class="size-5 transition-transform motion-reduce:transition-none! group-data-collapsed/sidebar:rotate-180" aria-hidden="true" />
+        </button>
+    </div>
+    <nav aria-label="{{ label }}" data-sidebar-target="scroll" data-action="scroll->sidebar#rememberScroll" class="min-h-0 flex-1 space-y-4 overflow-y-auto px-3 pb-4">
+        {##- The navigation: `Sidebar:Group`s holding `Sidebar:Item`s. -#}
+        {%- block content %}{% endblock -%}
+    </nav>
+</aside>

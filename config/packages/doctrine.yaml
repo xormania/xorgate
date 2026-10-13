@@ -1,0 +1,19 @@
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+        # Operational tables and the implicit BIGSERIAL sequence belong to explicit migrations.
+        schema_filter: '~^(?!foundation_probe$|messenger_messages(?:_id_seq)?$)~'
+    orm:
+        auto_mapping: true
+        mappings:
+            App:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: App\Entity
+                alias: App
+
+when@test:
+    doctrine:
+        dbal:
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'

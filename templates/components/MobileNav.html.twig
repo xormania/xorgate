@@ -1,0 +1,37 @@
+{%- props
+    ## string The drawer's id: its `<dialog>` is `drawer-<id>`, which the menu button controls.
+    id = 'mobile-nav',
+    ## string The accessible name of the drawer and of the navigation in it.
+    label = 'Main',
+    ## string The accessible name of the menu button.
+    menuLabel = 'Open menu',
+    ## boolean Whether the drawer is open on initial render.
+    open = false
+-%}
+{%- set _mobile_nav_header %}{##- The top of the drawer, typically the brand. -#}{% block header %}{% endblock %}{% endset -%}
+{%- set _mobile_nav_content %}{##- The navigation: a `SideNav`, or `Sidebar:Group`s of `Sidebar:Item`s. -#}{% block content %}{% endblock %}{% endset -%}
+<twig:Drawer :id="id" :open="open" placement="left" {{ ...attributes.defaults({
+    class: 'contents'|tailwind_classes,
+    'data-controller': 'mobile-nav',
+    'data-action': 'click->mobile-nav#closeOnLink turbo:before-cache@document->mobile-nav#close',
+}) }}>
+    <twig:Drawer:Trigger>
+        {#- the button is hidden where the app's Sidebar shows (md); the controller closes the drawer there -#}
+        <button type="button" {{ html_attr(
+            {'data-action': 'click->mobile-nav#focusTrigger'|html_attr_type('sst')},
+            drawer_trigger_attrs,
+            {'data-action': 'click->mobile-nav#focusCurrent'|html_attr_type('sst'), 'data-mobile-nav-target': 'trigger', 'aria-label': menuLabel},
+        ) }} class="inline-flex size-11 items-center justify-center rounded-base text-body hover:bg-neutral-secondary-medium hover:text-heading focus:outline-none focus:ring-2 focus:ring-brand-medium md:hidden">
+            <twig:ux:icon name="flowbite:bars-outline" class="size-6" aria-hidden="true" />
+        </button>
+    </twig:Drawer:Trigger>
+    <twig:Drawer:Content>
+        <twig:Drawer:Header>
+            <twig:Drawer:Title class="sr-only">{{ label }}</twig:Drawer:Title>
+            <div class="min-w-0 flex-1">{{ _mobile_nav_header }}</div>
+        </twig:Drawer:Header>
+        <nav aria-label="{{ label }}" data-mobile-nav-target="nav">
+            {{- _mobile_nav_content -}}
+        </nav>
+    </twig:Drawer:Content>
+</twig:Drawer>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale|default('en') }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{##- The page title. -#}{% block title %}{% endblock %}</title>
+        {#- Content Security Policy nonces (this recipe's README): a `csp_script_nonce` and a `csp_style_nonce` variable or Twig global, a string or a Stringable. Unset or empty, no nonce is printed. -#}
+        {%- set csp_script_nonce = csp_script_nonce|default('') ~ '' -%}
+        {%- set csp_style_nonce = csp_style_nonce|default('') ~ '' -%}
+        {%- if csp_style_nonce -%}
+            {#- Turbo gives this nonce to the <style> of its progress bar, which it adds to every page. -#}
+            <meta name="csp-nonce" nonce="{{ csp_style_nonce }}">
+        {%- endif -%}
+        {#- Sets the theme before the first paint (the theme-toggle recipe's no-flash snippet). -#}
+        <script{% if csp_script_nonce %} nonce="{{ csp_script_nonce }}"{% endif %}>
+            try {
+                const theme = localStorage.getItem('theme');
+                document.documentElement.classList.toggle('dark', 'dark' === theme || ('light' !== theme && matchMedia('(prefers-color-scheme: dark)').matches));
+            } catch (e) {}
+        </script>
+        {##- Extra tags in the head: meta, favicon, preloads. -#}
+        {%- block head %}{% endblock -%}
+        {##- Stylesheets not imported by the importmap entrypoint. -#}
+        {%- block stylesheets %}{% endblock -%}
+        {##- The scripts; by default the `app` importmap entrypoint, reloaded by Turbo when it changes. -#}
+        {%- block javascripts %}
+            {{ importmap('app', {'data-turbo-track': 'reload'}|merge(csp_script_nonce ? {nonce: csp_script_nonce} : {})) }}
+        {% endblock -%}
+    </head>
+    {#- form-reset: after Back and Forward, a GET form shows the values of the URL, a POST form keeps what was typed (this recipe's README). -#}
+    <body data-controller="form-reset" class="{##- Classes of the body. -#}{% block body_class %}min-h-svh bg-neutral-primary text-body antialiased{% endblock %}">
+        {##- Notifications on every layout: the toast region (`data-turbo-permanent`, so a Turbo visit keeps it) and the flash messages, added to it through Turbo Streams. -#}
+        {%- block toasts %}
+            <twig:ToastRegion />
+            {%- for type, messages in app.flashes %}
+                {%- for message in messages %}
+                    <twig:Toast:Stream variant="{{ type in ['success', 'warning', 'danger'] ? type : 'info' }}">{{ message }}</twig:Toast:Stream>
+                {%- endfor %}
+            {%- endfor %}
+        {% endblock -%}
+        {##- The page. -#}
+        {%- block body %}{% endblock -%}
+    </body>
+</html>

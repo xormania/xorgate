@@ -1,0 +1,26 @@
+{#- a NavMenu inside another component's content sees that component's variables: an `id` or `orientation` not given to it keeps its default -#}
+{%- if __context is defined and __context.id is defined %}{% set id = 'nav-menu' %}{% endif -%}
+{%- if __context is defined and __context.orientation is defined %}{% set orientation = 'horizontal' %}{% endif -%}
+{%- props
+    ## string The prefix of the submenus' ids (`<id>-<submenu name>`): give each NavMenu of a page its own, and the same menu rendered twice (in the navbar and in a drawer) two of them.
+    id = 'nav-menu',
+    ## 'horizontal'|'vertical' How the menu lays out: `horizontal`, a bar whose submenus open over the page under their button; `vertical`, a list whose submenus open in place, for a drawer. Any other value renders `horizontal`.
+    orientation = 'horizontal'
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+{%- set orientation = orientation in ['horizontal', 'vertical'] ? orientation : 'horizontal' -%}
+{#- read by the parts inside: the prefix of their ids, the orientation and the depth -#}
+{%- set _nav_menu_id = id -%}
+{%- set _nav_menu_vertical = 'vertical' == orientation -%}
+{%- set _nav_menu_level = 0 -%}
+<ul data-nav-menu-orientation-value="{{ orientation }}"
+    {{ attributes.defaults({
+        class: (_nav_menu_vertical ? 'space-y-1 text-sm' : 'flex items-center gap-1 text-sm')|tailwind_classes,
+        'data-controller': 'nav-menu',
+        'data-action': 'keydown->nav-menu#keydown focusout->nav-menu#focusout click->nav-menu#closeOnLink click@document->nav-menu#closeOutside resize@window->nav-menu#reposition scroll@window->nav-menu#reposition turbo:before-cache@document->nav-menu#closeAll',
+    }) }}
+>
+    {##- The menu: `NavMenu:Link`s and `NavMenu:Submenu`s, nested as deep as needed. -#}
+    {%- block content %}{% endblock -%}
+</ul>

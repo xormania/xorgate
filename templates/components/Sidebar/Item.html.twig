@@ -1,0 +1,34 @@
+{%- props
+    ## string The link. A URL other than relative, http(s), mailto or tel renders `#`.
+    href,
+    ## string|null A route name: the item is active when it is the current route (`app.current_route`).
+    route = null,
+    ## boolean|null Forces the active state; when null, `route` or the controller (on the current URL) decide.
+    active = null,
+    ## string|int|null A count or label shown at the end of the item.
+    badge = null
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+{#- a link prop keeps a relative, http(s), mailto or tel URL, read as browsers read it (case, leading spaces and C0 controls, tabs and newlines anywhere); any other renders "#" -#}
+{%- set _href = (href ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i' ? href ~ '' : '#' -%}
+{%- set _active = active ?? (route is not null and app.current_route == route) -%}
+<li>
+    <a href="{{ _href }}"
+       data-sidebar-target="item"
+       {%- if _active %} aria-current="page"{% endif %}
+       {%- if active is not null %} data-sidebar-active-fixed{% endif %}
+       {{ attributes.defaults({class: 'group/item flex min-h-11 items-center gap-3 rounded-base px-2 text-sm font-medium text-body hover:bg-neutral-secondary-medium hover:text-heading focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-medium aria-[current=page]:bg-brand-softer aria-[current=page]:text-fg-brand-strong'|tailwind_classes}) }}>
+        <span class="inline-flex size-5 shrink-0 items-center justify-center" aria-hidden="true">
+            {##- The item's icon, kept visible when the sidebar is collapsed. -#}
+            {%- block icon %}{% endblock -%}
+        </span>
+        <span class="min-w-0 flex-1 truncate group-data-collapsed/sidebar:sr-only">
+            {##- The item's label. -#}
+            {%- block content %}{% endblock -%}
+        </span>
+        {%- if badge is not null %}
+            <span class="rounded-full bg-neutral-tertiary px-2 py-0.5 text-xs font-medium text-heading group-data-collapsed/sidebar:hidden">{{ badge }}</span>
+        {%- endif %}
+    </a>
+</li>

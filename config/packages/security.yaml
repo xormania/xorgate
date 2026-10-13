@@ -1,0 +1,11 @@
+security:
+    firewalls:
+        mcp:
+            pattern: ^/mcp(?:/|$)
+            stateless: true
+            custom_authenticators:
+                - App\Security\McpTokenAuthenticator
+        main:
+            lazy: true
+    access_control:
+        - { path: '^/mcp(?:/|$)', roles: ROLE_MCP }

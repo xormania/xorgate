@@ -1,0 +1,40 @@
+{#- a Submenu inside another one sees its variables: a `name` not given to it stays null -#}
+{%- if __context is defined and __context.name is defined %}{% set name = null %}{% endif -%}
+{%- props
+    ## string The button's label.
+    label,
+    ## string|null The name in the submenu's id (`<parent id>-<name>`, lower-cased, spaces as `-`), unique among its siblings; defaults to the label.
+    name = null
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+{%- set _vertical = _nav_menu_vertical ?? false -%}
+{%- set _level = _nav_menu_level ?? 0 -%}
+{%- set _submenu_id = (_nav_menu_id ?? 'nav-menu') ~ '-' ~ ((name ?? label) ~ '')|replace({"\t": ' ', "\n": ' ', "\r": ' ', "\f": ' '})|lower|split(' ')|filter((part) => part is not empty)|join('-') -%}
+{#- the items inside take this submenu's id as their prefix, one level deeper -#}
+{%- set _nav_menu_id = _submenu_id -%}
+{%- set _nav_menu_level = _level + 1 -%}
+{%- set _content %}{##- The submenu's items: `NavMenu:Link`s and nested `NavMenu:Submenu`s. -#}{% block content %}{% endblock %}{% endset -%}
+{%- set _panel_classes = _vertical
+    ? 'ms-4 mt-1 space-y-1 border-s border-default ps-2'
+    : (0 == _level
+        ? 'absolute start-0 top-full z-50 mt-1 w-max min-w-48 max-w-[calc(100vw-2rem)] space-y-1 rounded-base border border-default-medium bg-neutral-primary-medium p-2 shadow-lg data-flip:start-auto data-flip:end-0'
+        : 'absolute start-full -top-2 z-50 ms-3 w-max min-w-48 max-w-[calc(100vw-2rem)] space-y-1 rounded-base border border-default-medium bg-neutral-primary-medium p-2 shadow-lg data-flip:start-auto data-flip:end-full data-flip:ms-0 data-flip:me-3 data-flip-y:top-auto data-flip-y:-bottom-2') -%}
+<li {{ attributes.defaults({class: (_vertical ? '' : 'relative')|tailwind_classes}) }}>
+    <button type="button" aria-expanded="false" aria-controls="{{ _submenu_id }}" data-nav-menu-target="button" data-action="nav-menu#toggle"
+            class="flex min-h-11 w-full cursor-pointer items-center gap-2 rounded-base text-start font-medium text-body hover:text-heading focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-medium [li:has([aria-current=page])>&]:font-semibold [li:has([aria-current=page])>&]:text-fg-brand-strong {{ not _vertical and _level > 0 ? 'hover:bg-neutral-tertiary-medium' : 'hover:bg-neutral-secondary-medium' }}{{ _vertical ? ' px-2' : ' px-3 whitespace-nowrap' }}">
+        <span class="min-w-0 flex-1">{{ label }}</span>
+        {%- if _vertical %}
+            {#- as a SideNav branch: a drawer often holds both -#}
+            <twig:ux:icon name="flowbite:chevron-right-outline" class="size-4 shrink-0 transition-transform motion-reduce:transition-none! rtl:rotate-180 [[aria-expanded=true]>&]:rotate-90" aria-hidden="true" />
+        {%- elseif _level > 0 %}
+            <twig:ux:icon name="flowbite:chevron-right-outline" class="size-4 shrink-0 rtl:rotate-180" aria-hidden="true" />
+        {%- else %}
+            <twig:ux:icon name="flowbite:chevron-down-outline" class="size-4 shrink-0 transition-transform motion-reduce:transition-none! [[aria-expanded=true]>&]:rotate-180" aria-hidden="true" />
+        {%- endif %}
+    </button>
+    {#- shown while the button is expanded: its aria-expanded is the only state -#}
+    <ul id="{{ _submenu_id }}" class="{{ _panel_classes }} [[aria-expanded=false]+&]:hidden">
+        {{- _content -}}
+    </ul>
+</li>

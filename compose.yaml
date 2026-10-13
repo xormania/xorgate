@@ -1,0 +1,105 @@
+name: ${COMPOSE_PROJECT_NAME:-xorgate}
+
+x-app: &app
+    image: ${IMAGES_PREFIX:-xorgate-}php-dev
+    build:
+        context: .
+        target: frankenphp_dev
+    working_dir: /app
+    environment:
+        APP_ENV: dev
+        APP_DEBUG: '1'
+        DATABASE_URL: postgresql://xorgate:${POSTGRES_PASSWORD:-xorgate_local}@database:5432/xorgate?serverVersion=17&charset=utf8
+        XORGATE_ARTIFACT_DIR: /var/lib/xorgate/artifacts
+        MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=false
+    volumes:
+        - ./:/app
+        - vendor:/app/vendor
+        - app_var:/app/var
+        - artifacts:/var/lib/xorgate/artifacts
+
+services:
+    php:
+        <<: *app
+        environment:
+            APP_ENV: dev
+            APP_DEBUG: '1'
+            DATABASE_URL: postgresql://xorgate:${POSTGRES_PASSWORD:-xorgate_local}@database:5432/xorgate?serverVersion=17&charset=utf8
+            XORGATE_ARTIFACT_DIR: /var/lib/xorgate/artifacts
+            MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=false
+            SERVER_NAME: ${SERVER_NAME:-:80}
+            FRANKENPHP_WORKER_CONFIG: watch
+        ports:
+            - '127.0.0.1:${HTTP_PORT:-8088}:80'
+            - '127.0.0.1:${HTTPS_PORT:-8448}:443'
+            - '127.0.0.1:${HTTPS_PORT:-8448}:443/udp'
+        volumes:
+            - ./:/app
+            - vendor:/app/vendor
+            - app_var:/app/var
+            - artifacts:/var/lib/xorgate/artifacts
+            - caddy_data:/data
+            - caddy_config:/config
+        depends_on:
+            database:
+                condition: service_healthy
+        healthcheck:
+            test: ['CMD', 'php', '-r', 'exit(false === @file_get_contents("http://php/health", false, stream_context_create(["http" => ["timeout" => 5]])) ? 1 : 0);']
+            interval: 10s
+            timeout: 6s
+            start_period: 20s
+            retries: 12
+        restart: unless-stopped
+
+    worker:
+        <<: *app
+        command: ['php', 'bin/console', 'messenger:consume', 'async', '--time-limit=3600', '--memory-limit=256M', '--keepalive=5']
+        # The base image's HTTP healthcheck does not apply to this CLI process.
+        # Queue consumption and artifact completion are proved by the foundation probe.
+        healthcheck:
+            test: ['CMD-SHELL', 'kill -0 1']
+            interval: 10s
+            timeout: 5s
+            start_period: 5s
+            retries: 3
+        depends_on:
+            database:
+                condition: service_healthy
+        restart: unless-stopped
+        stop_grace_period: 30s
+
+    database:
+        image: postgres:17-trixie
+        environment:
+            POSTGRES_DB: xorgate
+            POSTGRES_USER: xorgate
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-xorgate_local}
+        volumes:
+            - database:/var/lib/postgresql/data
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U xorgate -d xorgate']
+            interval: 5s
+            timeout: 5s
+            retries: 20
+        restart: unless-stopped
+
+    tools:
+        profiles: [tools]
+        image: ghcr.io/xormania/php-dev@sha256:cd670b7c7b9624ce7dc7ee6b7b2a4d5b19ce36d6226f077a417667ae8505e000
+        working_dir: /workspace
+        environment:
+            PUID: ${PUID:-1000}
+            PGID: ${PGID:-1000}
+            XDEBUG_MODE: 'off'
+        volumes:
+            - ./:/workspace
+            - tools_home:/home/dev
+
+volumes:
+    database:
+    artifacts:
+    vendor:
+    app_var:
+    caddy_data:
+    caddy_config:
+    tools_home:

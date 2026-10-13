@@ -1,0 +1,28 @@
+{%- props
+    ## string The accessible name of the button.
+    label = 'Toggle dark mode',
+    ## string The localStorage key the choice is saved under, the same as in the no-flash snippet.
+    storageKey = 'theme'
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+<button
+    type="button"
+    aria-label="{{ label }}"
+    aria-pressed="false"
+    data-theme-toggle-storage-key-value="{{ storageKey }}"
+    {{ attributes.defaults({
+        class: 'inline-flex size-11 items-center justify-center rounded-base text-body hover:bg-neutral-secondary-medium hover:text-heading focus:outline-none focus:ring-4 focus:ring-brand-medium'|tailwind_classes,
+        'data-controller': 'theme-toggle',
+        'data-action': 'theme-toggle#toggle',
+    }) }}
+>
+    <span class="hidden not-dark:inline">
+        {##- The icon shown in the light theme, a moon by default. -#}
+        {%- block light_icon %}<twig:ux:icon name="flowbite:moon-outline" class="size-5" aria-hidden="true" />{% endblock -%}
+    </span>
+    <span class="hidden dark:inline">
+        {##- The icon shown in the dark theme, a sun by default. -#}
+        {%- block dark_icon %}<twig:ux:icon name="flowbite:sun-outline" class="size-5" aria-hidden="true" />{% endblock -%}
+    </span>
+</button>

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+# Validate the installed application in its actual PHP runtime.
+docker compose exec -T php composer validate --strict
+docker compose exec -T php composer check-platform-reqs
+docker compose exec -T php sh -c 'find src config migrations tests public bin -type f -name "*.php" -print0 | xargs -0 -n1 php -l'
+docker compose exec -T php php bin/console lint:yaml config
+docker compose exec -T php php bin/console lint:container
+docker compose exec -T php php bin/console lint:twig templates
+
+# The configured test suffix keeps test fixtures out of the running application's DB.
+docker compose exec -T -e APP_ENV=test php php bin/console doctrine:database:create --if-not-exists
+docker compose exec -T -e APP_ENV=test php php bin/console doctrine:migrations:migrate --no-interaction
+docker compose exec -T -e APP_ENV=test php php vendor/bin/phpunit

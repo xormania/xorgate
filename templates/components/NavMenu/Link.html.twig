@@ -1,0 +1,27 @@
+{#- a Link inside another component's content sees its variables: a `route` or `active` not given to it stays null -#}
+{%- if __context is defined and __context.route is defined %}{% set route = null %}{% endif -%}
+{%- if __context is defined and __context.active is defined %}{% set active = null %}{% endif -%}
+{%- props
+    ## string The link. A URL other than relative, http(s), mailto or tel renders `#`.
+    href,
+    ## string|null A route name: the link is the current page when it is the current route (`app.current_route`).
+    route = null,
+    ## boolean|null Forces the current-page state; when null, `route` or the controller (on the current URL) decide.
+    active = null
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+{#- a link prop keeps a relative, http(s), mailto or tel URL, read as browsers read it (case, leading spaces and C0 controls, tabs and newlines anywhere); any other renders "#" -#}
+{%- set _href = (href ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i' ? href ~ '' : '#' -%}
+{%- set _active = active ?? (route is not null and app.current_route == route) -%}
+{%- set _vertical = _nav_menu_vertical ?? false -%}
+{%- set _in_panel = not _vertical and (_nav_menu_level ?? 0) > 0 -%}
+<li>
+    <a href="{{ _href }}" data-nav-menu-target="link"
+       {%- if _active %} aria-current="page"{% endif %}
+       {%- if active is not null %} data-nav-menu-active-fixed{% endif %}
+       {{ attributes.defaults({class: ('flex min-h-11 w-full items-center gap-2 rounded-base font-medium text-body hover:text-heading focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-medium aria-[current=page]:bg-brand-softer aria-[current=page]:text-fg-brand-strong ' ~ (_in_panel ? 'hover:bg-neutral-tertiary-medium' : 'hover:bg-neutral-secondary-medium') ~ (_vertical ? ' px-2' : ' px-3 whitespace-nowrap'))|tailwind_classes}) }}>
+        {##- The link's label. -#}
+        {%- block content %}{% endblock -%}
+    </a>
+</li>
