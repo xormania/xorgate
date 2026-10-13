@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+resolve=false
+if [[ ${1:-} == --resolve ]]; then
+    resolve=true
+    shift
+fi
+if [[ $# != 0 ]]; then
+    echo 'Usage: ./bin/setup [--resolve]' >&2
+    exit 2
+fi
+if [[ ! -f composer.lock && $resolve != true ]]; then
+    echo 'No dependency lock exists. Use ./bin/setup --resolve once, then commit composer.lock and symfony.lock.' >&2
+    exit 1
+fi
+
+docker info >/dev/null
+docker compose config --quiet
+docker compose build php
+docker compose run --rm --no-deps -T -e APP_SECRET -e XORGATE_MCP_TOKEN php php bin/bootstrap-env.php
+docker compose up -d --wait database
+
+if [[ $resolve == true && ! -f composer.lock ]]; then
+    docker compose run --rm --no-deps -T php composer update --prefer-dist --no-interaction --no-progress
+else
+    docker compose run --rm --no-deps -T php composer install --prefer-dist --no-interaction --no-progress
+fi
+
+docker compose run --rm --no-deps -T php bash bin/install-ui
+docker compose run --rm --no-deps -T php php bin/console doctrine:migrations:migrate --no-interaction --all-or-nothing
+docker compose up -d --wait --wait-timeout 180 php worker
+docker compose exec -T php php bin/console xorgate:runtime:status
+
+echo "Xorgate is ready at http://localhost:${HTTP_PORT:-8088}."

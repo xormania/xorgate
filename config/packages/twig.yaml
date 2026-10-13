@@ -1,0 +1,9 @@
+twig:
+    file_name_pattern: '*.twig'
+    globals:
+        csp_script_nonce: '@app.csp_nonce.script'
+        csp_style_nonce: '@app.csp_nonce.style'
+
+when@test:
+    twig:
+        strict_variables: true

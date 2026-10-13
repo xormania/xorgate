@@ -1,0 +1,3 @@
+ux_live_component:
+    resource: '@LiveComponentBundle/config/routes.php'
+    prefix: /_components

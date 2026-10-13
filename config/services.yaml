@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+            - '../src/Message/'
+
+    app.csp_nonce.script:
+        class: App\Security\CspNonce
+        arguments:
+            $directive: script
+    app.csp_nonce.style:
+        class: App\Security\CspNonce
+        arguments:
+            $directive: style

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+kit='https://github.com/xormania/uxor:9b2fa7309786cee435503de87cf0cd5f0a9d9782'
+if [[ ! -f assets/styles/uxor.css || ! -f templates/layouts/app.html.twig ]]; then
+    php bin/console ux:install theme --kit="$kit" --no-interaction
+    php bin/console ux:install layouts --kit="$kit" --no-interaction
+fi
+php bin/console importmap:install --no-interaction
+php bin/console ux:icons:lock --no-interaction
+php bin/console tailwind:build --no-interaction

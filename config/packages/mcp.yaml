@@ -1,0 +1,12 @@
+mcp:
+    servers:
+        xorgate:
+            name: xorgate
+            transports:
+                http: true
+                stdio: true
+            http:
+                path: /mcp
+                allowed_hosts: ['localhost', '127.0.0.1', 'php']
+            registry:
+                tools: ['App\Mcp\']

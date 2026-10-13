@@ -1,0 +1,10 @@
+.git/
+.env.local
+.env.local.php
+.env.*.local
+vendor/
+var/
+node_modules/
+out/
+test-results/
+playwright-report/

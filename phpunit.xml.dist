@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true" cacheDirectory="var/phpunit">
+    <php>
+        <server name="APP_ENV" value="test" force="true"/>
+        <server name="APP_DEBUG" value="1" force="true"/>
+        <server name="KERNEL_CLASS" value="App\Kernel"/>
+        <env name="XORGATE_ARTIFACT_DIR" value="var/test-artifacts" force="true"/>
+    </php>
+    <testsuites><testsuite name="foundation"><directory>tests</directory></testsuite></testsuites>
+    <source><include><directory suffix=".php">src</directory></include></source>
+</phpunit>

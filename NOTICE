@@ -1,0 +1,9 @@
+Xorgate uses UXor recipes, distributed under the MIT License.
+UXor: https://github.com/xormania/uxor
+Copyright (c) 2026 xor
+Upstream notices are retained in licenses/UXor-NOTICE.txt.
+
+The Docker development arrangement is adapted from Symfony Docker:
+https://github.com/dunglas/symfony-docker
+Reference commit: 422756611d61e0108600ed7ec1370ec677d0e8d0
+Symfony Docker is distributed under the MIT License, as stated in its README.

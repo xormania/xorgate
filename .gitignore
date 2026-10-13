@@ -1,0 +1,14 @@
+/.env.local
+/.env.local.php
+/.env.*.local
+/vendor/
+/var/
+/public/assets/
+/assets/vendor/
+/node_modules/
+/test-results/
+/playwright-report/
+/out/
+/compose.local.yaml
+__pycache__/
+*.pyc

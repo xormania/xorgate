@@ -1,0 +1,33 @@
+{
+    skip_install_trust
+    frankenphp {
+        {$FRANKENPHP_CONFIG}
+    }
+}
+
+{$SERVER_NAME::80} {
+    root * /app/public
+    encode zstd br gzip
+    log {
+        format filter {
+            request>headers>Authorization delete
+        }
+    }
+
+    @phpRoute {
+        not file {path}
+    }
+    rewrite @phpRoute index.php
+
+    @frontController path index.php
+    php @frontController {
+        worker {
+            file ./public/index.php
+            {$FRANKENPHP_WORKER_CONFIG}
+        }
+    }
+
+    file_server {
+        hide *.php
+    }
+}
