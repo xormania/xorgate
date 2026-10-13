@@ -1,0 +1,9 @@
+{%- set drawer_trigger_attrs = {
+    'data-action': 'click->drawer#open'|html_attr_type('sst'),
+    'data-drawer-target': 'trigger',
+    'aria-haspopup': 'dialog',
+    'aria-expanded': 'false',
+    'aria-controls': _drawer_id,
+} -%}
+{##- The element (e.g., a `Button`) that opens the drawer; spread `drawer_trigger_attrs` on it. -#}
+{%- block content %}{% endblock -%}

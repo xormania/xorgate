@@ -1,0 +1,17 @@
+{%- props
+    ## string The id of the `ToastRegion` to append to.
+    target = 'toasts',
+    ## 'info'|'success'|'warning'|'danger' The kind of message.
+    variant = 'info',
+    ## int Milliseconds before the toast dismisses itself, 0 to keep it until closed.
+    timeout = 5000
+-%}
+{%- set _toast_message -%}
+    {##- The message. -#}
+    {%- block content %}{% endblock -%}
+{%- endset -%}
+<turbo-stream action="append" target="{{ target }}">
+    <template>
+        <twig:Toast variant="{{ variant }}" timeout="{{ timeout }}">{{ _toast_message }}</twig:Toast>
+    </template>
+</turbo-stream>

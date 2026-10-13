@@ -1,0 +1,60 @@
+{%- props
+    ## 'brand'|'secondary'|'tertiary'|'success'|'danger'|'warning'|'dark'|'ghost'|'outline'|'outline-brand'|'outline-success'|'outline-danger'|'outline-warning' The visual style variant.
+    variant = 'brand',
+    ## 'default'|'xs'|'sm'|'lg'|'xl'|'icon'|'icon-xs'|'icon-sm' The button size.
+    size = 'default',
+    ## 'rounded'|'pill' The badge shape.
+    shape = 'rounded',
+    ## 'button'|'a' The HTML tag to render; any other value renders a `button`.
+    as = 'button',
+    ## string|null The link when `as="a"`; a URL other than relative, http(s), mailto or tel renders `#`.
+    href = null
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+{%- set as = as|lower in ['button', 'a'] ? as|lower : 'button' -%}
+{#- Read links as browsers do: ignore leading spaces/C0 controls and tabs/newlines in a scheme. -#}
+{%- set _href = href is not null ? ((href ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i' ? href ~ '' : '#') : null -%}
+{%- set style = html_cva(
+    base: 'inline-flex items-center justify-center box-border border border-transparent font-medium shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-brand-medium',
+    variants: {
+        variant: {
+            brand: 'text-fg-on-brand bg-brand hover:bg-brand-strong',
+            secondary: 'text-body bg-neutral-secondary-medium border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading',
+            tertiary: 'text-body bg-neutral-primary-soft border-default hover:bg-neutral-secondary-medium hover:text-heading',
+            success: 'text-fg-on-success bg-success hover:bg-success-strong',
+            danger: 'text-fg-on-danger bg-danger hover:bg-danger-strong',
+            warning: 'text-fg-on-warning bg-warning hover:bg-warning-strong',
+            dark: 'text-fg-on-dark bg-dark hover:bg-dark-strong',
+            ghost: 'text-heading bg-transparent hover:bg-neutral-secondary-medium shadow-none',
+            outline: 'text-body bg-neutral-primary border-default hover:bg-neutral-secondary-soft hover:text-heading',
+            'outline-brand': 'text-fg-brand bg-neutral-primary border-brand hover:bg-brand hover:text-fg-on-brand',
+            'outline-success': 'text-fg-success bg-neutral-primary border-success hover:bg-success hover:text-fg-on-success',
+            'outline-danger': 'text-fg-danger bg-neutral-primary border-danger hover:bg-danger hover:text-fg-on-danger',
+            'outline-warning': 'text-fg-warning bg-neutral-primary border-warning hover:bg-warning hover:text-fg-on-warning',
+        },
+        size: {
+            default: 'leading-5 text-sm px-4 py-2.5',
+            xs: 'leading-5 text-xs px-3 py-1.5',
+            sm: 'leading-5 text-sm px-3 py-2',
+            lg: 'text-base px-5 py-3',
+            xl: 'text-base px-6 py-3.5',
+            icon: 'w-10 h-10',
+            'icon-xs': 'w-8 h-8',
+            'icon-sm': 'w-9 h-9',
+        },
+        shape: {
+            rounded: 'rounded-base',
+            pill: 'rounded-full',
+        },
+    },
+) -%}
+<{{ as }}
+    {%- if as == 'a' and _href is not null %} href="{{ _href }}"{% endif %}
+    {{ attributes.defaults({
+        class: style.apply({variant: variant, size: size, shape: shape})|tailwind_classes,
+    }) }}
+>
+    {##- The button label and/or icon. -#}
+    {%- block content %}{% endblock -%}
+</{{ as }}>

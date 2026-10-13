@@ -54,6 +54,10 @@ services:
     worker:
         <<: *app
         command: ['php', 'bin/console', 'messenger:consume', 'async', '--time-limit=3600', '--memory-limit=256M', '--keepalive=5']
+        # The base image's HTTP healthcheck does not apply to this CLI process.
+        # Queue consumption and artifact completion are proved by the foundation probe.
+        healthcheck:
+            disable: true
         depends_on:
             database:
                 condition: service_healthy

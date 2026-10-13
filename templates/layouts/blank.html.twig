@@ -1,0 +1,9 @@
+{% extends 'layouts/base.html.twig' %}
+
+{##- The layout around the page content. -#}
+{% block body %}
+    <main class="min-h-svh">
+        {##- The page content, with nothing around it. -#}
+        {%- block content %}{% endblock -%}
+    </main>
+{% endblock %}

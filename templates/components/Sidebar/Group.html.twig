@@ -1,0 +1,15 @@
+{%- props
+    ## string|null The heading of the group, hidden while the sidebar is collapsed.
+    label = null
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+<div {{ attributes }}>
+    {%- if label %}
+        <p class="mb-1 px-2 text-xs font-semibold uppercase tracking-wide text-body-subtle group-data-collapsed/sidebar:sr-only">{{ label }}</p>
+    {%- endif %}
+    <ul class="space-y-1">
+        {##- The group's `Sidebar:Item`s. -#}
+        {%- block content %}{% endblock -%}
+    </ul>
+</div>

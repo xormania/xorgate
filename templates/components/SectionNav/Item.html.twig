@@ -1,0 +1,23 @@
+{%- props
+    ## string The section's page. A URL other than relative, http(s), mailto or tel renders `#`.
+    href,
+    ## string|null A route name: the item is the current section when it is the current route (`app.current_route`).
+    route = null,
+    ## boolean|null Forces the current-section state; when null, `route` decides, or without `route` the controller (on the current URL's path).
+    active = null
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+{#- a link prop keeps a relative, http(s), mailto or tel URL, read as browsers read it (case, leading spaces and C0 controls, tabs and newlines anywhere); any other renders "#" -#}
+{%- set _href = (href ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i' ? href ~ '' : '#' -%}
+{%- set _active = active ?? (route is not null and app.current_route == route) -%}
+<li>
+    <a href="{{ _href }}"
+       data-section-nav-target="item"
+       {%- if _active %} aria-current="page"{% endif %}
+       {%- if active is null and route is null %} data-section-nav-match-url{% endif %}
+       {{ attributes.defaults({class: 'block rounded-base px-3 py-2 text-sm font-medium whitespace-nowrap text-body hover:bg-neutral-secondary-medium hover:text-heading focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-medium focus-visible:ring-inset aria-[current=page]:bg-brand-softer aria-[current=page]:text-fg-brand-strong'|tailwind_classes}) }}>
+        {##- The section's name. -#}
+        {%- block content %}{% endblock -%}
+    </a>
+</li>
