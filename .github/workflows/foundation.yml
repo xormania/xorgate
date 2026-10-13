@@ -44,6 +44,9 @@ jobs:
               composer validate --no-check-lock --strict
             '
 
+      - name: Verify the clean production image builds its locked assets
+        run: docker build --target frankenphp_prod --tag xorgate-ci-production .
+
       - name: Bootstrap the development stack
         run: |
           mkdir -p var/ci

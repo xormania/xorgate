@@ -3,6 +3,8 @@
 .env.local.php
 .env.*.local
 vendor/
+assets/vendor/
+public/assets/
 var/
 node_modules/
 out/

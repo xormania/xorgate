@@ -29,6 +29,7 @@ COPY . /app
 RUN test -f composer.lock \
     && composer install --no-dev --prefer-dist --no-interaction --no-scripts --no-progress \
     && composer dump-autoload --classmap-authoritative --no-dev \
+    && php bin/console importmap:install --no-interaction \
     && php bin/console tailwind:build --minify \
     && php bin/console asset-map:compile \
     && mkdir -p var/cache var/log /var/lib/xorgate/artifacts \

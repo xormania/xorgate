@@ -12,7 +12,9 @@ This is a delivery plan. Domain names, status enums, schema fields and adapter b
 
 ## Current position
 
-The inspected foundation is [PR #1](https://github.com/xormania/xorgate/pull/1), head `8c7f3e557273780ace87f24316df805a0b182441`. At inspection, `master` remains the license-only commit `e9d4f7a247a90485556eda0db3f732a4646a42e4`; the foundation is open and unmerged. Its [latest Foundation CI run](https://github.com/xormania/xorgate/actions/runs/38338542194) completed successfully on that head. Code and security reviews were requested after CI passed and are running; that is not a completed review result.
+The foundation is [PR #1](https://github.com/xormania/xorgate/pull/1). At initial inspection, `master` remains the license-only commit `e9d4f7a247a90485556eda0db3f732a4646a42e4`; the foundation is open and unmerged. The reviewed baseline `8c7f3e557273780ace87f24316df805a0b182441` passed [Foundation CI](https://github.com/xormania/xorgate/actions/runs/38338542194). Code and security reviews completed on that baseline after CI passed.
+
+Code review identified a production asset-build ordering defect. Corrective commit `e24f95db73f8665417e223e2c7d74df0892df932` installs importmap assets before Tailwind, excludes generated assets from the build context, and adds a clean production-image build to CI. Verify the latest checks and reviews on the resulting head before merging; the baseline's green check alone does not validate the correction. Security review's low-severity admission/retention finding is tracked in [WO-005](https://github.com/xormania/xorgate/issues/7).
 
 | Capability | Observed implementation | Next extension |
 | --- | --- | --- |
@@ -41,6 +43,8 @@ Use UXor for the first substantial evidence integration and at least one non-PHP
 | 2 | [WO-002: durable artifact intake and JUnit](https://github.com/xormania/xorgate/issues/3) | Asynchronous report import, retained original bytes and normalized observations | WO-001 |
 | 3 | [WO-003: Playwright attempts, logs and Jev assessments](https://github.com/xormania/xorgate/issues/4) | Retry history, setup failures, bounded logs and existing diagnostic annotations | WO-002 |
 | 4 | [WO-004: verification targets and applicable evidence](https://github.com/xormania/xorgate/issues/5) | Explained verification map, explicit gaps and export/restore proof | WO-001–003 |
+
+[WO-005: admission limits and retention](https://github.com/xormania/xorgate/issues/7) is a cross-cutting operational item. Prefer implementing its admission contract alongside WO-001/002; complete it before shared/remote deployment. A shared bearer token does not identify individual callers.
 
 Each issue contains concrete acceptance checks. Start WO-001 from the foundation branch while PR #1 completes review. Other work can inspect fixtures and refine contracts, but schema-dependent implementation follows the actual WO-001/002 contracts. Do not merge a dependent PR before its foundation.
 
@@ -144,7 +148,7 @@ Use one reviewable PR per coherent work order, splitting an issue only when each
 
 Read [AGENTS.md](../AGENTS.md), [development.md](development.md) and the actual predecessor diff before changing contracts. Keep shared implementation services behind UI/MCP/CLI; do not introduce separate verdict implementations. Record schema, migration and adapter decisions in the implementation PR with concrete before/after examples.
 
-For implementation PRs, run the applicable `bin/check` and foundation integration flow plus focused new boundary checks. After CI is green, request one code review and one security review on that head; resolve findings and check the resulting head. Existing requests on PR #1 are already running and need no duplicate trigger. Owner review/merge remains distinct from green automation.
+For implementation PRs, run the applicable `bin/check` and foundation integration flow plus focused new boundary checks. After CI is green, request one code review and one security review on that head; resolve findings and check the resulting head. Avoid duplicate requests for a head already under review. Owner review/merge remains distinct from green automation.
 
 Verification should concentrate on false-confidence and recovery boundaries: wrong source/revision, missing populations, retry erasure, duplicate intake, interrupted commit, lost artifact, invalid parser input and cross-interface disagreement. Add browser checks for the actual operator flow, including keyboard navigation, CSP, Turbo Back and reconnect behavior; avoid copying the entire UXor component test suite into Xorgate.
 
