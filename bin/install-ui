@@ -7,6 +7,18 @@ if [[ ! -f assets/styles/uxor.css || ! -f templates/layouts/app.html.twig ]]; th
     php bin/console ux:install theme --kit="$kit" --no-interaction
     php bin/console ux:install layouts --kit="$kit" --no-interaction
 fi
+# Application-owned recipes: install missing sources without replacing reviewed customizations.
+for entry in \
+    'form-theme:templates/form/flowbite_layout.html.twig' \
+    'table:templates/components/Table.html.twig' \
+    'empty-state:templates/components/EmptyState.html.twig' \
+    'card:templates/components/Card.html.twig'; do
+    recipe=${entry%%:*}
+    target=${entry#*:}
+    if [[ ! -f "$target" ]]; then
+        php bin/console ux:install "$recipe" --kit="$kit" --no-interaction
+    fi
+done
 php bin/console importmap:install --no-interaction
 php bin/console ux:icons:lock --no-interaction
 php bin/console tailwind:build --no-interaction

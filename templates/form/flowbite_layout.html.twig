@@ -1,0 +1,239 @@
+{#-
+    UXor form theme. Rows render through the FormField component, controls through the Input,
+    Select, Textarea, Checkbox, Radio, Label and Button components, so a Symfony form looks like the
+    hand-written components. Blocks not overridden here come from Symfony's tailwind_2_layout.
+-#}
+{% use 'tailwind_2_layout.html.twig' %}
+
+{#- Rows -#}
+
+{##- A row: a FormField with the label, the control, its help and errors; a compound field (expanded choices, a date in three selects, a sub-form) is a fieldset with a legend. -#}
+{%- block form_row -%}
+    {%- set _row_kind = compound ? 'fieldset' : 'field' -%}
+    {{- block('flowbite_row') -}}
+{%- endblock form_row -%}
+
+{##- A checkbox row: the checkbox, its label beside it, then help and errors. -#}
+{%- block checkbox_row -%}
+    {%- set _row_kind = 'check' -%}
+    {{- block('flowbite_row') -}}
+{%- endblock checkbox_row -%}
+
+{##- A single radio row, laid out like a checkbox row. -#}
+{%- block radio_row -%}
+    {%- set _row_kind = 'check' -%}
+    {{- block('flowbite_row') -}}
+{%- endblock radio_row -%}
+
+{##- Renders one row as a FormField, wiring aria-describedby and aria-invalid on the control. -#}
+{%- block flowbite_row -%}
+    {%- set _label = null -%}
+    {%- if label is not same as(false) -%}
+        {%- set _label -%}{##- The label text, translated, from Symfony's layout. -#}{{- block('form_label_content') -}}{%- endset -%}
+    {%- endif -%}
+    {%- set _help = null -%}
+    {%- if help -%}
+        {%- set _help -%}{##- The help text, translated, from Symfony's layout. -#}{{- block('form_help_content') -}}{%- endset -%}
+    {%- endif -%}
+    {%- set _errors = errors|map((error) => error.message) -%}
+    {%- set _describedby = ((help ? [id ~ '_help'] : [])|merge(errors|length ? [id ~ '_error'] : []))|join(' ') -%}
+    {%- set _control_aria = (_describedby ? {'aria-describedby': _describedby} : {})|merge(errors|length ? {'aria-invalid': 'true'} : {}) -%}
+    {%- set _row_attr = row_attr|merge({class: row_attr.class|default(row_class|default('mb-6'))}) -%}
+    {%- if 'fieldset' == _row_kind -%}
+        {%- set _row_attr = _describedby ? _row_attr|merge({'aria-describedby': _describedby}) : _row_attr -%}
+        <twig:FormField as="fieldset" for="{{ id }}" :label="_label" :labelAttr="label_attr" :help="_help" :helpAttr="help_attr" :error="_errors" :required="required" {{ ..._row_attr }}>
+            {{- form_widget(form) -}}
+        </twig:FormField>
+    {%- elseif 'check' == _row_kind -%}
+        <twig:FormField for="{{ id }}" :help="_help" :helpAttr="help_attr" :error="_errors" {{ ..._row_attr }}>
+            <div class="flex items-center gap-2">
+                {{- form_widget(form, {attr: _control_aria}) -}}
+                {{- form_label(form, null, {label_attr: label_attr|merge({class: (label_attr.class|default('') ~ ' select-none')|trim})}) -}}
+            </div>
+        </twig:FormField>
+    {%- else -%}
+        <twig:FormField for="{{ id }}" :label="_label" :labelAttr="label_attr" :help="_help" :helpAttr="help_attr" :error="_errors" :required="required" {{ ..._row_attr }}>
+            {{- form_widget(form, {attr: _control_aria}) -}}
+        </twig:FormField>
+    {%- endif -%}
+{%- endblock flowbite_row -%}
+
+{#- Labels, help, errors outside a row (form_label(), form_help(), form_errors()) -#}
+
+{##- A label outside a row, through the Label component (its invalid variant when the field has errors). -#}
+{%- block form_label -%}
+    {%- if label is not same as(false) -%}
+        {%- set _label -%}{{- block('form_label_content') -}}{%- endset -%}
+        {%- set _label_attr = compound ? label_attr : label_attr|merge({for: id}) -%}
+        <twig:Label :variant="errors|length ? 'invalid' : 'default'" {{ ..._label_attr }}>{{ _label }}</twig:Label>
+    {%- endif -%}
+{%- endblock form_label -%}
+
+{##- Help text outside a row, with the id and classes of FormField's help. -#}
+{%- block form_help -%}
+    {%- if help -%}
+        <p id="{{ id }}_help" class="{{ help_attr.class|default('mt-2.5 text-sm text-body') }}">{{- block('form_help_content') -}}</p>
+    {%- endif -%}
+{%- endblock form_help -%}
+
+{##- Errors outside a row (and the form's own errors), with the id and classes of FormField's error. -#}
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        {%- if errors|length == 1 -%}
+            <p id="{{ id }}_error" class="mt-2.5 text-sm text-fg-danger-strong">{{ (errors|first).message }}</p>
+        {%- else -%}
+            <ul id="{{ id }}_error" class="mt-2.5 list-inside list-disc space-y-1 text-sm text-fg-danger-strong">
+                {%- for error in errors %}<li>{{ error.message }}</li>{% endfor -%}
+            </ul>
+        {%- endif -%}
+    {%- endif -%}
+{%- endblock form_errors -%}
+
+{#- Controls -#}
+
+{##- Text-like inputs through the Input component; hidden, range and color inputs keep Symfony's markup. -#}
+{%- block form_widget_simple -%}
+    {%- set type = type|default('text') -%}
+    {%- if type in ['hidden', 'range', 'color'] -%}
+        {{- parent() -}}
+    {%- else -%}
+        {%- set _control = 'Input' -%}
+        {%- set _control_attr = {type: type, value: value is empty ? null : value} -%}
+        {{- block('flowbite_control') -}}
+    {%- endif -%}
+{%- endblock form_widget_simple -%}
+
+{##- A textarea through the Textarea component. -#}
+{%- block textarea_widget -%}
+    {%- set _control = 'Textarea' -%}
+    {%- set _control_content = value -%}
+    {{- block('flowbite_control') -}}
+{%- endblock textarea_widget -%}
+
+{##- A `DateType` opted in with `'block_prefix' => 'flowbite_date_picker'`: with `'widget' => 'single_text'`, the date-picker recipe's widget (a typed field, a button opening a Calendar, the hidden input with the field's name), rendered from its own template so a project without that recipe never needs it; any other widget stays Symfony's. -#}
+{%- block flowbite_date_picker_widget -%}
+    {%- if 'single_text' == widget|default('') -%}
+        {{- include('form/flowbite_date_picker_widget.html.twig') -}}
+    {%- else -%}
+        {##- Any other widget, from this theme or Symfony's layout. -#}{{- block('date_widget') -}}
+    {%- endif -%}
+{%- endblock flowbite_date_picker_widget -%}
+
+{##- A `DropzoneType` (symfony/ux-dropzone): the dropzone recipe's widget (a box to drop files on or browse, previews, Remove buttons), rendered from its own template so a project without that recipe never needs it; without the recipe, the kit's file Input. Symfony UX Dropzone's own theme never renders. -#}
+{%- block dropzone_widget -%}
+    {%- set _dropzone = include('form/flowbite_dropzone_widget.html.twig', ignore_missing = true) -%}
+    {%- if _dropzone|trim is empty -%}
+        {%- set type = 'file' -%}
+        {{- block('form_widget_simple') -}}
+    {%- else -%}
+        {{- _dropzone -}}
+    {%- endif -%}
+{%- endblock dropzone_widget -%}
+
+{##- An `EditorType` (the editor recipe's PHP): the editor recipe's widget (a formatting toolbar over an editable area, the hidden textarea with the field's name), rendered from its own template so a project without that recipe never needs it. -#}
+{%- block flowbite_editor_widget -%}
+    {{- include('form/flowbite_editor_widget.html.twig') -}}
+{%- endblock flowbite_editor_widget -%}
+
+{##- A `MarkdownType` (the markdown-editor recipe's PHP): the markdown-editor recipe's widget (a Markdown textarea with Write and Preview tabs), rendered from its own template so a project without that recipe never needs it. -#}
+{%- block flowbite_markdown_widget -%}
+    {{- include('form/flowbite_markdown_widget.html.twig') -}}
+{%- endblock flowbite_markdown_widget -%}
+
+{##- A collapsed choice through the Select component. -#}
+{%- block choice_widget_collapsed -%}
+    {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
+        {%- set required = false -%}
+    {%- endif -%}
+    {%- set _control_content -%}
+        {%- if placeholder is not none -%}
+            <option value=""{% if placeholder_attr|default({}) %}{% with {attr: placeholder_attr} %}{##- The placeholder option's attributes, from Symfony's layout. -#}{{ block('attributes') }}{% endwith %}{% endif %}{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
+        {%- endif -%}
+        {%- if preferred_choices|length > 0 -%}
+            {%- set options = preferred_choices -%}
+            {%- set render_preferred_choices = true -%}
+            {##- The options, from Symfony's layout. -#}
+            {{- block('choice_widget_options') -}}
+            {%- if choices|length > 0 and separator is not none -%}
+                {%- if separator_html is not defined or separator_html is same as(false) -%}
+                    <option disabled="disabled">{{ separator }}</option>
+                {%- else -%}
+                    {{ separator|raw }}
+                {%- endif -%}
+            {%- endif -%}
+        {%- endif -%}
+        {%- set options = choices -%}
+        {%- set render_preferred_choices = false -%}
+        {{- block('choice_widget_options') -}}
+    {%- endset -%}
+    {%- set _control = 'Select' -%}
+    {%- set _control_attr = {multiple: multiple} -%}
+    {%- set _controllers = (attr['data-controller'] ?? '')|split(' ') -%}
+    {%- if 'symfony--ux-autocomplete--autocomplete' in _controllers -%}
+        {#- the autocomplete recipe's autocomplete-sync: Tom Select shows the choice a Live Component's re-render sets, and the one a reset of the select's form puts back -#}
+        {%- if 'autocomplete-sync' not in _controllers -%}
+            {%- set _control_attr = _control_attr|merge({'data-controller': attr['data-controller'] ~ ' autocomplete-sync'}) -%}
+        {%- endif -%}
+        {%- if attr['aria-labelledby'] is not defined and label is not same as(false) -%}
+            {#- Tom Select (the autocomplete recipe) points the label at its own input and names it "<id>-ts-label" unless it has an id: the hidden select keeps the label's name through it -#}
+            {%- set _control_attr = _control_attr|merge({'aria-labelledby': label_attr.id ?? (id ~ '-ts-label')}) -%}
+        {%- endif -%}
+    {%- endif -%}
+    {{- block('flowbite_control') -}}
+{%- endblock choice_widget_collapsed -%}
+
+{##- Expanded choices: each radio or checkbox with its label beside it. -#}
+{%- block choice_widget_expanded -%}
+    {%- set attr = attr|merge({class: attr.class|default('space-y-3')}) -%}
+    <div {## The container's id and attributes, from Symfony's layout. #}{{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            <div class="flex items-center gap-2">
+                {{- form_widget(child) -}}
+                {{- form_label(child, null, {translation_domain: choice_translation_domain, label_attr: {class: 'select-none'}}) -}}
+            </div>
+        {%- endfor -%}
+    </div>
+{%- endblock choice_widget_expanded -%}
+
+{##- A checkbox through the Checkbox component. -#}
+{%- block checkbox_widget -%}
+    {%- set _control = 'Checkbox' -%}
+    {%- set _control_attr = {value: value is defined ? value : null, checked: checked} -%}
+    {{- block('flowbite_control') -}}
+{%- endblock checkbox_widget -%}
+
+{##- A radio through the Radio component. -#}
+{%- block radio_widget -%}
+    {%- set _control = 'Radio' -%}
+    {%- set _control_attr = {value: value is defined ? value : null, checked: checked} -%}
+    {{- block('flowbite_control') -}}
+{%- endblock radio_widget -%}
+
+{##- A button through the Button component; `attr: {variant: ...}` picks its variant. -#}
+{%- block button_widget -%}
+    {%- set _control_content -%}{{- block('form_label_content') -}}{%- endset -%}
+    {%- set _control = 'Button' -%}
+    {%- set _control_attr = {type: type|default('button'), required: null} -%}
+    {{- block('flowbite_control') -}}
+{%- endblock button_widget -%}
+
+{##- Renders the component named by `_control` with the attributes Symfony's widget_attributes would print, merged with `_control_attr`, and `_control_content` as its content. -#}
+{%- block flowbite_control -%}
+    {%- set _attrs = {id: id, name: full_name, disabled: disabled, required: required|default(false)} -%}
+    {%- for _name, _value in attr -%}
+        {%- if _name in ['placeholder', 'title'] and translation_domain is not same as(false) and _value is not null -%}
+            {%- set _value = _value|trans(attr_translation_parameters, translation_domain) -%}
+        {%- endif -%}
+        {%- set _attrs = _attrs|merge({(_name): _value}) -%}
+    {%- endfor -%}
+    {%- set _attrs = _attrs|merge(_control_attr|default({}))|filter((value) => value is not null) -%}
+    {%- if 'Select' == _control -%}
+        <twig:Select {{ ..._attrs }}>{{ _control_content }}</twig:Select>
+    {%- elseif 'Textarea' == _control -%}
+        <twig:Textarea {{ ..._attrs }}>{{ _control_content }}</twig:Textarea>
+    {%- elseif 'Button' == _control -%}
+        <twig:Button {{ ..._attrs }}>{{ _control_content }}</twig:Button>
+    {%- else -%}
+        {{ component(_control, _attrs) }}
+    {%- endif -%}
+{%- endblock flowbite_control -%}

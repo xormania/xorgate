@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+# Reproduce Toolkit's installation separately from our application-owned templates.
+# These recipes currently have no consumer modifications; compare all transitive files.
+kit='https://github.com/xormania/uxor:9b2fa7309786cee435503de87cf0cd5f0a9d9782'
+destination="$PWD/var/ci/uxor-installed"
+mkdir -p "$destination"
+for recipe in form-theme table empty-state card; do
+    php bin/console ux:install "$recipe" --kit="$kit" --force --no-interaction \
+        --destination="$destination" | tee "var/ci/uxor-install-$recipe.log"
+done
+while IFS= read -r -d '' installed; do
+    relative=${installed#"$destination/"}
+    diff -u "$relative" "$installed"
+done < <(find "$destination" -type f -print0)
+echo 'Toolkit-installed form, table, empty-state and card recipes match committed sources.'

@@ -1,0 +1,36 @@
+{% extends 'layouts/management.html.twig' %}
+{% form_theme form 'form/flowbite_layout.html.twig' %}
+
+{% block title %}Xorgate · {{ project is null ? 'Register project' : 'Edit project' }}{% endblock %}
+{% block page_title %}{{ project is null ? 'Register project' : 'Edit project metadata' }}{% endblock %}
+{% block page_description %}{{ project is null ? 'Declare a project and the runtimes it uses.' : project.name }}{% endblock %}
+{% block page_before %}
+    <a href="{{ project is null ? path('app_projects') : path('app_project_show', {projectId: project.project_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">{{ project is null ? 'Back to projects' : 'Back to project' }}</a>
+{% endblock %}
+
+{% block content %}
+    <twig:Card class="max-w-3xl">
+        <twig:Card:Header>
+            <twig:Card:Title as="h2">Project metadata</twig:Card:Title>
+        </twig:Card:Header>
+        <twig:Card:Content>
+            <p class="mb-5 text-sm text-body">Repository values are metadata. Runtime declarations can describe one language or a mixed environment. Leave unknown values blank.</p>
+            {{ form_start(form, {attr: {id: 'project', novalidate: true}}) }}
+                {{ form_errors(form) }}
+                {{ form_errors(form.request_id) }}
+                {% if project is not null %}{{ form_errors(form.expected_version) }}{% endif %}
+                {{ form_row(form.name) }}
+                {{ form_row(form.repository_url) }}
+                {{ form_row(form.repository_identity) }}
+                {{ form_row(form.runtimes) }}
+                {% if project is not null %}
+                    <p class="mb-5 text-sm text-body">This form started from metadata version {{ form.expected_version.vars.value }}. If another edit changes it, reload this form before saving again. Existing execution records keep their original context.</p>
+                {% endif %}
+                <div class="flex flex-wrap gap-3">
+                    <twig:Button type="submit">{{ project is null ? 'Register project' : 'Save metadata' }}</twig:Button>
+                    <twig:Button as="a" variant="outline" href="{{ project is null ? path('app_projects') : path('app_project_show', {projectId: project.project_id}) }}">Cancel</twig:Button>
+                </div>
+            {{ form_end(form) }}
+        </twig:Card:Content>
+    </twig:Card>
+{% endblock %}

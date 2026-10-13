@@ -34,6 +34,8 @@ docker compose restart worker
 | --- | --- |
 | `src/Controller/DashboardController.php` | Render the observed foundation status |
 | `src/Service/FoundationStatus.php` | Shared web/MCP runtime snapshot |
+| `src/Service/ProjectRegistry.php` | Shared project commands, queries and immutable execution context |
+| `src/Controller/ProjectController.php`, `templates/projects/` | UXor operator registry and native Symfony forms |
 | `src/Security/CspNonce.php` | Main-request script/style nonces compatible with persistent workers |
 | `src/EventListener/SecurityHeadersListener.php` | Browser response headers and CSP |
 | `templates/dashboard/` | Actual foundation readiness and implementation boundaries |
@@ -50,7 +52,7 @@ The runtime probe supplies a stable record that can be queued, processed and ins
 
 ## UXor assets and layouts
 
-`bin/install-ui` installs `theme` and `layouts` from immutable kit revision `9b2fa7309786cee435503de87cf0cd5f0a9d9782`, plus their recipe dependencies. The application stylesheet imports local installed assets:
+`bin/install-ui` installs missing `theme`, `layouts`, `form-theme`, `table`, `empty-state` and `card` recipes from immutable kit revision `9b2fa7309786cee435503de87cf0cd5f0a9d9782`, plus their recipe dependencies. Existing installed sources belong to the application and are preserved. The new recipes' printed Composer requirements are already regular locked dependencies. Docker CI runs `bin/check-ui-install` to reproduce the selected new recipes with Toolkit in a separate directory and compare all generated sources. The application stylesheet imports local installed assets:
 
 ```css
 @import 'tailwindcss';
@@ -65,6 +67,7 @@ This is a consuming application: do not copy the demo's `../../../kit.css` impor
 - [Demo asset setup](https://github.com/xormania/uxor/tree/9b2fa7309786cee435503de87cf0cd5f0a9d9782/demo/assets)
 - [Fresh Symfony Docker installation test](https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/tools/tests/docker-install.sh)
 - [Consumer agent guidance](https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/docs/PROJECT-AGENTS-SNIPPET.md)
+- [Native Symfony form controller](https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/demo/src/Controller/FormsController.php) and [form template](https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/demo/templates/forms/index.html.twig)
 
 Install additional recipes when implementing a screen, execute the dependency instructions printed by the installer, and lock any new icons before committing:
 
@@ -106,4 +109,4 @@ The HTTP transport is served from `/mcp` with a Bearer token configured by `XORG
 
 Database data and `/var/lib/xorgate/artifacts` are persistent. Restarting or stopping containers retains these volumes. Removing volumes deletes their development data, so backup/export work must account for both stores.
 
-This foundation has not yet implemented project onboarding, third-party test execution, external CI adapters, coverage calculations, diagnostics orchestration, multi-user permissions or a published installable image. Docker packaging for Xorgate's own app does not require a managed project to use Docker. Deployment configuration and an authorization design must be completed before offering the system as a shared remote service.
+Project registration and immutable execution provenance are implemented through the [shared registry contract](project-registry.md). Third-party test execution, report ingestion, external CI adapters, coverage calculations, diagnostics orchestration, multi-user permissions and a published installable image remain subsequent work. Docker packaging for Xorgate's own app does not require a managed project to use Docker. Deployment configuration and an authorization design must be completed before offering the system as a shared remote service.

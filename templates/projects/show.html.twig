@@ -1,0 +1,74 @@
+{% extends 'layouts/management.html.twig' %}
+
+{% block title %}Xorgate · {{ project.name }}{% endblock %}
+{% block page_title %}{{ project.name }}{% endblock %}
+{% block page_description %}Registered project metadata and immutable reported execution context.{% endblock %}
+{% block page_before %}<a href="{{ path('app_projects') }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to projects</a>{% endblock %}
+{% block page_actions %}
+    <twig:Button as="a" variant="outline" href="{{ path('app_project_edit', {projectId: project.project_id}) }}">Edit metadata</twig:Button>
+    <twig:Button as="a" href="{{ path('app_execution_new', {projectId: project.project_id}) }}">Record execution context</twig:Button>
+{% endblock %}
+
+{% block content %}
+    <div class="space-y-6" data-xorgate-project-id="{{ project.project_id }}">
+        <twig:Card>
+            <twig:Card:Header><twig:Card:Title as="h2">Project metadata</twig:Card:Title></twig:Card:Header>
+            <twig:Card:Content>
+                <dl class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div><dt class="text-sm font-medium text-heading">Project ID</dt><dd class="mt-1 break-all text-sm text-body">{{ project.project_id }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Repository identity</dt><dd class="mt-1 break-all text-sm text-body">{{ project.repository_identity is null ? 'Unknown' : project.repository_identity }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Repository URL</dt><dd class="mt-1 break-all text-sm text-body">{{ project.repository_url is null ? 'Unknown' : project.repository_url }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Declared runtimes</dt><dd class="mt-1 text-sm text-body">{{ project.runtimes is empty ? 'Unknown' : project.runtimes|join(', ') }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Metadata version</dt><dd class="mt-1 text-sm text-body">{{ project.version }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Registered</dt><dd class="mt-1 text-sm text-body"><time datetime="{{ project.created_at }}">{{ project.created_at }}</time></dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Updated</dt><dd class="mt-1 text-sm text-body"><time datetime="{{ project.updated_at }}">{{ project.updated_at }}</time></dd></div>
+                </dl>
+            </twig:Card:Content>
+        </twig:Card>
+
+        <section id="execution-records" aria-labelledby="executions-heading" class="space-y-4" data-xorgate-executions="{{ executions.items is empty ? 'empty' : 'populated' }}">
+            <div>
+                <h2 id="executions-heading" class="text-xl font-semibold text-heading">Execution context</h2>
+                <p class="mt-1 text-sm text-body">Reported source, environment and native identifiers. Recording context does not run tests or establish coverage.</p>
+            </div>
+            {% if executions.items is empty %}
+                <twig:EmptyState title="{{ cursor is null ? 'No execution context recorded' : 'No more execution records' }}" description="{{ cursor is null ? 'Record known context from an observed execution. Unknown values remain explicit.' : 'You have reached the end of this execution listing.' }}" class="rounded-base border border-default bg-neutral-primary-soft">
+                    <twig:block name="actions">
+                        <twig:Button as="a" href="{{ cursor is null ? path('app_execution_new', {projectId: project.project_id}) : path('app_project_show', {projectId: project.project_id}) }}">{{ cursor is null ? 'Record execution context' : 'Back to first page' }}</twig:Button>
+                    </twig:block>
+                </twig:EmptyState>
+            {% else %}
+                <div class="overflow-x-auto rounded-base border border-default bg-neutral-primary-soft">
+                    <twig:Table>
+                        <twig:Table:Caption>Recorded execution context</twig:Table:Caption>
+                        <twig:Table:Header>
+                            <twig:Table:Row>
+                                <twig:Table:Head>Execution</twig:Table:Head>
+                                <twig:Table:Head>Tested revision</twig:Table:Head>
+                                <twig:Table:Head>Environment</twig:Table:Head>
+                                <twig:Table:Head>Producer</twig:Table:Head>
+                                <twig:Table:Head>Observed</twig:Table:Head>
+                            </twig:Table:Row>
+                        </twig:Table:Header>
+                        <twig:Table:Body>
+                            {% for execution in executions.items %}
+                                <twig:Table:Row>
+                                    <twig:Table:Head scope="row" class="break-all">
+                                        <a href="{{ path('app_execution_show', {projectId: project.project_id, executionId: execution.execution_id}) }}" class="font-medium text-fg-brand hover:underline focus-visible:outline-2 focus-visible:outline-brand-medium">{{ execution.execution_id }}</a>
+                                    </twig:Table:Head>
+                                    <twig:Table:Cell class="break-all">{{ execution.source.tested_revision is null ? 'Unknown' : execution.source.tested_revision }}</twig:Table:Cell>
+                                    <twig:Table:Cell>{{ execution.environment.name is null ? 'Unknown' : execution.environment.name }}</twig:Table:Cell>
+                                    <twig:Table:Cell>{{ execution.producer.name is null ? 'Unknown' : execution.producer.name }}</twig:Table:Cell>
+                                    <twig:Table:Cell>
+                                        {% if execution.observed_at is null %}Unknown{% else %}<time datetime="{{ execution.observed_at }}">{{ execution.observed_at }}</time>{% endif %}
+                                    </twig:Table:Cell>
+                                </twig:Table:Row>
+                            {% endfor %}
+                        </twig:Table:Body>
+                    </twig:Table>
+                </div>
+            {% endif %}
+            {% include 'projects/_pagination.html.twig' with {page: executions, cursor: cursor, route: 'app_project_show', route_parameters: {projectId: project.project_id}} only %}
+        </section>
+    </div>
+{% endblock %}

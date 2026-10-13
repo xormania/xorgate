@@ -1,0 +1,12 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block brand %}
+    <a href="{{ path('app_dashboard') }}" class="font-semibold tracking-tight text-heading">Xorgate</a>
+{% endblock %}
+
+{% block sidebar %}
+    <twig:Sidebar:Group label="Management">
+        <twig:Sidebar:Item href="{{ path('app_dashboard') }}" route="app_dashboard">Overview</twig:Sidebar:Item>
+        <twig:Sidebar:Item href="{{ path('app_projects') }}" route="app_projects">Projects</twig:Sidebar:Item>
+    </twig:Sidebar:Group>
+{% endblock %}
