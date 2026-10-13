@@ -4,7 +4,6 @@ doctrine:
         # Operational tables and the implicit BIGSERIAL sequence belong to explicit migrations.
         schema_filter: '~^(?!foundation_probe$|messenger_messages(?:_id_seq)?$)~'
     orm:
-        auto_generate_proxy_classes: true
         auto_mapping: true
         mappings:
             App:
