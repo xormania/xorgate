@@ -22,7 +22,7 @@ docker compose build php
 docker compose run --rm --no-deps -T -e APP_SECRET -e XORGATE_MCP_TOKEN php php bin/bootstrap-env.php
 docker compose up -d --wait database
 
-if [[ $resolve == true && ! -f composer.lock ]]; then
+if [[ $resolve == true ]]; then
     docker compose run --rm --no-deps -T php composer update --prefer-dist --no-interaction --no-progress
 else
     docker compose run --rm --no-deps -T php composer install --prefer-dist --no-interaction --no-progress

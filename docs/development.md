@@ -14,7 +14,7 @@ docker compose exec -T php php bin/console doctrine:migrations:status
 
 Use `./bin/setup --resolve` when initially generating absent locks or intentionally updating dependencies. Normal setup installs the reviewed lockfiles. Composer runs inside the PHP container; keep dependency resolution failures visible rather than silently selecting another installation mode.
 
-The development defaults are [HTTP port 8088](http://localhost:8088) and [HTTPS port 8448](https://localhost:8448). The `php`, `worker` and `database` services share the application network. Keep the chosen Compose project name and port settings consistent across terminals.
+The development default is [HTTP port 8088](http://localhost:8088). Enable HTTPS with `SERVER_NAME='localhost, php:80' ./bin/setup`, then use [HTTPS port 8448](https://localhost:8448) with Caddy's local certificate trusted. The `php`, `worker` and `database` services share the application network. Keep the chosen Compose project name and port settings consistent across terminals.
 
 ```bash
 docker compose logs -f php worker
