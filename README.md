@@ -16,9 +16,9 @@ From the repository root:
 ./bin/setup
 ```
 
-The setup builds the development image, installs locked dependencies and the pinned UXor theme/layout recipes, creates the database schema, prepares frontend assets and starts the worker. Open [http://localhost:8088](http://localhost:8088). To enable local HTTPS, start with `SERVER_NAME='localhost, php:80' ./bin/setup`, then open [https://localhost:8448](https://localhost:8448) and trust Caddy's development certificate.
+The setup builds the development image, installs locked dependencies, creates the database schema, prepares the committed UXor assets and starts the worker. Open [http://localhost:8088](http://localhost:8088). To enable local HTTPS, start with `SERVER_NAME='localhost, php:80' ./bin/setup`, then open [https://localhost:8448](https://localhost:8448) and trust Caddy's development certificate.
 
-When preparing this repository's initial dependency locks, use `./bin/setup --resolve`. This is a bootstrap/dependency-update operation; normal setup uses the committed lockfiles. Review and commit the generated locks and installed UI assets before relying on that exact dependency set in other environments.
+Use `./bin/setup --resolve` only when intentionally updating dependencies. Normal setup uses the committed lockfiles and installed UI recipes; review and commit changed locks and assets after an update.
 
 ```bash
 ./bin/check

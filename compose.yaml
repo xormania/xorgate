@@ -57,7 +57,11 @@ services:
         # The base image's HTTP healthcheck does not apply to this CLI process.
         # Queue consumption and artifact completion are proved by the foundation probe.
         healthcheck:
-            disable: true
+            test: ['CMD-SHELL', 'kill -0 1']
+            interval: 10s
+            timeout: 5s
+            start_period: 5s
+            retries: 3
         depends_on:
             database:
                 condition: service_healthy
