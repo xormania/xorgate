@@ -13,6 +13,7 @@ final class FoundationStatus
     public function __construct(
         private readonly Connection $connection,
         private readonly ArtifactStorage $artifacts,
+        private readonly FoundationProbeLimits $limits,
         #[Autowire('%kernel.environment%')]
         private readonly string $environment,
     ) {
@@ -21,9 +22,11 @@ final class FoundationStatus
     public function snapshot(): array
     {
         $checks = [];
+        $capacity = ['status' => 'unavailable'];
 
         try {
             $this->connection->fetchOne('SELECT COUNT(*) FROM foundation_probe');
+            $capacity = $this->limits->snapshot();
             $checks['database'] = ['status' => 'ready', 'detail' => 'Database and foundation schema are reachable.'];
         } catch (\Throwable) {
             $checks['database'] = ['status' => 'unavailable', 'detail' => 'Database or foundation schema is unavailable.'];
@@ -46,6 +49,7 @@ final class FoundationStatus
         return [
             'application' => ['name' => 'xorgate', 'framework' => Kernel::VERSION, 'environment' => $this->environment],
             'checks' => $checks,
+            'probe_capacity' => $capacity,
             'ready' => !\in_array('unavailable', array_column($checks, 'status'), true),
             'observed_at' => (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->format(\DateTimeInterface::ATOM),
         ];

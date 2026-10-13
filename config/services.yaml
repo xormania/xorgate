@@ -7,6 +7,7 @@ services:
         exclude:
             - '../src/Kernel.php'
             - '../src/Message/'
+            - '../src/Exception/'
 
     app.csp_nonce.script:
         class: App\Security\CspNonce

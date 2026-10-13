@@ -79,6 +79,10 @@ jobs:
       - name: Prove MCP queues work while the worker is stopped
         run: |
           docker compose stop worker
+          # Exercise a real admission rejection with one pending probe, not 100 fixtures.
+          printf '%s\n' 'XORGATE_PROBE_MAX_PENDING=1' >> .env.local
+          docker compose restart php
+          docker compose up -d --wait --wait-timeout 120 php
           python3 tests/smoke/foundation.py queued
 
       - name: Prove the worker completes the durable probe and writes its artifact

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Exception\ProbeCapacityException;
 use App\Message\RunFoundationProbe;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
@@ -18,6 +19,7 @@ final class FoundationProbe
         private readonly MessageBusInterface $bus,
         private readonly ArtifactStorage $artifacts,
         private readonly LoggerInterface $logger,
+        private readonly FoundationProbeLimits $limits,
     ) {
     }
 
@@ -37,6 +39,12 @@ final class FoundationProbe
 
         try {
             $created = $this->connection->transactional(function () use ($probeId): bool {
+                $this->limits->lock();
+                // Existing IDs remain usable at capacity and never consume another admission.
+                if (false !== $this->connection->fetchOne('SELECT id FROM foundation_probe WHERE id = ?', [$probeId])) {
+                    return false;
+                }
+                $this->limits->assertCapacity();
                 $inserted = $this->connection->executeStatement(
                     'INSERT INTO foundation_probe (id, status, created_at) VALUES (?, ?, ?) ON CONFLICT (id) DO NOTHING',
                     [$probeId, 'queued', self::now()],
@@ -51,6 +59,9 @@ final class FoundationProbe
 
                 return true;
             });
+        } catch (ProbeCapacityException $exception) {
+            // Rejected loops must not themselves generate an unbounded application log.
+            throw $exception;
         } catch (\Throwable $exception) {
             $this->logger->error('foundation.probe.dispatch_failed', [
                 'probe_id' => $probeId, 'correlation_id' => $probeId, 'exception_type' => $exception::class,
@@ -58,9 +69,11 @@ final class FoundationProbe
             throw new \RuntimeException('Foundation probe could not be queued. Verify database and queue readiness.');
         }
 
-        $this->logger->info($created ? 'foundation.probe.queued' : 'foundation.probe.existing', [
-            'probe_id' => $probeId, 'correlation_id' => $probeId,
-        ]);
+        if ($created) {
+            $this->logger->info('foundation.probe.queued', [
+                'probe_id' => $probeId, 'correlation_id' => $probeId,
+            ]);
+        }
 
         return $this->get($probeId);
     }
@@ -85,7 +98,8 @@ final class FoundationProbe
                 'path' => $row['artifact_path'],
                 'sha256' => $row['artifact_sha256'],
                 'bytes' => (int) $row['artifact_bytes'],
-                'available' => $this->artifacts->isAvailable($row['artifact_path'], $row['artifact_sha256']),
+                'available' => null === $row['artifact_expired_at'] && $this->artifacts->isAvailable($row['artifact_path'], $row['artifact_sha256']),
+                'expired_at' => null === $row['artifact_expired_at'] ? null : self::iso($row['artifact_expired_at']),
             ];
         }
 

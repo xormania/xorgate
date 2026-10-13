@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Exception\ProbeCapacityException;
 use App\Service\FoundationProbe;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -28,6 +29,10 @@ final class DispatchFoundationProbeCommand extends Command
     {
         try {
             $probe = $this->probes->dispatch($input->getArgument('probe-id'));
+        } catch (ProbeCapacityException $exception) {
+            $output->writeln(json_encode($exception->response(), JSON_THROW_ON_ERROR));
+
+            return Command::FAILURE;
         } catch (\InvalidArgumentException | \RuntimeException $exception) {
             $output->writeln(json_encode(['error' => $exception->getMessage()], JSON_THROW_ON_ERROR));
 

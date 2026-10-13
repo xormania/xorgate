@@ -46,6 +46,8 @@ docker compose restart worker
 
 The runtime probe supplies a stable record that can be queued, processed and inspected after a client disconnects. Extend this service pattern when introducing actual execution records; the probe's schema is not the final managed-test domain model.
 
+`FoundationProbeLimits` serializes admission and retention with a PostgreSQL transaction advisory lock. Repeated IDs bypass new-work admission; new IDs are checked against pending, total retained and rolling-minute limits before record/queue insertion. The shared runtime snapshot exposes the same capacity across UI, MCP and CLI. The idle worker runs bounded retention automatically; `xorgate:probe:cleanup` runs the same service explicitly. Only completed probes are eligible, and any async/failed message defers cleanup to preserve redelivery. Artifact expiration is recorded before eventual metadata pruning. If file deletion succeeds but the database transaction fails, the next sweep repeats the idempotent deletion and completes the metadata update.
+
 ## UXor assets and layouts
 
 `bin/install-ui` installs `theme` and `layouts` from immutable kit revision `9b2fa7309786cee435503de87cf0cd5f0a9d9782`, plus their recipe dependencies. The application stylesheet imports local installed assets:

@@ -52,6 +52,25 @@ final class ArtifactStorage
         return rtrim($this->directory, '/').'/'.$path;
     }
 
+    public function removeProbe(string $probeId): void
+    {
+        $path = $this->absolutePath('foundation/'.FoundationProbe::canonicalId($probeId).'.json');
+        $root = realpath($this->directory);
+        if (false === $root) {
+            throw new \RuntimeException('Artifact retention storage is unavailable.');
+        }
+        if (!file_exists($path) && !is_link($path)) {
+            return;
+        }
+        // Never follow a substituted foundation directory outside the configured store.
+        if (realpath(\dirname($path)) !== $root.'/foundation' || is_link(\dirname($path))) {
+            throw new \RuntimeException('Artifact retention location is unsafe.');
+        }
+        if (!@unlink($path)) {
+            throw new \RuntimeException('Artifact retention cleanup failed.');
+        }
+    }
+
     private function writeAtomic(string $path, string $contents): void
     {
         $destination = $this->absolutePath($path);

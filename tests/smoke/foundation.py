@@ -41,11 +41,14 @@ class PageAssets(HTMLParser):
     def __init__(self):
         super().__init__()
         self.ready = False
+        self.capacity_status = None
         self.styles = []
         self.modules = []
 
     def handle_starttag(self, tag, attributes):
         attrs = dict(attributes)
+        if attrs.get('data-xorgate-probe-capacity'):
+            self.capacity_status = attrs['data-xorgate-probe-capacity']
         if attrs.get("data-xorgate-foundation-status") == "ready":
             self.ready = True
         if tag == "link" and attrs.get("rel") == "stylesheet" and attrs.get("href"):
@@ -56,13 +59,17 @@ class PageAssets(HTMLParser):
             self.modules.append(attrs["src"])
 
 
-def check_page(base_url):
+def check_page(base_url, capacity_status=None):
     with urlopen(base_url + "/", timeout=15) as response:
         require(response.status == 200, "Dashboard did not render")
         content = read_response(response).decode("utf-8")
     page = PageAssets()
     page.feed(content)
     require(page.ready, "Dashboard does not report the same ready foundation")
+    require(page.capacity_status in {"available", "limited", "unavailable"},
+            "Dashboard does not expose observed probe capacity")
+    if capacity_status is not None:
+        require(page.capacity_status == capacity_status, "Dashboard and MCP probe capacity disagree")
     require(page.styles, "Dashboard did not render any stylesheet links")
     origin = urlparse(base_url).netloc
     local_assets = [
@@ -236,7 +243,7 @@ def main():
     runtime = check_runtime(client)
     if options.phase == "queued":
         check_auth(client.endpoint)
-        check_page(base_url)
+        check_page(base_url, runtime.get("probe_capacity", {}).get("status"))
         probe_id = str(uuid.uuid4())
         probe = client.tool("xorgate_probe_dispatch", {"probeId": probe_id})
         require(probe.get("probe_id") == probe_id, "Dispatch did not retain the supplied idempotency key")
@@ -244,6 +251,22 @@ def main():
         require(probe.get("artifact") is None, "Queued probe unexpectedly has an artifact")
         repeated = client.tool("xorgate_probe_dispatch", {"probeId": probe_id})
         require(repeated == probe, "Duplicate dispatch did not return the same queued record")
+        capacity = client.tool("xorgate_runtime_status").get("probe_capacity", {})
+        require(capacity.get("limits", {}).get("pending") == 1,
+                "Set XORGATE_PROBE_MAX_PENDING=1 for the stopped-worker admission check")
+        rejected = client.tool("xorgate_probe_dispatch", {"probeId": str(uuid.uuid4())})
+        require(rejected.get("accepted") is False and rejected.get("error") == "pending_probe_limit",
+                "MCP did not reject unique new work at capacity")
+        require(rejected.get("capacity") == capacity, "Rejected work changed the capacity counters")
+        require(client.tool("xorgate_probe_get", {"probeId": probe_id}) == probe,
+                "Rejected work changed the original probe")
+        require(client.tool("xorgate_runtime_status").get("probe_capacity") == capacity,
+                "Rejected work consumed another admission")
+        read = subprocess.run(["docker", "compose", "exec", "-T", "php", "php", "bin/console",
+                               "xorgate:runtime:status", "--json"], check=True, capture_output=True, text=True)
+        require(json.loads(read.stdout).get("probe_capacity") == capacity,
+                "CLI and MCP capacity disagree")
+        check_page(base_url, "limited")
         state = {"probe_id": probe_id, "queued": probe, "runtime": runtime}
     else:
         state = json.loads(options.state.read_text())

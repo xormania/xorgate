@@ -64,6 +64,20 @@ The probe exercises Xorgate's own persistence, queue, worker and artifact path. 
 
 The default web UI is for loopback development. HTTP MCP has token authentication; broader web-user and project permissions are subsequent implementation work.
 
+## Probe capacity and retention
+
+New probes share one installation-wide budget across HTTP MCP, STDIO and CLI. The shared MCP token is not an individual caller identity. Defaults allow 100 pending/failed probes, 1,000 retained records and 30 new probes per rolling minute. Repeating an existing ID remains idempotent at capacity. A rejected MCP request returns `accepted: false`, an explicit limit reason and capacity data without creating a record, message or artifact; CLI dispatch returns the same data with a failing exit code. Inspect `probe_capacity` through runtime status or the dashboard.
+
+The worker automatically sweeps completed probes once per minute when idle, expiring artifacts after seven days and pruning their metadata after fourteen days. Until metadata is pruned, `artifact.expired_at` identifies deliberate expiration separately from an unexpectedly missing file; repeating its ID returns the historical record. After pruning, that ID no longer has an idempotency record. Queued and failed probes are retained for recovery and count against the budget. Cleanup defers while the async or failed queue has messages so it cannot remove records needed by redelivery.
+
+Override the positive `XORGATE_PROBE_MAX_PENDING`, `XORGATE_PROBE_MAX_RETAINED`, `XORGATE_PROBE_MAX_PER_MINUTE`, `XORGATE_PROBE_ARTIFACT_RETENTION_SECONDS` and `XORGATE_PROBE_RECORD_RETENTION_SECONDS` values in `.env.local`; restart the worker after changes. Record retention must cover artifact retention, which must be at least 60 seconds. Each sweep handles at most 100 expirations and 100 metadata removals. Run a sweep explicitly with:
+
+```bash
+docker compose exec -T php php bin/console xorgate:probe:cleanup
+```
+
+If recovery work fills the pending budget, inspect the failed transport and recover or retire that work before admitting more probes. These limits govern foundation probes; the managed-project operation policy remains later domain work.
+
 ## Services and data
 
 | Compose service | Responsibility |
