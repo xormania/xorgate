@@ -203,6 +203,8 @@ final class FoundationProbeTest extends KernelTestCase
             for ($i = 0; $i < 2; ++$i) {
                 $process = new Process([PHP_BINARY, 'bin/console', 'xorgate:probe:dispatch', Uuid::v7()->toRfc4122()], self::$kernel->getProjectDir(), [
                     'APP_ENV' => 'test', 'XORGATE_ARTIFACT_DIR' => $this->artifactDirectory,
+                    // Parent Dotenv metadata must not mark these explicit child overrides as reloadable defaults.
+                    'SYMFONY_DOTENV_VARS' => false,
                     'XORGATE_PROBE_MAX_PENDING' => '1', 'XORGATE_PROBE_MAX_RETAINED' => '2', 'XORGATE_PROBE_MAX_PER_MINUTE' => '2',
                 ]);
                 $process->setTimeout(15);

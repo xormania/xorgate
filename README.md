@@ -70,7 +70,7 @@ New probes share one installation-wide budget across HTTP MCP, STDIO and CLI. Th
 
 The worker automatically sweeps completed probes once per minute when idle, expiring artifacts after seven days and pruning their metadata after fourteen days. Until metadata is pruned, `artifact.expired_at` identifies deliberate expiration separately from an unexpectedly missing file; repeating its ID returns the historical record. After pruning, that ID no longer has an idempotency record. Queued and failed probes are retained for recovery and count against the budget. Cleanup defers while the async or failed queue has messages so it cannot remove records needed by redelivery.
 
-Override the positive `XORGATE_PROBE_MAX_PENDING`, `XORGATE_PROBE_MAX_RETAINED`, `XORGATE_PROBE_MAX_PER_MINUTE`, `XORGATE_PROBE_ARTIFACT_RETENTION_SECONDS` and `XORGATE_PROBE_RECORD_RETENTION_SECONDS` values in `.env.local`; restart the worker after changes. Record retention must cover artifact retention, which must be at least 60 seconds. Each sweep handles at most 100 expirations and 100 metadata removals. Run a sweep explicitly with:
+Override the positive `XORGATE_PROBE_MAX_PENDING`, `XORGATE_PROBE_MAX_RETAINED`, `XORGATE_PROBE_MAX_PER_MINUTE`, `XORGATE_PROBE_ARTIFACT_RETENTION_SECONDS` and `XORGATE_PROBE_RECORD_RETENTION_SECONDS` values in `.env.local`; restart `php` and `worker` after changes. Record retention must cover artifact retention, which must be at least 60 seconds. Each sweep handles at most 100 expirations and 100 metadata removals. Run a sweep explicitly with:
 
 ```bash
 docker compose exec -T php php bin/console xorgate:probe:cleanup
