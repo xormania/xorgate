@@ -1,0 +1,31 @@
+<twig:Card>
+    <twig:Card:Header><twig:Card:Title as="h2">Stored execution provenance</twig:Card:Title></twig:Card:Header>
+    <twig:Card:Content>
+        <dl class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div><dt class="text-sm font-medium text-heading">Execution ID</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.execution_id }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Project ID</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.project_id }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Repository identity</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.source.repository_identity is null ? 'Unknown' : execution.source.repository_identity }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Actual tested revision</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.source.tested_revision is null ? 'Unknown' : execution.source.tested_revision }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Workspace fingerprint</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.source.workspace_fingerprint is null ? 'Unknown' : execution.source.workspace_fingerprint }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Environment</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.environment.name is null ? 'Unknown' : execution.environment.name }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Producer</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.producer.name is null ? 'Unknown' : execution.producer.name }} · {{ execution.producer.version is null ? 'Unknown version' : execution.producer.version }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Provider run</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.native_identity.run_id is null ? 'Unknown' : execution.native_identity.run_id }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Provider attempt</dt><dd class="mt-1 text-sm text-body">{{ execution.native_identity.run_attempt is null ? 'Unknown' : execution.native_identity.run_attempt }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Job / shard</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.native_identity.job_id is null ? 'Unknown' : execution.native_identity.job_id }} / {{ execution.native_identity.shard is null ? 'Unknown' : execution.native_identity.shard }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Observed at</dt><dd class="mt-1 text-sm text-body">{% if execution.observed_at is null %}Unknown{% else %}<time datetime="{{ execution.observed_at }}">{{ execution.observed_at }}</time>{% endif %}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Context recorded at</dt><dd class="mt-1 text-sm text-body"><time datetime="{{ execution.created_at }}">{{ execution.created_at }}</time></dd></div>
+        </dl>
+        <details class="mt-5">
+            <summary class="cursor-pointer text-sm font-medium text-heading">Additional source and environment context</summary>
+            <dl class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                <div><dt class="text-sm font-medium text-heading">Repository URL</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.source.repository_url is null ? 'Unknown' : execution.source.repository_url }}</dd></div>
+                <div><dt class="text-sm font-medium text-heading">PR head revision</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.source.pr_head_revision is null ? 'Unknown' : execution.source.pr_head_revision }}</dd></div>
+                <div><dt class="text-sm font-medium text-heading">PR base revision</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.source.pr_base_revision is null ? 'Unknown' : execution.source.pr_base_revision }}</dd></div>
+                <div><dt class="text-sm font-medium text-heading">PR merge revision</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.source.pr_merge_revision is null ? 'Unknown' : execution.source.pr_merge_revision }}</dd></div>
+                <div><dt class="text-sm font-medium text-heading">Observed runtimes</dt><dd class="mt-1 text-sm text-body">{{ execution.environment.runtimes is empty ? 'Unknown' : execution.environment.runtimes|join(', ') }}</dd></div>
+                <div><dt class="text-sm font-medium text-heading">Configuration reference</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.environment.configuration_ref is null ? 'Unknown' : execution.environment.configuration_ref }}</dd></div>
+                <div><dt class="text-sm font-medium text-heading">Provider</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.native_identity.provider is null ? 'Unknown' : execution.native_identity.provider }}</dd></div>
+            </dl>
+        </details>
+    </twig:Card:Content>
+</twig:Card>

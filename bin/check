@@ -10,10 +10,32 @@ docker compose exec -T php php bin/console lint:yaml config
 docker compose exec -T php php bin/console lint:container
 docker compose exec -T php php bin/console lint:twig templates
 
+# Produce authentic four-outcome JUnit bytes without counting intentional fixture failures as validation.
+docker compose exec -T php sh -c 'mkdir -p var/ci && rm -f var/ci/controlled-producer-report.xml'
+producer_status=0
+docker compose exec -T -e APP_ENV=test php php vendor/bin/phpunit --no-configuration \
+    --log-junit var/ci/controlled-producer-report.xml tests/Fixtures/JUnit/ProducerCases.php || producer_status=$?
+if (( producer_status != 2 )); then
+    echo 'Controlled PHPUnit producer did not return its expected error-inclusive exit status.' >&2
+    exit 1
+fi
+mkdir -p var/ci
+docker compose cp php:/app/var/ci/controlled-producer-report.xml var/ci/controlled-producer-report.xml
+python3 tests/smoke/intake.py producer
+
 # The configured test suffix keeps test fixtures out of the running application's DB.
 docker compose exec -T -e APP_ENV=test php php bin/console doctrine:database:create --if-not-exists
 docker compose exec -T -e APP_ENV=test php php bin/console doctrine:migrations:migrate --no-interaction
-docker compose exec -T -e APP_ENV=test php php vendor/bin/phpunit
+docker compose exec -T php sh -c 'mkdir -p var/ci && rm -f var/ci/current-test-report.xml'
+test_status=0
+docker compose exec -T -e APP_ENV=test php php vendor/bin/phpunit --log-junit var/ci/current-test-report.xml || test_status=$?
+if docker compose exec -T php test -f var/ci/current-test-report.xml; then
+    mkdir -p var/ci
+    docker compose cp php:/app/var/ci/current-test-report.xml var/ci/current-test-report.xml
+fi
+if (( test_status != 0 )); then
+    exit "$test_status"
+fi
 
 # Verify development tooling against the same running application, without another stack.
 bin/check-dev

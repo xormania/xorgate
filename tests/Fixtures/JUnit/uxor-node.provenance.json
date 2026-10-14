@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "fixture": "uxor-node.xml",
+  "classification": "authentic-local-producer-report",
+  "sourceRepo": "xormania/uxor",
+  "sourceSHA": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+  "sourceBranch": "main (pinned checkout)",
+  "sourceFile": "tools/tests/shard-plan.test.mjs",
+  "sourceFileURL": "https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/tools/tests/shard-plan.test.mjs",
+  "workspace": {
+    "trackedStateBefore": "clean",
+    "trackedStateAfter": "clean"
+  },
+  "workflow": null,
+  "runId": null,
+  "runAttempt": null,
+  "jobId": null,
+  "jobName": null,
+  "shard": null,
+  "origin": {
+    "kind": "local-execution",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=junit",
+      "--test-reporter-destination=<REPORT_XML>",
+      "tools/tests/shard-plan.test.mjs"
+    ],
+    "workingDirectory": "clean UXor checkout at sourceSHA",
+    "exitStatus": 0,
+    "reportWrittenAt": "2026-10-14T07:53:13.320200+00:00",
+    "capturedAt": "2026-10-14T07:55:54.165323+00:00",
+    "platform": "linux",
+    "commandRedaction": "Only the transient absolute output destination is represented by <REPORT_XML>; all other arguments are exact."
+  },
+  "producer": {
+    "name": "node:test built-in junit reporter",
+    "version": "24.19.0",
+    "language": "JavaScript",
+    "sourceURL": "https://github.com/nodejs/node/blob/v24.19.0/lib/internal/test_runner/reporter/junit.js"
+  },
+  "artifact": {
+    "provider": null,
+    "id": null,
+    "filename": "uxor-node-authentic-junit.xml",
+    "archiveSHA256": null,
+    "sha256": "18abffcc9def78dbb50374f8fef9010f49584bafe3a1786b66f51756a75638b5",
+    "bytes": 3594
+  },
+  "originalReport": {
+    "filename": "uxor-node-authentic-junit.xml",
+    "bytes": 3594,
+    "sha256": "18abffcc9def78dbb50374f8fef9010f49584bafe3a1786b66f51756a75638b5"
+  },
+  "retainedReport": {
+    "filename": "uxor-node.xml",
+    "bytes": 2889,
+    "sha256": "693911b10ff73b3bedbe5b4e80c52faa2fc971dba0cae8ed22de97240bd774c9"
+  },
+  "minimization": {
+    "kind": "none",
+    "description": "All 15 native testcase elements and producer diagnostic comments remain. See redaction for source paths."
+  },
+  "redaction": {
+    "kind": "path-prefix-removal",
+    "description": "Removed the transient absolute checkout prefix from all 15 testcase file attributes, leaving their repository-relative source file. Recorded command output destination is symbolic. Testcase names, outcomes, durations and all other XML bytes are unchanged.",
+    "affectedCaseCount": 15,
+    "retainedFile": "tools/tests/shard-plan.test.mjs"
+  },
+  "observed": {
+    "xmlRoot": "testsuites",
+    "testsuiteElements": 0,
+    "testcaseElements": 15,
+    "outcomes": {
+      "passed": 15,
+      "error": 0,
+      "skipped": 0,
+      "failure": 0
+    },
+    "sumTestcaseTimeSeconds": 0.601737,
+    "producerTimestamp": null,
+    "caseRetry": null,
+    "maxNameCharacters": 128,
+    "maxClassnameCharacters": 4,
+    "maxFileCharacters": 31
+  },
+  "limitations": [
+    "This is actual UXor tool-test execution on the recorded local Node runtime, not a downloaded GitHub CI artifact.",
+    "JUnit omits provider/run/job metadata, case retry and a producer timestamp; these remain null.",
+    "All observed cases passed. Failure/error/skip mapping must be verified separately; none is invented here.",
+    "The root has direct testcase children, no testsuite elements and no root count/time attributes. Comments are native reporter diagnostics rather than standard suite attributes."
+  ]
+}

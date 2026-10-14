@@ -1,0 +1,20 @@
+<twig:Card data-xorgate-artifact-id="{{ artifact.artifact_id }}" data-xorgate-artifact-availability="{{ artifact.availability.status }}">
+    <twig:Card:Header><twig:Card:Title as="h2">Original artifact</twig:Card:Title></twig:Card:Header>
+    <twig:Card:Content>
+        <dl class="grid gap-5 sm:grid-cols-2">
+            <div><dt class="text-sm font-medium text-heading">Artifact ID</dt><dd class="mt-1 break-all text-sm text-body">{{ artifact.artifact_id }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Availability</dt><dd class="mt-1 text-sm text-body">{{ artifact.availability.status }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Reported filename</dt><dd class="mt-1 break-all text-sm text-body">{{ artifact.filename is null ? 'Unknown' : artifact.filename }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Reported media type</dt><dd class="mt-1 break-all text-sm text-body">{{ artifact.media_type is null ? 'Unknown' : artifact.media_type }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">SHA-256</dt><dd class="mt-1 break-all font-mono text-xs text-body">{{ artifact.sha256 }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Original bytes</dt><dd class="mt-1 text-sm text-body">{{ artifact.bytes|number_format }}</dd></div>
+            <div><dt class="text-sm font-medium text-heading">Received</dt><dd class="mt-1 text-sm text-body"><time datetime="{{ artifact.created_at }}">{{ artifact.created_at }}</time></dd></div>
+            <div><dt class="text-sm font-medium text-heading">Expired at</dt><dd class="mt-1 text-sm text-body">{% if artifact.expired_at is null %}Not expired{% else %}<time datetime="{{ artifact.expired_at }}">{{ artifact.expired_at }}</time>{% endif %}</dd></div>
+        </dl>
+        {% if artifact.availability.available %}
+            <div class="mt-5"><twig:Button as="a" variant="outline" href="{{ path('app_report_download', {projectId: artifact.project_id, executionId: artifact.execution_id, artifactId: artifact.artifact_id}) }}" data-turbo="false" data-turbo-prefetch="false">Download original bytes</twig:Button></div>
+        {% else %}
+            <p class="mt-5 text-sm text-body">Original bytes are {{ artifact.availability.status }}. Stored parser observations remain separate from artifact availability.</p>
+        {% endif %}
+    </twig:Card:Content>
+</twig:Card>

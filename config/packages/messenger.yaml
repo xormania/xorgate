@@ -7,6 +7,8 @@ framework:
                 options:
                     queue_name: async
                     auto_setup: false
+                    # Match the report processing lease; worker --keepalive=5 refreshes visibility.
+                    redeliver_timeout: 300
                 retry_strategy:
                     max_retries: 3
                     delay: 1000
@@ -18,3 +20,4 @@ framework:
                     auto_setup: false
         routing:
             App\Message\RunFoundationProbe: async
+            App\Message\NormalizeReport: async

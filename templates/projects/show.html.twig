@@ -55,6 +55,7 @@
                                 <twig:Table:Row>
                                     <twig:Table:Head scope="row" class="break-all">
                                         <a href="{{ path('app_execution_show', {projectId: project.project_id, executionId: execution.execution_id}) }}" class="font-medium text-fg-brand hover:underline focus-visible:outline-2 focus-visible:outline-brand-medium">{{ execution.execution_id }}</a>
+                                        <p class="mt-2 text-xs font-normal"><a href="{{ path('app_execution_evidence', {projectId: project.project_id, executionId: execution.execution_id}) }}" class="text-fg-brand hover:underline">Report imports</a></p>
                                     </twig:Table:Head>
                                     <twig:Table:Cell class="break-all">{{ execution.source.tested_revision is null ? 'Unknown' : execution.source.tested_revision }}</twig:Table:Cell>
                                     <twig:Table:Cell>{{ execution.environment.name is null ? 'Unknown' : execution.environment.name }}</twig:Table:Cell>

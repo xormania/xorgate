@@ -102,19 +102,21 @@ jobs:
       - name: Prove project registration and execution provenance through UI, MCP and CLI
         run: python3 tests/smoke/registry.py register
 
-      - name: Prove MCP queues work while the worker is stopped
+      - name: Prove probe and report intake admission while the worker is stopped
         run: |
           docker compose stop worker
           # Exercise a real admission rejection with one pending probe, not 100 fixtures.
-          docker compose exec -T php sh -c 'printf "%s\n" "XORGATE_PROBE_MAX_PENDING=1" >> .env.local'
+          docker compose exec -T php sh -c 'printf "%s\n" "XORGATE_PROBE_MAX_PENDING=1" "XORGATE_INTAKE_MAX_PENDING=1" >> .env.local'
           docker compose restart php
           docker compose up -d --wait --wait-timeout 120 php
           python3 tests/smoke/foundation.py queued
+          python3 tests/smoke/intake.py queued
 
-      - name: Prove the worker completes the durable probe and writes its artifact
+      - name: Prove native worker completion and retained original report bytes
         run: |
           docker compose up -d --wait worker
           python3 tests/smoke/foundation.py complete
+          python3 tests/smoke/intake.py complete
           python3 tests/smoke/development.py worker-log
 
       - name: Prove ordinary container restart preserves records and artifacts
@@ -123,6 +125,7 @@ jobs:
           docker compose up -d --wait --wait-timeout 120
           python3 tests/smoke/foundation.py persist
           python3 tests/smoke/registry.py persist
+          python3 tests/smoke/intake.py persist
 
       - name: Collect diagnostic output
         if: always()

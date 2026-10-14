@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "fixture": "controlled-phpunit.xml",
+  "classification": "controlled-native-producer-report",
+  "sourceRepo": "xormania/xorgate",
+  "sourceSHA": "4e6f05f3932c0d2cb618bc5f51ce1d1f11562d20",
+  "sourceBranch": "feat/artifact-intake",
+  "sourceFile": "tests/Fixtures/JUnit/ProducerCases.php",
+  "sourceFileURL": "https://github.com/xormania/xorgate/blob/4e6f05f3932c0d2cb618bc5f51ce1d1f11562d20/tests/Fixtures/JUnit/ProducerCases.php",
+  "sourceFileSHA256": "e41f0e903528b61fc6ba5efb143afc186da0a6f3b141c681db394188ef8abbd9",
+  "source": {
+    "tested_revision": "4e6f05f3932c0d2cb618bc5f51ce1d1f11562d20",
+    "pr_head_revision": "e55fc794538fa73a0454c3538780488ee4db9f02",
+    "pr_base_revision": "1b72935bc3a2ff439931337ac34dfd54abc7e717",
+    "pr_merge_revision": "4e6f05f3932c0d2cb618bc5f51ce1d1f11562d20",
+    "workspace_dirty": true,
+    "workspace_fingerprint": null
+  },
+  "workflow": ".github/workflows/foundation.yml",
+  "workflowURL": "https://github.com/xormania/xorgate/blob/4e6f05f3932c0d2cb618bc5f51ce1d1f11562d20/.github/workflows/foundation.yml",
+  "runId": 38534840861,
+  "runAttempt": 1,
+  "runURL": "https://github.com/xormania/xorgate/actions/runs/38534840861",
+  "jobId": 115755100852,
+  "jobName": "Docker foundation",
+  "jobURL": "https://github.com/xormania/xorgate/actions/runs/38534840861/job/115755100852",
+  "shard": null,
+  "origin": {
+    "kind": "github-actions-controlled-producer",
+    "entryCommand": [
+      "bin/check"
+    ],
+    "producerCommand": [
+      "docker",
+      "compose",
+      "exec",
+      "-T",
+      "-e",
+      "APP_ENV=test",
+      "php",
+      "php",
+      "vendor/bin/phpunit",
+      "--no-configuration",
+      "--log-junit",
+      "var/ci/controlled-producer-report.xml",
+      "tests/Fixtures/JUnit/ProducerCases.php"
+    ],
+    "exitStatus": 2,
+    "fourOutcomeValidation": "passed",
+    "runCreatedAt": "2026-10-14T08:24:07Z",
+    "artifactCreatedAt": "2026-10-14T08:26:31Z",
+    "capturedAt": "2026-10-14T08:31:44.178868+00:00",
+    "overallRunConclusion": "failure",
+    "overallRunLimitation": "The controlled producer and its exact four-outcome proof completed. Later application integration bootstrap failed because a helper count() collided with an inherited final method; this report is not evidence of a green application suite."
+  },
+  "producer": {
+    "name": "PHPUnit native JUnit logger",
+    "version": "13.4.2",
+    "phpVersion": "8.5.11",
+    "language": "PHP",
+    "sourceURL": "https://github.com/sebastianbergmann/phpunit/blob/13.4.2/src/Logging/JUnit/JunitXmlLogger.php"
+  },
+  "runtime": {
+    "service": "php",
+    "configuredImage": "xorgate-php-dev",
+    "buildTarget": "frankenphp_dev",
+    "configuredBaseImage": "dunglas/frankenphp:1-php8.5@sha256:a052ae7cccd4a025eca17767e7acac57a4fc660a4f3dfc790be9b9cd5182d6e6",
+    "observedImageId": null,
+    "php": "8.5.11",
+    "phpunit": "13.4.2"
+  },
+  "artifact": {
+    "provider": "GitHub Actions",
+    "id": 11879202888,
+    "name": "foundation-evidence-4e6f05f3932c0d2cb618bc5f51ce1d1f11562d20",
+    "url": "https://api.github.com/repos/xormania/xorgate/actions/artifacts/11879202888",
+    "filename": "controlled-producer-report.xml",
+    "archiveSHA256": "d9962a688ef146ab23b971b6199d45c8caa8432322dd4eead5b0f708a3f9aa2f",
+    "sha256": "8d09a401caa0cb5e6cbcba8b7c2bb6787fee37afddfdb6177a1029241307a256",
+    "bytes": 1795
+  },
+  "originalReport": {
+    "filename": "controlled-producer-report.xml",
+    "bytes": 1795,
+    "sha256": "8d09a401caa0cb5e6cbcba8b7c2bb6787fee37afddfdb6177a1029241307a256"
+  },
+  "retainedReport": {
+    "filename": "controlled-phpunit.xml",
+    "bytes": 1760,
+    "sha256": "1baecadc766c718d4d1734fe4ba093af629fb67497437020cc0138b77beeae42"
+  },
+  "producerProof": {
+    "filename": "controlled-producer.json",
+    "sha256": "950469fa052fbd95b8737849e37e88352bfa8af9063b4f72ae3352abe5752ff8",
+    "observedExitStatus": 2,
+    "workspaceDirty": true
+  },
+  "minimization": {
+    "kind": "none",
+    "description": "All four native testcases, suite attributes, assertions and native failure/error/skipped children remain."
+  },
+  "redaction": {
+    "kind": "path-prefix-removal",
+    "description": "Removed only the container /app/ prefix from five file attributes and two diagnostic source references, leaving repository-relative file paths. All other XML bytes are unchanged.",
+    "affectedPathOccurrences": 7
+  },
+  "observed": {
+    "xmlRoot": "testsuites",
+    "testsuiteElements": 1,
+    "testcaseElements": 4,
+    "outcomes": {
+      "passed": 1,
+      "error": 1,
+      "skipped": 1,
+      "failure": 1
+    },
+    "sumTestcaseTimeSeconds": 0.001691,
+    "declaredSuiteTimeSeconds": 0.00169,
+    "producerTimestamp": null,
+    "caseRetry": null,
+    "maxNameCharacters": 21,
+    "maxClassnameCharacters": 38,
+    "maxFileCharacters": 38
+  },
+  "limitations": [
+    "These four outcomes are deliberately induced controlled reporter inputs, not failures in Xorgate or a managed project.",
+    "Native JUnit provides no producer timestamp or structured case retry identity; these remain null.",
+    "Observed dirty workspace state is preserved, with no invented workspace fingerprint.",
+    "The configured image/base/target are source facts; an actual Docker image ID was not recorded.",
+    "The overall CI run failed after producer validation; application correctness is not inferred from this fixture."
+  ]
+}

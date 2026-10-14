@@ -1,0 +1,82 @@
+{% extends 'layouts/management.html.twig' %}
+
+{% block title %}Xorgate · Report intake{% endblock %}
+{% block page_title %}Report intake{% endblock %}
+{% block page_description %}{{ project.name }} · {{ operation.report_role }}{% endblock %}
+{% block page_before %}<a href="{{ path('app_execution_evidence', {projectId: project.project_id, executionId: execution.execution_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to report imports</a>{% endblock %}
+{% block page_actions %}<twig:Button as="a" variant="outline" href="{{ path('app_intake_operation', {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}) }}">Refresh status</twig:Button>{% endblock %}
+
+{% block content %}
+    <div class="space-y-6" data-xorgate-intake-operation-id="{{ operation.operation_id }}" data-xorgate-intake-status="{{ operation.status }}" data-xorgate-parser-outcome="{{ operation.parser_outcome ?? 'unknown' }}">
+        <twig:Card>
+            <twig:Card:Header><twig:Card:Title as="h2">Intake operation</twig:Card:Title></twig:Card:Header>
+            <twig:Card:Content>
+                <dl class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div><dt class="text-sm font-medium text-heading">Operation ID</dt><dd class="mt-1 break-all text-sm text-body">{{ operation.operation_id }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Processing state</dt><dd class="mt-1 text-sm text-body">{{ operation.status }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Request ID</dt><dd class="mt-1 break-all text-sm text-body">{{ operation.request_id }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Report role / format</dt><dd class="mt-1 text-sm text-body">{{ operation.report_role }} / {{ operation.format }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Started</dt><dd class="mt-1 text-sm text-body">{% if operation.started_at is null %}Not started{% else %}<time datetime="{{ operation.started_at }}">{{ operation.started_at }}</time>{% endif %}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Finished</dt><dd class="mt-1 text-sm text-body">{% if operation.completed_at is null %}Not finished{% else %}<time datetime="{{ operation.completed_at }}">{{ operation.completed_at }}</time>{% endif %}</dd></div>
+                </dl>
+                <p class="mt-5 text-sm text-body">{{ operation.status in ['queued', 'running'] ? 'Intake is asynchronous. Refresh this page to retrieve the worker’s stored progress.' : 'This state records the worker’s processing of the uploaded report. It does not declare that tests passed.' }}</p>
+                {% if operation.error is not null %}<p class="mt-4 text-sm text-fg-danger-strong">{{ operation.error.code }}: {{ operation.error.message }}</p>{% endif %}
+            </twig:Card:Content>
+        </twig:Card>
+
+        <twig:Card>
+            <twig:Card:Header><twig:Card:Title as="h2">Adapter result</twig:Card:Title></twig:Card:Header>
+            <twig:Card:Content>
+                <dl class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div><dt class="text-sm font-medium text-heading">Parser outcome</dt><dd class="mt-1 text-sm text-body">{{ operation.parser_outcome is null ? 'Not recorded yet' : operation.parser_outcome }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Parser / version</dt><dd class="mt-1 text-sm text-body">{{ operation.parser.name is null ? 'Unknown' : operation.parser.name }} / {{ operation.parser.version is null ? 'Unknown' : operation.parser.version }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Document validity</dt><dd class="mt-1 text-sm text-body">{{ operation.valid_document is null ? 'Unknown' : (operation.valid_document ? 'Valid' : 'Invalid') }}</dd></div>
+                </dl>
+                {% if operation.summary is not null and operation.summary is not empty %}
+                    <dl class="mt-5 grid gap-5 sm:grid-cols-2">
+                        <div><dt class="text-sm font-medium text-heading">Observed cases</dt><dd class="mt-1 text-sm text-body">{{ operation.summary.cases is null ? 'Unknown' : operation.summary.cases }}</dd></div>
+                        <div><dt class="text-sm font-medium text-heading">Observed suites</dt><dd class="mt-1 text-sm text-body">{{ operation.summary.suites is null ? 'Unknown' : operation.summary.suites }}</dd></div>
+                        {% for outcome, count in operation.summary.observed_counts %}<div><dt class="text-sm font-medium text-heading">Observed {{ outcome }}</dt><dd class="mt-1 text-sm text-body">{{ count }}</dd></div>{% endfor %}
+                    </dl>
+                    <details class="mt-5"><summary class="cursor-pointer text-sm font-medium text-heading">Native declared counts</summary><pre class="mt-2 overflow-x-auto whitespace-pre-wrap break-all text-xs text-body">{{ operation.summary.declared_counts is null ? 'Unknown' : operation.summary.declared_counts|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></details>
+                {% endif %}
+                <p class="mt-5 text-sm text-body">An empty report records no cases. Partial or unsupported evidence does not establish a complete test population. Native observed outcomes and native declared counts retain their separate meaning.</p>
+                {% if operation.limitations is not empty %}
+                    <ul class="mt-4 list-inside list-disc space-y-2 text-sm text-body">{% for limitation in operation.limitations %}<li>{{ limitation is iterable ? limitation|json_encode : limitation }}</li>{% endfor %}</ul>
+                {% endif %}
+            </twig:Card:Content>
+        </twig:Card>
+
+        <section aria-labelledby="observations-heading" class="space-y-4" data-xorgate-observations-state="{{ observations.items is empty ? 'empty' : 'populated' }}">
+            <h2 id="observations-heading" class="text-xl font-semibold text-heading">Native case observations</h2>
+            {% if observations.items is empty %}
+                <twig:EmptyState title="No case observations on this page" description="{{ operation.status in ['queued', 'running'] ? 'The worker has not committed case observations yet. Refresh the operation to inspect its progress.' : 'Inspect the adapter result and limitations above. No passing outcome is inferred from an empty list.' }}" class="rounded-base border border-default bg-neutral-primary-soft" />
+            {% else %}
+                <div class="overflow-x-auto rounded-base border border-default bg-neutral-primary-soft">
+                    <twig:Table>
+                        <twig:Table:Caption>Observed cases from this report</twig:Table:Caption>
+                        <twig:Table:Header><twig:Table:Row><twig:Table:Head>Case / class</twig:Table:Head><twig:Table:Head>Native outcome</twig:Table:Head><twig:Table:Head>Duration</twig:Table:Head><twig:Table:Head>Details</twig:Table:Head></twig:Table:Row></twig:Table:Header>
+                        <twig:Table:Body>
+                            {% for observation in observations.items %}
+                                <twig:Table:Row data-xorgate-observation-id="{{ observation.observation_id }}" data-xorgate-native-outcome="{{ observation.native_outcome }}">
+                                    <twig:Table:Head scope="row"><span>{{ observation.name is null ? 'Unknown' : observation.name }}</span><p class="mt-1 break-all text-xs font-normal text-body">{{ observation.classname is null ? 'Unknown class' : observation.classname }}</p></twig:Table:Head>
+                                    <twig:Table:Cell>{{ observation.native_outcome }}</twig:Table:Cell>
+                                    <twig:Table:Cell>{{ observation.duration_seconds is null ? 'Unknown' : observation.duration_seconds ~ ' seconds' }}</twig:Table:Cell>
+                                    <twig:Table:Cell>
+                                        <details><summary class="cursor-pointer text-sm font-medium text-heading">Case evidence</summary>
+                                            <dl class="mt-3 space-y-2 text-xs text-body"><div><dt class="font-medium">Observation ID</dt><dd class="break-all">{{ observation.observation_id }}</dd></div><div><dt class="font-medium">Case key</dt><dd class="break-all">{{ observation.case_key }}</dd></div><div><dt class="font-medium">Suite key</dt><dd class="break-all">{{ observation.suite_key }}</dd></div><div><dt class="font-medium">Assertions</dt><dd>{{ observation.assertions is null ? 'Unknown' : observation.assertions }}</dd></div></dl>
+                                            <pre class="mt-3 whitespace-pre-wrap break-all text-xs text-body">{{ observation.diagnostics|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                                        </details>
+                                    </twig:Table:Cell>
+                                </twig:Table:Row>
+                            {% endfor %}
+                        </twig:Table:Body>
+                    </twig:Table>
+                </div>
+            {% endif %}
+            {% include 'projects/_pagination.html.twig' with {page: observations, cursor: cursor, route: 'app_intake_operation', route_parameters: {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}} only %}
+        </section>
+        {% include 'reports/_artifact.html.twig' with {artifact: operation.artifact} only %}
+        {% include 'reports/_provenance.html.twig' with {execution: operation.source_context} only %}
+    </div>
+{% endblock %}

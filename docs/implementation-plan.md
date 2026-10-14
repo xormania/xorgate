@@ -1,6 +1,6 @@
 # Xorgate implementation plan
 
-Date: 2026-10-13 (America/New_York)
+Updated: 2026-10-14 (UTC)
 
 Owner: xor
 
@@ -12,18 +12,18 @@ This is a delivery plan. Domain names, status enums, schema fields and adapter b
 
 ## Current position
 
-The foundation is [PR #1](https://github.com/xormania/xorgate/pull/1). At initial inspection, `master` remains the license-only commit `e9d4f7a247a90485556eda0db3f732a4646a42e4`; the foundation is open and unmerged. The reviewed baseline `8c7f3e557273780ace87f24316df805a0b182441` passed [Foundation CI](https://github.com/xormania/xorgate/actions/runs/38338542194). Code and security reviews completed on that baseline after CI passed.
+The foundation and project registry are merged. [PR #8](https://github.com/xormania/xorgate/pull/8) delivered WO-001, and [PR #9](https://github.com/xormania/xorgate/pull/9) delivered the native Symfony AI Mate, profiler/logging and Serena development setup. The current baseline is `1b72935bc3a2ff439931337ac34dfd54abc7e717`. PR #9 passed [Docker CI](https://github.com/xormania/xorgate/actions/runs/38527736959) and received one code review plus one security review after green, with no major findings.
 
-Code review identified a production asset-build ordering defect. Corrective commit `e24f95db73f8665417e223e2c7d74df0892df932` installs importmap assets before Tailwind, excludes generated assets from the build context, and adds a clean production-image build to CI. Verify the latest checks and reviews on the resulting head before merging; the baseline's green check alone does not validate the correction. Security review's low-severity admission/retention finding is tracked in [WO-005](https://github.com/xormania/xorgate/issues/7).
+WO-002 is implemented in [PR #10](https://github.com/xormania/xorgate/pull/10): retained report bytes, durable intake operations, Messenger normalization, shared operator/agent interfaces and the intake portion of WO-005. Its check evidence and the fixes from the single code/security review round are tracked in that PR. The merged baseline remains PR #9 until the owner merges PR #10.
 
-| Capability | Observed implementation | Next extension |
+| Capability | Observed baseline | Active/next extension |
 | --- | --- | --- |
-| Development installation | `bin/setup`, locked dependencies, pinned Symfony Docker runtime, installed UXor recipes | Installable application/worker artifacts and consumer integration |
-| Persistence | PostgreSQL migration for `foundation_probe` and `messenger_messages` | Managed projects, source context, operations and observations |
-| Asynchronous work | Transactional probe dispatch, actual Messenger consumer, redelivery handling | Domain operations, lifecycle, cancellation and reconciliation |
-| Artifacts | Atomic probe JSON writes with digest, size and availability checks | Generic intake, retained report bytes, bounded retrieval and recovery |
-| Human/agent access | Foundation dashboard, HTTP health, authenticated HTTP MCP, local STDIO and CLI | Project/run/evidence/verification queries and management operations |
-| Operational signal | Correlated probe logs and runtime/storage readiness | Operation timings, worker capacity and end-to-end telemetry |
+| Development installation | Symfony Docker/PHP 8.5, installed UXor recipes, native Mate CLI and pinned Serena | Installable application/worker artifacts and consumer integration |
+| Persistence | PostgreSQL registry, immutable execution context and durable Messenger transport | Intake operations, artifact catalogue and normalized observations |
+| Asynchronous work | Transactional probe dispatch, actual consumer and redelivery handling | Durable report parsing and recovery |
+| Artifacts | Atomic probe JSON writes with integrity/availability checks | Generic report intake, bounded retrieval, byte budgets and retention |
+| Human/agent access | Registry UI/MCP/CLI and foundation diagnostics | Report upload, status and evidence through shared services |
+| Operational signal | Correlated logs, opt-in Symfony profiler and Mate diagnostics | Intake timings/capacity and subsequent distributed telemetry |
 
 The green workflow exercises Docker setup, configuration/platform checks, PostgreSQL integration, actual HTTP/MCP exchanges, worker processing, independently checked artifact bytes and persistence across container restart. Its source is [foundation.yml](../.github/workflows/foundation.yml). It does not establish browser interaction coverage, remote-worker readiness, backup/restore or the managed-project workflow.
 
@@ -46,7 +46,7 @@ Use UXor for the first substantial evidence integration and at least one non-PHP
 
 [WO-005: admission limits and retention](https://github.com/xormania/xorgate/issues/7) is a cross-cutting operational item. Prefer implementing its admission contract alongside WO-001/002; complete it before shared/remote deployment. A shared bearer token does not identify individual callers.
 
-Each issue contains concrete acceptance checks. Start WO-001 from the foundation branch while PR #1 completes review. Other work can inspect fixtures and refine contracts, but schema-dependent implementation follows the actual WO-001/002 contracts. Do not merge a dependent PR before its foundation.
+Each issue contains concrete acceptance checks. WO-001 is merged; WO-002 builds on its actual identity/provenance contract. Subsequent schema-dependent work follows the reviewed intake contract. Keep remaining acceptance items open until observed evidence exists.
 
 ### Minimum model to establish in WO-001/002
 
@@ -78,7 +78,7 @@ UXor was inspected at `dev` revision [`0f1a9585eeea89017544ce2639b676b38d393e22`
 | JUnit and failed-step evidence | [CI workflow](https://github.com/xormania/uxor/blob/0f1a9585eeea89017544ce2639b676b38d393e22/.github/workflows/ci.yml) | Preserve producer-specific limitations and failures outside test cases |
 | Existing Jev assessment files | [Diagnosis action](https://github.com/xormania/uxor/blob/0f1a9585eeea89017544ce2639b676b38d393e22/.github/actions/jev-diagnosis/action.yml) | Display advisory findings and availability reasons, tied to original inputs |
 
-Before implementing an adapter, inspect the actual producer schema and minimized files, record versions, and locate qualifying retained runs. This planning change has not downloaded or imported real UXor run artifacts. Synthetic edge fixtures are useful boundary checks; they cannot substitute for the real-run acceptance proof.
+Before implementing an adapter, inspect the actual producer schema and minimized files, record versions, and locate qualifying retained runs. Current UXor CI does not retain its original PHPUnit JUnit and its Playwright reporters emit JSON/HTML rather than JUnit. WO-002 retains an authentic JUnit report from UXor's native Node tool tests at the reviewed recipe revision; its origin is a local producer run, with no invented provider IDs. Xorgate Docker CI supplies native PHPUnit reports. See [fixture provenance](../tests/Fixtures/JUnit/README.md). Synthetic edge fixtures are useful boundary checks; they cannot substitute for real producer bytes. Actual UXor Playwright retry/red evidence remains WO-003 acceptance work.
 
 Retain fixture provenance: repository, provider run and attempt, actual tested revision, artifact identity/digest, producer version and any minimization/redaction performed. Source fixtures must not contain credentials. If a historic artifact expired, find another qualifying run and retain its evidence; expiration is an observed availability state.
 
@@ -99,7 +99,7 @@ These stages preserve the complete product scope. Their subdivisions become impl
 
 | Stage | Work | Completion evidence |
 | --- | --- | --- |
-| A — Foundation | Finish review of PR #1 and incorporate actionable findings | Green CI and completed code/security review on the resulting head; clean installation proof |
+| A — Foundation | Merged foundation and Symfony development tooling | Green Docker CI, completed code/security reviews and actual consumer checks |
 | B — Observe and explain | WO-001–004 | First useful product milestone above |
 | C — CI integration and existing-command execution | GitHub Actions observation/artifact sync; workspace and execution-provider contracts; bounded local commands and xorder integration; explicit CI dispatch/rerun/cancel | One real pipeline and one existing non-PHP command managed through UI/MCP, with exact source, receipts and preserved evidence; uncertain provider responses reconciled |
 | D — Distributed operations and shared deployment | Worker identity/capacity, leases/heartbeats, bounded scheduling, cancellation, remote source/artifact transfer, project/operation access, protected web deployment | Work runs on another host; worker/web restart, duplicate delivery, expired leases and cancellation races preserve an accurate operation history |
@@ -144,11 +144,11 @@ History includes first-attempt failures, retry recovery, incomparable environmen
 
 ## PR and verification workflow
 
-Use one reviewable PR per coherent work order, splitting an issue only when each part has a concrete observable result. While the foundation is unmerged, target its branch for dependent work. After it merges, retarget/rebase onto `master` without mixing unrelated changes or hiding review findings. Keep issue acceptance checkboxes open until observed proof exists.
+Use one reviewable PR per coherent work order, splitting an issue only when each part has a concrete observable result. Branch from merged `master` without mixing unrelated changes or hiding review findings. Keep issue acceptance checkboxes open until observed proof exists.
 
 Read [AGENTS.md](../AGENTS.md), [development.md](development.md) and the actual predecessor diff before changing contracts. Keep shared implementation services behind UI/MCP/CLI; do not introduce separate verdict implementations. Record schema, migration and adapter decisions in the implementation PR with concrete before/after examples.
 
-For implementation PRs, run the applicable `bin/check` and foundation integration flow plus focused new boundary checks. After CI is green, request one code review and one security review on that head; resolve findings and check the resulting head. Avoid duplicate requests for a head already under review. Owner review/merge remains distinct from green automation.
+For implementation PRs, run the applicable `bin/check` and foundation integration flow plus focused new boundary checks. After CI is green, request one code review and one security review on that head. Resolve findings and verify resulting changes; repeat review only for a practical P1 finding. Owner review/merge remains distinct from green automation.
 
 Verification should concentrate on false-confidence and recovery boundaries: wrong source/revision, missing populations, retry erasure, duplicate intake, interrupted commit, lost artifact, invalid parser input and cross-interface disagreement. Add browser checks for the actual operator flow, including keyboard navigation, CSP, Turbo Back and reconnect behavior; avoid copying the entire UXor component test suite into Xorgate.
 
@@ -156,4 +156,4 @@ Measure CI time, setup/cache cost and test scope before adding more shards, matr
 
 ## Immediate next action
 
-Implement [WO-001](https://github.com/xormania/xorgate/issues/2) on the foundation, while PR #1's reviews complete. Its first PR must demonstrate registering and retrieving real project records through shared services and the operator/agent interfaces. Then use that actual identity/provenance contract for WO-002 intake. Review the domain vocabulary in those PRs against xor's latest direction before treating public names as stable.
+Finish the review fixes and Docker acceptance evidence for [PR #10](https://github.com/xormania/xorgate/pull/10), then leave merge to the owner. The single code/security review round has completed; repeat review only for a practical P1. Start [WO-003](https://github.com/xormania/xorgate/issues/4) in a separate PR using retained native Playwright retry-recovered, red and setup-failure evidence plus existing Jev assessments. Preserve individual attempts, native outcomes and bounded logs through the same Symfony intake services.

@@ -4,10 +4,14 @@
 {% block page_title %}Execution context{% endblock %}
 {% block page_description %}{{ project.name }} · {{ execution.execution_id }}{% endblock %}
 {% block page_before %}<a href="{{ path('app_project_show', {projectId: project.project_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to project</a>{% endblock %}
+{% block page_actions %}
+    <twig:Button as="a" variant="outline" href="{{ path('app_execution_evidence', {projectId: project.project_id, executionId: execution.execution_id}) }}">Report imports</twig:Button>
+    <twig:Button as="a" href="{{ path('app_report_upload', {projectId: project.project_id, executionId: execution.execution_id}) }}">Upload report</twig:Button>
+{% endblock %}
 
 {% block content %}
     <div class="space-y-6" data-xorgate-execution-id="{{ execution.execution_id }}">
-        <p class="text-sm text-body">This immutable record preserves reported context. Unknown fields are shown explicitly. It contains no test outcome or coverage assessment.</p>
+        <p class="text-sm text-body">This immutable record preserves reported context. Unknown fields are shown explicitly. Imported reports retain separate parser observations and original artifacts.</p>
         <twig:Card>
             <twig:Card:Header><twig:Card:Title as="h2">Record identity</twig:Card:Title></twig:Card:Header>
             <twig:Card:Content>

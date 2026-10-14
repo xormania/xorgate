@@ -1,0 +1,12 @@
+{% extends 'layouts/management.html.twig' %}
+
+{% block title %}Xorgate · Original artifact{% endblock %}
+{% block page_title %}Original artifact{% endblock %}
+{% block page_description %}{{ project.name }} · {{ execution.execution_id }}{% endblock %}
+{% block page_before %}<a href="{{ path('app_execution_evidence', {projectId: project.project_id, executionId: execution.execution_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to report imports</a>{% endblock %}
+{% block content %}
+    <div class="space-y-6">
+        {% include 'reports/_artifact.html.twig' with {artifact: artifact} only %}
+        {% include 'reports/_provenance.html.twig' with {execution: execution} only %}
+    </div>
+{% endblock %}

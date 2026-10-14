@@ -2,7 +2,7 @@ doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
         # Operational tables and the implicit BIGSERIAL sequence belong to explicit migrations.
-        schema_filter: '~^(?!foundation_probe$|managed_project$|execution_record$|registry_request$|messenger_messages(?:_id_seq)?$)~'
+        schema_filter: '~^(?!foundation_probe$|managed_project$|execution_record$|registry_request$|report_artifact$|report_import$|report_suite$|report_case$|messenger_messages(?:_id_seq)?$)~'
     orm:
         auto_mapping: true
         mappings:
