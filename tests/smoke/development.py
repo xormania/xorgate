@@ -167,15 +167,23 @@ def profiler(base_url):
         token = response.headers.get("X-Debug-Token", "")
         require(re.fullmatch(r"[a-f0-9]{6,64}", token), "Opt-in request did not produce a real profiler token")
         read_response(response)
-    with urlopen(base_url + "/_profiler/" + token, timeout=20) as response:
-        require(response.status == 200, "Stored request profile could not be opened")
-        content = read_response(response).decode()
-        require("/projects" in content and "app_projects" in content,
-                "Profiler did not retain the measured application request")
     profile = mate_tool("symfony-profiler-get", token=token).get("untrusted_data", {})
-    require(profile.get("token") == token and profile.get("status_code") == 200 and "/projects" in profile.get("url", ""),
+    require(profile.get("token") == token and profile.get("status_code") == 200
+            and profile.get("method") == "GET" and profile.get("url") == base_url + "/projects?profile=1",
             "Mate did not inspect the profile of the actual HTTP request")
-    require(profile.get("collectors"), "Mate did not expose the stored request profile's collectors")
+    request_uri = f"symfony-profiler://profile/{token}/request"
+    require(any(collector.get("name") == "request" and collector.get("uri") == request_uri
+                for collector in profile.get("collectors", [])), "Mate did not expose the stored request collector")
+    contents = mate("resources:read", request_uri, "--format=json")
+    summary = next((item.get("text", {}).get("untrusted_data", {}).get("summary", {})
+                    for item in contents if item.get("uri") == request_uri), {})
+    require(summary.get("route") == "app_projects" and summary.get("path") == "/projects"
+            and summary.get("method") == "GET" and summary.get("status_code") == 200,
+            "Stored request collector does not match the measured application route")
+    with urlopen(base_url + "/_profiler/" + token, timeout=20) as response:
+        require(response.status == 200 and "text/html" in response.headers.get("Content-Type", ""),
+                "Native profiler interface could not be opened")
+        require(read_response(response), "Native profiler interface returned an empty page")
     return {"manual_request_profile": True, "profile_inspected_by_mate": True, "route": "app_projects",
             "ordinary_request_profile": False, "ordinary_page_csp": "strict"}
 
