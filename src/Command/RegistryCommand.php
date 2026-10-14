@@ -40,7 +40,7 @@ abstract class RegistryCommand extends Command
 
     protected function configureInput(): void
     {
-        $this->addOption('input', null, InputOption::VALUE_REQUIRED, 'JSON object file (maximum 64 KiB), or - for standard input. Include your request_id UUID.', '-');
+        $this->addOption('input', null, InputOption::VALUE_REQUIRED, 'JSON object file (maximum 64 KiB). Use --input=- or omit this option for standard input. Include your request_id UUID.', '-');
     }
 
     protected function configurePage(): void

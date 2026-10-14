@@ -192,13 +192,13 @@ def register(client, browser):
         "repository_url": "https://example.test/ci/python.git", "repository_identity": "example:repo:python",
         "runtimes": ["Python 3.13"],
     }
-    python = cli("xorgate:project:register", "--input", "-", input_value=python_input)
+    python = cli("xorgate:project:register", "--input=-", input_value=python_input)
     require(get_project(client, python["project_id"]) == python, "MCP could not see the CLI-created project")
     require(client.tool("xorgate_project_register", {"input": python_input}) == python,
             "MCP replay changed the CLI-created project")
     changed = dict(python_input, name="Conflicting registration")
     require_error(client.tool("xorgate_project_register", {"input": changed}), "conflict")
-    require_error(cli("xorgate:project:register", "--input", "-", input_value=changed, success=False), "conflict")
+    require_error(cli("xorgate:project:register", "--input=-", input_value=changed, success=False), "conflict")
 
     status, _, _, execution_form = browser.request(f"/projects/{mixed['project_id']}/executions/new")
     require(status == 200 and execution_form.form_id == "execution", "Native execution form did not render")
@@ -213,7 +213,7 @@ def register(client, browser):
     first = client.tool("xorgate_execution_record", {"projectId": mixed["project_id"], "input": first_input})
     require(client.tool("xorgate_execution_record", {"projectId": mixed["project_id"], "input": first_input}) == first,
             "Execution replay changed its stored provenance")
-    second = cli("xorgate:execution:record", mixed["project_id"], "--input", "-", input_value=execution_input(2))
+    second = cli("xorgate:execution:record", mixed["project_id"], "--input=-", input_value=execution_input(2))
     require(first["execution_id"] != second["execution_id"], "Provider attempts collapsed into one execution")
     require(first["source"]["tested_revision"] == second["source"]["tested_revision"], "Attempt test did not use the same tested revision")
     require(first["native_identity"]["run_attempt"] == 1 and second["native_identity"]["run_attempt"] == 2,

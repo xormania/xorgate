@@ -20,13 +20,15 @@ Replaying an identical command returns its original response, even after a later
 | `xorgate_execution_get` | `xorgate:execution:get` | Read an execution within its project |
 | `xorgate_execution_list` | `xorgate:execution:list` | Read a bounded execution page within a project |
 
-Ask MCP `tools/list` for the current argument schemas. CLI mutations accept a JSON object through `--input <file>` or standard input (`--input -`, the default), limited to 64 KiB and nesting depth 16. Queries accept UUID arguments; list commands accept `--limit` and `--cursor`. Errors are bounded JSON with `accepted: false` and an `error.code` of `invalid_input`, `not_found`, `conflict`, `capacity` or `unavailable`; CLI errors have a nonzero exit status.
+Ask MCP `tools/list` for the current argument schemas. CLI mutations accept a JSON object through `--input <file>` or standard input (`--input=-`, also the default when omitted), limited to 64 KiB and nesting depth 16. Queries accept UUID arguments; list commands accept `--limit` and `--cursor`. Service errors return bounded JSON with `accepted: false` and an `error.code` of `invalid_input`, `not_found`, `conflict`, `capacity` or `unavailable`; CLI errors have a nonzero exit status. MCP schema validation failures use the protocol's invalid-parameters error.
 
 Project input contains `request_id`, `name`, nullable `repository_url`, nullable `repository_identity` and a `runtimes` array. `schema_version` is optional and, when supplied, must be 1. Names have a maximum of 120 characters, repository identity 160, repository URL 2,048 and runtime declarations eight strings of at most 80 characters. Unknown fields are rejected. Repository identity is an opaque, caller-declared identity; it is not remotely verified. Repository URLs cannot contain embedded passwords, query strings or fragments.
 
 ## Execution context
 
 An execution belongs to exactly one project. Its context is stored at creation and is unaffected by later project edits. Optional metadata is represented as null, and unknown runtimes as an empty array. Revisions and workspace fingerprints are opaque values; Xorgate does not invent hashes or infer a tested revision from a PR head.
+
+Prefer JSON objects for provenance groups. The pinned MCP SDK decodes an empty object as an empty PHP array, so schemas also accept empty arrays as equivalent unknown groups. Nonempty arrays are rejected.
 
 | Object | Fields | Maximum string lengths |
 | --- | --- | --- |

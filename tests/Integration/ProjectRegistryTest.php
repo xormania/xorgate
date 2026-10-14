@@ -354,7 +354,7 @@ final class ProjectRegistryTest extends KernelTestCase
         $this->connection->executeQuery('SELECT pg_advisory_xact_lock(?)', [RegistryLimits::LOCK_KEY]);
         try {
             foreach ($inputs as $input) {
-                $process = new Process([PHP_BINARY, 'bin/console', 'xorgate:project:register', '--input', '-'], self::$kernel->getProjectDir(), [
+                $process = new Process([PHP_BINARY, 'bin/console', 'xorgate:project:register', '--input=-'], self::$kernel->getProjectDir(), [
                     'APP_ENV' => 'test',
                     // Explicit subprocess limits must not be reloaded as parent Dotenv defaults.
                     'SYMFONY_DOTENV_VARS' => false,
@@ -373,11 +373,36 @@ final class ProjectRegistryTest extends KernelTestCase
         $results = [];
         foreach ($processes as $process) {
             $code = $process->wait();
-            $result = json_decode($process->getOutput(), true, 512, JSON_THROW_ON_ERROR);
+            try {
+                $result = json_decode($process->getOutput(), true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                self::fail('Registration CLI did not return JSON. '.self::childDiagnostic($process));
+            }
+            self::assertIsArray($result, self::childDiagnostic($process));
             $results[] = [$code, $result];
         }
 
         return $results;
+    }
+
+    private static function childDiagnostic(Process $process): string
+    {
+        $diagnostic = 'Exit '.$process->getExitCode().'; stdout: '.$process->getOutput().'; stderr: '.$process->getErrorOutput();
+        foreach (['APP_SECRET', 'XORGATE_MCP_TOKEN', 'DATABASE_URL'] as $name) {
+            $value = $_SERVER[$name] ?? $_ENV[$name] ?? getenv($name);
+            if (is_string($value) && '' !== $value) {
+                $diagnostic = str_replace($value, '<redacted>', $diagnostic);
+                if ('DATABASE_URL' === $name) {
+                    $password = parse_url($value, PHP_URL_PASS);
+                    if (is_string($password) && '' !== $password) {
+                        $diagnostic = str_replace($password, '<redacted>', $diagnostic);
+                    }
+                }
+            }
+        }
+        $diagnostic = preg_replace('/"password"\s*:\s*"[^"]*"/', '"password":"<redacted>"', $diagnostic) ?? 'Child diagnostic unavailable.';
+
+        return substr($diagnostic, 0, 4096);
     }
 
     private function projectInput(string $name = 'Project', array $runtimes = ['Rust']): array
