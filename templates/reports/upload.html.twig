@@ -8,6 +8,22 @@
 
 {% block content %}
     <div class="space-y-6" data-xorgate-report-upload="{{ execution.execution_id }}">
+        <twig:Card data-xorgate-intake-capacity="{{ capacity.status }}">
+            <twig:Card:Header><twig:Card:Title as="h2">Shared intake capacity</twig:Card:Title></twig:Card:Header>
+            <twig:Card:Content>
+                <p class="mb-4 text-sm text-body">{{ capacity.status == 'limited' ? 'New intake is limited.' : 'New intake can be admitted within these installation limits.' }} Existing request replays remain available. Admission is checked again when an upload is submitted.</p>
+                {% if capacity.reason is not null %}<p class="mb-4 text-sm text-body">Limit reason: {{ capacity.reason }}</p>{% endif %}
+                <dl class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div><dt class="text-sm font-medium text-heading">Pending operations</dt><dd class="mt-1 text-sm text-body" data-xorgate-intake-pending="{{ capacity.usage.pending }}">{{ capacity.usage.pending }} / {{ capacity.limits.pending }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Retained operations</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.retained }} / {{ capacity.limits.retained }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">New operations in the last minute</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.created_last_minute }} / {{ capacity.limits.new_per_minute }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Bytes referenced by retained artifacts</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.reference_bytes|number_format }} / {{ capacity.limits.storage_bytes|number_format }} bytes</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Measured stored blob bytes</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.blob_bytes|number_format }} / {{ capacity.limits.storage_bytes|number_format }} bytes</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Stored original blobs</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.blob_files }} / {{ capacity.limits.blob_files }}{{ capacity.usage.blob_scan_truncated ? ' (bounded scan stopped)' : '' }}</dd></div>
+                </dl>
+                {% if capacity.usage.blob_scan_truncated %}<p class="mt-4 text-sm text-body">The blob scan reached its bound; measured blob bytes and file counts are partial.</p>{% endif %}
+            </twig:Card:Content>
+        </twig:Card>
         <twig:Card class="max-w-3xl">
             <twig:Card:Header><twig:Card:Title as="h2">Import an existing report</twig:Card:Title></twig:Card:Header>
             <twig:Card:Content>

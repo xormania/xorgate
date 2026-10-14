@@ -201,6 +201,8 @@ def queued(client, browser, report, proof):
     upload_path = base + "/reports/new"
     status, _, form = browser.page(upload_path)
     require(status == 200 and form.form_id == "report_upload", "Native upload form did not render with its stable identity")
+    require(form.state.get("data-xorgate-intake-capacity") == "available" and form.state.get("data-xorgate-intake-pending") == "0",
+            "Native upload page did not show measured empty intake capacity")
     fields = dict(form.form_values)
     require(fields.get("report_upload[_token]") and fields.get("report_upload[request_id]"), "Upload form omitted CSRF or request identity")
     fields.update({"report_upload[report_role]": "controlled-phpunit", "report_upload[format]": "junit", "report_upload[confirm_context]": "1"})
@@ -232,8 +234,12 @@ def queued(client, browser, report, proof):
     require(cli("xorgate:report:submit", ids["projectId"], ids["executionId"], "--input=-", "--file=var/ci/controlled-producer-report.xml", input_value=new_input, success=False) == rejected,
             "CLI and MCP admission limits disagree")
     limited_fields = fields | {"report_upload[request_id]": new_input["request_id"]}
-    status, _, _ = browser.upload(upload_path, limited_fields, content)
+    status, _, limited_content = browser.upload(upload_path, limited_fields, content)
     require(status == 429, "Native form did not show the same capacity rejection")
+    limited_page = IntakePage()
+    limited_page.feed(limited_content.decode("utf-8"))
+    require(limited_page.state.get("data-xorgate-intake-capacity") == "limited" and limited_page.state.get("data-xorgate-intake-pending") == "1",
+            "Native rejection did not retain the same measured pending capacity")
     oversized = cli("xorgate:artifact:read", ids["projectId"], ids["executionId"], current["artifact"]["artifact_id"], "--limit=32769", success=False)
     require_error(oversized, "invalid_input")
     other = client.tool("xorgate_execution_record", {"projectId": ids["projectId"], "input": {"request_id": str(uuid.uuid4()), "source": {"tested_revision": proof["source_revision"]}}})

@@ -84,6 +84,9 @@ final class ReportIntakeController extends AbstractController
                     'operationId' => $operation['operation_id'],
                 ], Response::HTTP_SEE_OTHER);
             } catch (\InvalidArgumentException|\RuntimeException $error) {
+                if ($error instanceof IntakeCapacityException) {
+                    $capacity = $error->capacity;
+                }
                 $form->addError(new FormError($this->safeMessage($error)));
                 $status = $error instanceof \InvalidArgumentException ? Response::HTTP_UNPROCESSABLE_ENTITY : $this->errorStatus($error);
             } finally {
@@ -96,6 +99,7 @@ final class ReportIntakeController extends AbstractController
         return $this->render('reports/upload.html.twig', $context + [
             'form' => $form->createView(),
             'max_bytes' => $maxBytes,
+            'capacity' => $capacity,
         ], new Response(null, $status));
     }
 

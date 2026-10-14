@@ -84,7 +84,7 @@ Override the positive `XORGATE_PROBE_MAX_PENDING`, `XORGATE_PROBE_MAX_RETAINED`,
 docker compose exec -T php php bin/console xorgate:probe:cleanup
 ```
 
-If recovery work fills the pending budget, inspect the failed transport and recover or retire that work before admitting more probes. These limits govern foundation probes; the managed-project operation policy remains later domain work.
+If recovery work fills the pending budget, inspect the failed transport and recover or retire that work before admitting more probes. These limits govern foundation probes. Report imports have separate installation-wide admission, byte and retention budgets described in the [intake contract](docs/artifact-intake.md).
 
 ## Services and data
 
