@@ -42,7 +42,7 @@ docker compose restart worker
 | Symfony Console and Maker | Discover installed commands and generate code with their native conventions | `php` application service, `/app` |
 | Symfony AI Mate | Installed application diagnostics, tool/resource discovery and Symfony introspection | `./bin/mate`, using the same `php` service |
 | Serena | Source navigation, language-server queries and explicitly enabled source edits | `./bin/serena`, separate pinned container bound to this checkout |
-| Xorgate MCP | Runtime status, project registration and stored execution context | `/mcp` or `mcp:server xorgate` in the application |
+| Xorgate MCP | Runtime status, project/execution records, report intake and retained evidence | `/mcp` or `mcp:server xorgate` in the application |
 
 Discover the installed Makers and inspect their current arguments before generating code:
 
@@ -111,6 +111,9 @@ For a changed behaviour, run the smallest check that actually exercises it, then
 | `src/Controller/DashboardController.php` | Render the observed foundation status |
 | `src/Service/FoundationStatus.php` | Shared web/MCP runtime snapshot |
 | `src/Service/ProjectRegistry.php` | Shared project commands, queries and immutable execution context |
+| `src/Service/ReportIntake.php`, `src/Service/ReportArtifactStore.php` | Durable report admission, retained bytes, operation/evidence queries and recovery |
+| `src/Report/`, `src/MessageHandler/` | Bounded report adapter and Messenger normalization |
+| `src/Controller/Artifact/`, `templates/reports/` | Native upload forms and UXor evidence inspection |
 | `src/Controller/ProjectController.php`, `templates/projects/` | UXor operator registry and native Symfony forms |
 | `src/Security/CspNonce.php` | Main-request script/style nonces compatible with persistent workers |
 | `src/EventListener/SecurityHeadersListener.php` | Browser response headers and CSP |
@@ -193,4 +196,6 @@ The HTTP transport is served from `/mcp` with a Bearer token configured by `XORG
 
 Database data and `/var/lib/xorgate/artifacts` are persistent. Restarting or stopping containers retains these volumes. Removing volumes deletes their development data, so backup/export work must account for both stores.
 
-Project registration and immutable execution provenance are implemented through the [shared registry contract](project-registry.md). Third-party test execution, report ingestion, external CI adapters, coverage calculations, diagnostics orchestration, multi-user permissions and a published installable image remain subsequent work. Docker packaging for Xorgate's own app does not require a managed project to use Docker. Deployment configuration and an authorization design must be completed before offering the system as a shared remote service.
+Project registration and immutable execution provenance use the [shared registry contract](project-registry.md). Report ingestion uses the [artifact intake contract](artifact-intake.md): preserve bytes before publishing a committed operation, enqueue through the same DBAL connection, parse outside the admission transaction, and commit normalized observations atomically. Filesystem publication and database commit remain separate boundaries; bounded cleanup reconciles abandoned staged/orphan bytes. Back up the database and artifact volume together while writes are stopped.
+
+Third-party test execution, external CI adapters, coverage calculations, diagnostics orchestration, multi-user permissions and a published installable image remain subsequent work. Docker packaging for Xorgate's own app does not require a managed project to use Docker. Deployment configuration and an authorization design must be completed before offering the system as a shared remote service.

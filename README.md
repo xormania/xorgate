@@ -2,7 +2,7 @@
 
 Xorgate is a testing and CI management system for projects in any language or framework. Its intended scope includes persistent execution data, logs, verification evidence, system coverage, diagnostics and operational insight. People interact through the web application; agents use MCP. Both interfaces use the same application services and records.
 
-The application provides a Symfony 8.1 runtime in Symfony Docker, a UXor operator interface, PostgreSQL persistence, a durable Messenger queue, an asynchronous worker, local artifact storage and MCP tools. Register language-neutral projects at `/projects` and preserve immutable execution provenance through the same web, MCP and CLI services. A persistent runtime probe demonstrates the asynchronous foundation. Report ingestion, test execution adapters, CI-provider integrations and coverage assessments remain subsequent domain work.
+The application provides a Symfony 8.1 runtime in Symfony Docker, a UXor operator interface, PostgreSQL persistence, a durable Messenger queue, an asynchronous worker, local artifact storage and MCP tools. Register language-neutral projects at `/projects`, record immutable execution provenance, and import existing JUnit reports through shared web, MCP and CLI services. Intake retains original bytes and returns a durable operation handle while Messenger normalizes bounded observations. Test execution adapters, CI-provider integrations and coverage assessments remain subsequent domain work.
 
 Symfony and PHP are Xorgate's implementation runtime. Managed projects can use Rust, Python, TypeScript, JVM, .NET, Go, native code or mixed-language environments.
 
@@ -96,13 +96,16 @@ If recovery work fills the pending budget, inspect the failed transport and reco
 
 Artifact storage is mounted at `/var/lib/xorgate/artifacts`. Keep the database and artifact volumes together when backing up the application. `docker compose down` retains volumes; `docker compose down --volumes` removes persistent development data.
 
-The [project registry contract](docs/project-registry.md) describes registration, versioned metadata edits, immutable execution context, idempotent commands, bounded queries and admission limits. The application does not yet provide report ingestion, remote execution, CI integrations, log search, coverage calculations or assessment workflows. The initial probe and correlated application logs make the asynchronous path available for extending those capabilities.
+The [project registry contract](docs/project-registry.md) describes registration, versioned metadata edits, immutable execution context, idempotent commands, bounded queries and admission limits. The [artifact intake contract](docs/artifact-intake.md) describes report submission, parser boundaries, original-byte retrieval and installation-wide capacity/retention. A completed parser can observe failing tests; parsing never establishes an execution verdict. Missing, corrupt and expired original bytes remain visible independently of normalized observations.
+
+Open an execution's report page to upload and inspect evidence manually. Agents can submit small reports through `xorgate_report_submit`, inspect `xorgate_operation_get`, and query `xorgate_observations_list` or bounded original bytes through `xorgate_artifact_read`. Use CLI streams for larger files. The application does not yet provide remote test execution, CI-provider synchronization, log search, coverage calculations or assessment workflows.
 
 ## Development and design
 
 - [Development workflow](docs/development.md)
 - [Implementation plan and work orders](docs/implementation-plan.md)
 - [Project registry and execution provenance](docs/project-registry.md)
+- [Artifact and report intake](docs/artifact-intake.md)
 - [System design and scope](docs/system-design.md)
 - [Symfony and UXor setup reference](docs/symfony-uxor-setup.md)
 - [Agent instructions](AGENTS.md)

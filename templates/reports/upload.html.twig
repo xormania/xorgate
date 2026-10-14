@@ -1,0 +1,34 @@
+{% extends 'layouts/management.html.twig' %}
+{% form_theme form 'form/flowbite_layout.html.twig' %}
+
+{% block title %}Xorgate · Upload report{% endblock %}
+{% block page_title %}Upload report{% endblock %}
+{% block page_description %}{{ project.name }} · {{ execution.execution_id }}{% endblock %}
+{% block page_before %}<a href="{{ path('app_execution_show', {projectId: project.project_id, executionId: execution.execution_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to execution context</a>{% endblock %}
+
+{% block content %}
+    <div class="space-y-6" data-xorgate-report-upload="{{ execution.execution_id }}">
+        <twig:Card class="max-w-3xl">
+            <twig:Card:Header><twig:Card:Title as="h2">Import an existing report</twig:Card:Title></twig:Card:Header>
+            <twig:Card:Content>
+                <p class="mb-4 text-sm text-body">The original bytes are retained and parsing runs asynchronously. Uploading a report does not execute tests or change the execution context. The upload limit is {{ max_bytes|number_format }} bytes.</p>
+                <p class="mb-5 text-sm text-body">Verify the source fields against the report's actual origin. At least one known field must match this execution. Unknown-only execution context cannot establish this source check; record an execution with known source context first.</p>
+                {{ form_start(form, {attr: {id: 'report_upload', novalidate: true}, enctype: 'multipart/form-data'}) }}
+                    {{ form_errors(form) }}
+                    {{ form_errors(form.request_id) }}
+                    {{ form_row(form.report_role) }}
+                    {{ form_row(form.format) }}
+                    {{ form_row(form.report) }}
+                    {{ form_row(form.source) }}
+                    {{ form_row(form.confirm_context) }}
+                    {% if form.vars.submitted %}<p class="mb-5 text-sm text-body">The selected file is not retained in this form. Select it again before retrying.</p>{% endif %}
+                    <div class="flex flex-wrap gap-3">
+                        <twig:Button type="submit">Upload for intake</twig:Button>
+                        <twig:Button as="a" variant="outline" href="{{ path('app_execution_evidence', {projectId: project.project_id, executionId: execution.execution_id}) }}">View report imports</twig:Button>
+                    </div>
+                {{ form_end(form) }}
+            </twig:Card:Content>
+        </twig:Card>
+        {% include 'reports/_provenance.html.twig' with {execution: execution} only %}
+    </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'layouts/management.html.twig' %}
+
+{% block title %}Xorgate · Report imports{% endblock %}
+{% block page_title %}Report imports{% endblock %}
+{% block page_description %}{{ project.name }} · {{ execution.execution_id }}{% endblock %}
+{% block page_before %}<a href="{{ path('app_execution_show', {projectId: project.project_id, executionId: execution.execution_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to execution context</a>{% endblock %}
+{% block page_actions %}<twig:Button as="a" href="{{ path('app_report_upload', {projectId: project.project_id, executionId: execution.execution_id}) }}">Upload report</twig:Button>{% endblock %}
+
+{% block content %}
+    <div class="space-y-6" data-xorgate-evidence-state="{{ evidence.items is empty ? 'empty' : 'populated' }}" data-xorgate-execution-id="{{ execution.execution_id }}">
+        <p class="text-sm text-body">Each import retains its own original artifact and parser observations. Intake completion describes processing of a report; native case outcomes remain separate. Missing reports and expected test populations are not inferred.</p>
+        {% if evidence.items is empty %}
+            <twig:EmptyState title="{{ cursor is null ? 'No reports imported' : 'No more imports' }}" description="{{ cursor is null ? 'Upload an existing report for this execution to retain its original bytes and inspect the adapter result.' : 'You have reached the end of this import listing.' }}" class="rounded-base border border-default bg-neutral-primary-soft">
+                <twig:block name="actions">
+                    <twig:Button as="a" href="{{ cursor is null ? path('app_report_upload', {projectId: project.project_id, executionId: execution.execution_id}) : path('app_execution_evidence', {projectId: project.project_id, executionId: execution.execution_id}) }}">{{ cursor is null ? 'Upload report' : 'First page' }}</twig:Button>
+                </twig:block>
+            </twig:EmptyState>
+        {% else %}
+            <div class="overflow-x-auto rounded-base border border-default bg-neutral-primary-soft">
+                <twig:Table>
+                    <twig:Table:Caption>Stored report imports</twig:Table:Caption>
+                    <twig:Table:Header><twig:Table:Row>
+                        <twig:Table:Head>Report role / operation</twig:Table:Head>
+                        <twig:Table:Head>Intake state</twig:Table:Head>
+                        <twig:Table:Head>Parser outcome</twig:Table:Head>
+                        <twig:Table:Head>Original artifact</twig:Table:Head>
+                        <twig:Table:Head>Received</twig:Table:Head>
+                    </twig:Table:Row></twig:Table:Header>
+                    <twig:Table:Body>
+                        {% for operation in evidence.items %}
+                            <twig:Table:Row data-xorgate-intake-operation-id="{{ operation.operation_id }}" data-xorgate-intake-status="{{ operation.status }}">
+                                <twig:Table:Head scope="row">
+                                    <a href="{{ path('app_intake_operation', {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}) }}" class="font-medium text-fg-brand hover:underline">{{ operation.report_role }}</a>
+                                    <p class="mt-1 break-all text-xs font-normal text-body">{{ operation.operation_id }}</p>
+                                </twig:Table:Head>
+                                <twig:Table:Cell>{{ operation.status }}</twig:Table:Cell>
+                                <twig:Table:Cell>{{ operation.parser_outcome is null ? 'Not recorded yet' : operation.parser_outcome }}</twig:Table:Cell>
+                                <twig:Table:Cell>
+                                    <a href="{{ path('app_report_artifact', {projectId: project.project_id, executionId: execution.execution_id, artifactId: operation.artifact.artifact_id}) }}" class="text-fg-brand hover:underline">{{ operation.artifact.availability.status }}</a>
+                                </twig:Table:Cell>
+                                <twig:Table:Cell><time datetime="{{ operation.created_at }}">{{ operation.created_at }}</time></twig:Table:Cell>
+                            </twig:Table:Row>
+                        {% endfor %}
+                    </twig:Table:Body>
+                </twig:Table>
+            </div>
+        {% endif %}
+        {% include 'projects/_pagination.html.twig' with {page: evidence, cursor: cursor, route: 'app_execution_evidence', route_parameters: {projectId: project.project_id, executionId: execution.execution_id}} only %}
+        {% include 'reports/_provenance.html.twig' with {execution: execution} only %}
+    </div>
+{% endblock %}

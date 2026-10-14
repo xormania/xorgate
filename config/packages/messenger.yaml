@@ -18,3 +18,4 @@ framework:
                     auto_setup: false
         routing:
             App\Message\RunFoundationProbe: async
+            App\Message\NormalizeReport: async

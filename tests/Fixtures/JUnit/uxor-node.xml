@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="listedTests reads every test of a --list report, keyed as durations.json names it" time="0.001745" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="the longest tests go first, each to the least loaded shard: the shards balance by time, not count" time="0.000867" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="the plan is deterministic: the same list in another order gives the same shards" time="0.000481" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="every listed test lands in exactly one shard, an untimed one at its file's mean time" time="0.000470" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="the completeness check names a dropped, a duplicated and an unlisted test" time="0.000214" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="without timings, or with too few of the listed tests timed, it falls back to Playwright's --shard" time="0.000294" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="a file that cannot be split by test goes whole to one shard: serial, a title the list cannot name, a title that prefixes another" time="0.000482" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="each shard's lines select exactly its tests, read as Playwright reads a --test-list" time="0.001439" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="mergeTimings: a browser seen whole replaces its times, a partial one keeps the rest, a failed test keeps its old time" time="0.000750" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="plan writes each shard's test list and plan.json, and gives Playwright its arguments" time="0.065045" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="plan falls back to --shard=N/M when the timings file is missing, and says why" time="0.043437" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="plan refuses a list it cannot read: a shard must never run a guess" time="0.116836" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="verify passes when Playwright lists exactly the shard's tests, and fails naming a dropped or an extra one" time="0.156774" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="timings reads every shard's durations.json into the timings file plan reads" time="0.101807" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<testcase name="bad usage exits 64" time="0.111096" classname="test" file="tools/tests/shard-plan.test.mjs"/>
+	<!-- tests 15 -->
+	<!-- suites 0 -->
+	<!-- pass 15 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 701.51628 -->
+</testsuites>
