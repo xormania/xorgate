@@ -181,9 +181,16 @@ final class ProjectRegistryTest extends KernelTestCase
     public function testEvidenceContextRequiresAtLeastOneKnownSourceIdentifier(): void
     {
         $project = $this->registry->register($this->projectInput());
-        $unknown = $this->registry->recordExecution($project['project_id'], ['request_id' => $this->requestId()]);
+        $unknown = $this->registry->recordExecution($project['project_id'], [
+            'request_id' => $this->requestId(), 'source' => ['tested_revision' => "\u{00A0}"],
+        ]);
+        self::assertNull($unknown['source']['tested_revision']);
         $requests = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request');
-        foreach ([['tested_revision' => null], ['tested_revision' => '   '], ['workspace_fingerprint' => '', 'pr_merge_revision' => null]] as $context) {
+        foreach ([
+            ['tested_revision' => null], ['tested_revision' => '   '],
+            ['tested_revision' => "\u{00A0}"], ['tested_revision' => "\u{2003}"], ['tested_revision' => "\u{3000}"],
+            ['workspace_fingerprint' => '', 'pr_merge_revision' => null],
+        ] as $context) {
             try {
                 $this->registry->assertExecutionContext($project['project_id'], $unknown['execution_id'], $context);
                 self::fail('Unknown-only evidence context must not authorize attachment.');
@@ -196,11 +203,15 @@ final class ProjectRegistryTest extends KernelTestCase
 
         // An opaque, nonempty "0" is a known revision even though PHP treats it as falsey.
         $known = $this->registry->recordExecution($project['project_id'], [
-            'request_id' => $this->requestId(), 'source' => ['tested_revision' => '0'],
+            'request_id' => $this->requestId(), 'source' => ['tested_revision' => "\u{00A0}0\u{2003}"],
         ]);
+        self::assertSame('0', $known['source']['tested_revision']);
         $requests = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request');
         self::assertSame($known, $this->registry->assertExecutionContext($project['project_id'], $known['execution_id'], [
             'tested_revision' => '0', 'workspace_fingerprint' => null,
+        ]));
+        self::assertSame($known, $this->registry->assertExecutionContext($project['project_id'], $known['execution_id'], [
+            'tested_revision' => "\u{00A0}0\u{2003}\u{3000}", 'workspace_fingerprint' => null,
         ]));
         self::assertSame($requests, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request'));
         self::assertCount(2, $this->registry->listExecutions($project['project_id'])['items']);

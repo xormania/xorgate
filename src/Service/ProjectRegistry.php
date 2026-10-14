@@ -344,7 +344,8 @@ final class ProjectRegistry
             || preg_match('/[\x00-\x1F\x7F]/u', $value) || iconv_strlen($value, 'UTF-8') > $max) {
             throw new \InvalidArgumentException($field.' must contain at most '.$max.' characters without control characters.');
         }
-        $value = trim($value);
+        // Unicode separators and NEXT LINE are whitespace too; preserve characters within a value.
+        $value = preg_replace('/\A[\s\p{Z}\x{0085}]+|[\s\p{Z}\x{0085}]+\z/u', '', $value);
 
         return '' === $value ? null : $value;
     }
