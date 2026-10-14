@@ -8,7 +8,7 @@ Symfony and PHP are Xorgate's implementation runtime. Managed projects can use R
 
 ## Start the development application
 
-Requirements: Docker with the Compose plugin, Bash and access to the pinned container images, Composer package archives, UXor recipes and importmap assets. PHP and Composer run in containers; a host PHP installation is unnecessary.
+Requirements: Docker with the Compose plugin, Bash, Python 3 for checks, and access to the pinned container images, Composer package archives, UXor recipes and importmap assets. Xorgate's application image runs PHP 8.5. PHP and Composer run in containers; a host PHP installation is unnecessary.
 
 From the repository root:
 
@@ -28,7 +28,15 @@ docker compose down
 
 The dashboard displays current database, artifact-directory and queue readiness. It reports application foundation health; it does not claim coverage or correctness of any managed project.
 
-## Connect an agent
+## Develop Xorgate
+
+Use the installed Symfony tools against the running `php` application service. Run Symfony Console and its Makers with `docker compose exec -T php php bin/console …`; `./bin/mate` exposes installed Mate diagnostics in the same runtime. Serena supplies source navigation and edits through its separate, pinned development service. These tools support work on Xorgate's own code; the [development workflow](docs/development.md) describes their commands and workspace configuration.
+
+UXor is consumed through Symfony UX Toolkit 3.5.1. Selected recipes are copied into this application and maintained here, with AssetMapper/importmap, Stimulus, Turbo and TailwindBundle. The demo supplies examples for those integrations. Xorgate retains its reviewed recipe pin and application-owned layouts.
+
+Run `./bin/check-dev` for focused Mate environment and opt-in HTTP profiler checks against the running application; `./bin/check` includes it. Python 3 drives these checks from the host while PHP operations stay in the container. Serena acceptance runs separately after `./bin/serena pull`, as described in the development guide.
+
+## Connect a project-management agent
 
 The Symfony application exposes a Streamable HTTP MCP endpoint at `/mcp`. HTTP requests require `Authorization: Bearer <XORGATE_MCP_TOKEN>`; setup generates this token in the local, untracked `.env.local`. Configure the token through your client's secret/header settings. Local clients can instead use the named STDIO server through the running PHP container without an HTTP token header:
 

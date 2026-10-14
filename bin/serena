@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+cd "$root"
+compose=(docker compose --profile serena)
+
+usage() {
+    cat <<'HELP'
+Usage: bin/serena [--read-only | --write | pull]
+
+Start the pinned Serena v2 MCP server over standard input/output.
+Inspection is read-only by default; --write explicitly enables source editing.
+Run bin/setup first to install application dependencies. Run bin/serena pull
+once to download the exact image. Server startup never pulls an image.
+
+Call initial_instructions first, then supply its session_id as session on every
+serena_repl call. Each connection owns its REPL; the project index is persistent.
+HELP
+}
+
+mode=--read-only
+case "${1:-}" in
+    '') ;;
+    --read-only|--write) mode="$1"; shift ;;
+    pull) shift; mode=pull ;;
+    --help|-h) usage; exit 0 ;;
+    *) usage >&2; exit 2 ;;
+esac
+if (( $# )); then
+    usage >&2
+    exit 2
+fi
+
+if ! command -v docker >/dev/null || ! docker info >/dev/null 2>&1; then
+    printf '%s\n' 'Serena needs a working Docker engine and the Compose plugin.' >&2
+    exit 1
+fi
+image="$("${compose[@]}" config --images serena)"
+if [[ ! "$image" =~ ^ghcr\.io/xormania/php-serena@sha256:[a-f0-9]{64}$ ]]; then
+    printf '%s\n' 'Serena must use the exact published digest in compose.yaml.' >&2
+    exit 1
+fi
+if [[ "$mode" == pull ]]; then
+    exec "${compose[@]}" pull serena
+fi
+if ! docker image inspect "$image" >/dev/null 2>&1; then
+    printf '%s\n' 'The pinned Serena image is not installed. Run bin/serena pull first.' >&2
+    exit 1
+fi
+
+# The checked-out project and exact image each own a private index. Runtime
+# REPL state and new Serena memories stay inside the temporary container state.
+cache_root="$root/.serena/cache"
+cache_dir="$cache_root/${image##*@sha256:}"
+for directory in "$root/.serena" "$cache_root" "$cache_dir"; do
+    if [[ -L "$directory" ]]; then
+        printf '%s\n' 'Serena cache directories must not be symlinks.' >&2
+        exit 1
+    fi
+done
+umask 077
+mkdir -p "$cache_dir"
+chmod 700 "$cache_root" "$cache_dir"
+export XORGATE_SERENA_CACHE_DIR="$cache_dir"
+export XORGATE_SERENA_READ_ONLY=true
+if [[ "$mode" == --write ]]; then
+    export XORGATE_SERENA_READ_ONLY=false
+fi
+export PUID="${PUID:-$(id -u)}"
+export PGID="${PGID:-$(id -g)}"
+
+exec "${compose[@]}" run --rm -T --no-deps --pull never serena \
+    --project /workspace "$mode" --cache-dir /run/serena-cache \
+    --languages php_phpactor,typescript --request-timeout 180

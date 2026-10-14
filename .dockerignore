@@ -10,3 +10,6 @@ node_modules/
 out/
 test-results/
 playwright-report/
+.serena/cache/
+.serena/memories/
+.serena/project.local.yml

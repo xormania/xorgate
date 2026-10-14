@@ -12,3 +12,6 @@
 /compose.local.yaml
 __pycache__/
 *.pyc
+/.serena/cache/
+/.serena/memories/
+/.serena/project.local.yml

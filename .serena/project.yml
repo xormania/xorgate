@@ -1,0 +1,12 @@
+project_name: xorgate
+language_servers: [php_phpactor, typescript]
+read_only: true
+ignored_paths:
+    - .git
+    - var
+    - node_modules
+    - public/assets
+    - assets/vendor
+    - test-results
+    - playwright-report
+    - out
