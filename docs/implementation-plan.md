@@ -14,7 +14,7 @@ This is a delivery plan. Domain names, status enums, schema fields and adapter b
 
 The foundation and project registry are merged. [PR #8](https://github.com/xormania/xorgate/pull/8) delivered WO-001, and [PR #9](https://github.com/xormania/xorgate/pull/9) delivered the native Symfony AI Mate, profiler/logging and Serena development setup. The current baseline is `1b72935bc3a2ff439931337ac34dfd54abc7e717`. PR #9 passed [Docker CI](https://github.com/xormania/xorgate/actions/runs/38527736959) and received one code review plus one security review after green, with no major findings.
 
-WO-002 is active: retained report bytes, durable intake operations, Messenger normalization, shared operator/agent interfaces and the intake portion of WO-005. Passing checks for the development setup do not establish that report intake is complete; its own CI and acceptance evidence belong to the implementation PR.
+WO-002 is implemented in [PR #10](https://github.com/xormania/xorgate/pull/10): retained report bytes, durable intake operations, Messenger normalization, shared operator/agent interfaces and the intake portion of WO-005. Its check evidence and the fixes from the single code/security review round are tracked in that PR. The merged baseline remains PR #9 until the owner merges PR #10.
 
 | Capability | Observed baseline | Active/next extension |
 | --- | --- | --- |
@@ -156,4 +156,4 @@ Measure CI time, setup/cache cost and test scope before adding more shards, matr
 
 ## Immediate next action
 
-Complete [WO-002](https://github.com/xormania/xorgate/issues/3): import genuine JUnit bytes, preserve original provenance/integrity, inspect bounded observations through UI/MCP/CLI, and demonstrate replay/recovery/retention in Docker CI. Include global intake admission and byte budgets from WO-005 without pretending the shared bearer token identifies individual callers. After green and the single code/security review round, the owner can merge; WO-003 then adds native Playwright attempt/log evidence and existing Jev annotations.
+Finish the review fixes and Docker acceptance evidence for [PR #10](https://github.com/xormania/xorgate/pull/10), then leave merge to the owner. The single code/security review round has completed; repeat review only for a practical P1. Start [WO-003](https://github.com/xormania/xorgate/issues/4) in a separate PR using retained native Playwright retry-recovered, red and setup-failure evidence plus existing Jev assessments. Preserve individual attempts, native outcomes and bounded logs through the same Symfony intake services.

@@ -217,10 +217,15 @@ final class ReportIntakeTest extends KernelTestCase
         self::assertCount(1, iterator_to_array(self::getContainer()->get('messenger.transport.async')->get()));
         $this->connection->executeStatement("UPDATE report_import SET started_at = CURRENT_TIMESTAMP - INTERVAL '301 seconds' WHERE id = ?", [$queued['operation_id']]);
         $this->connection->executeStatement("UPDATE messenger_messages SET delivered_at = CURRENT_TIMESTAMP - INTERVAL '301 seconds' WHERE queue_name = 'async'");
-        $this->consumeOne();
+        // Recovery belongs to a fresh worker process. Reusing the abandoned
+        // PostgreSQL receiver also reuses its LISTEN/NOTIFY and idle polling state.
+        $worker = $this->cliProcess(['messenger:consume', 'async', '--limit=1', '--time-limit=5', '--sleep=0.01', '--no-interaction']);
+        $worker->run();
+        self::assertSame(0, $worker->getExitCode(), substr($worker->getOutput().$worker->getErrorOutput(), 0, 2000));
         $completed = $this->operation($queued);
         self::assertSame('completed', $completed['status']);
         self::assertSame(2, $completed['summary']['cases']);
+        self::assertSame(0, $this->countRows('messenger_messages'), 'The restarted worker must ACK the recovered original message.');
         $this->intake->process($queued['operation_id']);
         self::assertSame(2, $this->countRows('report_case'));
     }
