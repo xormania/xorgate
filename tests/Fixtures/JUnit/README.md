@@ -67,9 +67,44 @@ failure, runtime error, and skip. Its filename does not match application
 must be captured from that execution and labeled a controlled producer report;
 the PHP source alone is not evidence that it ran.
 
-With the locked PHPUnit `13.4.1`, the deliberate error makes the expected exit
-status 2, as specified by its
-[exit-code calculator](https://github.com/sebastianbergmann/phpunit/blob/ccde40327c501eebff192614b0dcf11806418901/src/TextUI/ShellExitCodeCalculator.php).
-Validation must also find exactly these four cases and one outcome of each
-kind. An exit status by itself cannot distinguish intended fixture outcomes
-from a configuration or runtime failure.
+The native PHPUnit execution returns exit status 2 when these cases include
+the deliberate error. Validation also finds exactly these four cases and one
+outcome of each kind. An exit status by itself cannot distinguish intended
+fixture outcomes from a configuration or runtime failure.
+
+`controlled-phpunit.xml` was captured from actual
+[Xorgate Docker CI run 38534840861](https://github.com/xormania/xorgate/actions/runs/38534840861),
+attempt 1, job `115755100852` (`Docker foundation`). The application container
+reported PHP `8.5.11` and PHPUnit `13.4.2`. All four native outcomes were emitted
+and the exact-case producer validation passed. The full CI run later failed
+when an application integration-test helper collided with an inherited final
+method; this controlled report does not claim the application suite passed.
+
+The recorded checkout was the synthetic PR merge revision
+`4e6f05f3932c0d2cb618bc5f51ce1d1f11562d20`, combining base
+`1b72935bc3a2ff439931337ac34dfd54abc7e717` and PR head
+`e55fc794538fa73a0454c3538780488ee4db9f02`. The producer proof recorded a dirty
+workspace. These source facts remain separate in the provenance JSON, with no
+invented workspace fingerprint.
+
+The original report and producer proof came from evidence artifact
+`11879202888`. Its ZIP SHA-256 was verified against GitHub's artifact metadata:
+`d9962a688ef146ab23b971b6199d45c8caa8432322dd4eead5b0f708a3f9aa2f`.
+Original report SHA-256 is
+`8d09a401caa0cb5e6cbcba8b7c2bb6787fee37afddfdb6177a1029241307a256`.
+The retained fixture removes only seven `/app/` path prefixes from source
+attributes and diagnostics. Its SHA-256 is
+`1baecadc766c718d4d1734fe4ba093af629fb67497437020cc0138b77beeae42`.
+Names, native child elements, assertion counts, diagnostics and measured times
+are otherwise unchanged.
+
+The report has one `<testsuite>` and four cases: one passed, one failure, one
+error, and one skipped. Case times total `0.001691` seconds; the suite reports
+`0.001690`, preserving the producer's independent rounding. It supplies neither
+a producer timestamp nor a structured case retry identity. The configured
+image and build target are recorded as source facts; an observed Docker image
+ID was not captured.
+
+See the observed version's
+[PHPUnit JUnit logger](https://github.com/sebastianbergmann/phpunit/blob/13.4.2/src/Logging/JUnit/JunitXmlLogger.php)
+for the native case attributes and outcome elements.

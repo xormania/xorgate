@@ -118,12 +118,12 @@ final class ReportIntakeTest extends KernelTestCase
                 self::fail('Evidence must remain scoped to its execution.');
             } catch (RegistryNotFoundException) { }
         }
-        self::assertSame(3, $this->count('report_import'));
-        self::assertSame(3, $this->count('messenger_messages'));
+        self::assertSame(3, $this->countRows('report_import'));
+        self::assertSame(3, $this->countRows('messenger_messages'));
         $badSchema = $this->metadata(); $badSchema['schema_version'] = null;
         try { $this->submit(self::twoCases(), $badSchema); self::fail('An explicit null schema version must be rejected.'); }
         catch (\InvalidArgumentException) { }
-        self::assertSame(3, $this->count('report_import'));
+        self::assertSame(3, $this->countRows('report_import'));
     }
 
     public function testActualWorkerAndCompletedRedeliveryPreserveObservationIdentity(): void
@@ -138,8 +138,8 @@ final class ReportIntakeTest extends KernelTestCase
         $this->consumeOne();
         self::assertSame($completed, $this->operation($queued));
         self::assertSame($cases, $this->intake->listObservations($this->projectId(), $this->executionId(), $queued['operation_id']));
-        self::assertSame(2, $this->count('report_case'));
-        self::assertSame(0, $this->count('messenger_messages'));
+        self::assertSame(2, $this->countRows('report_case'));
+        self::assertSame(0, $this->countRows('messenger_messages'));
     }
 
     public function testPublishedOriginalSurvivesAdmissionRollbackAndRetryReusesItWithinPhysicalBudget(): void
@@ -152,9 +152,9 @@ final class ReportIntakeTest extends KernelTestCase
         $broken = $this->service($limits, $bus);
         try { $this->submit($bytes, $metadata, $broken); self::fail('Admission cannot claim success without a durable queue message.'); }
         catch (\RuntimeException) { }
-        self::assertSame(0, $this->count('report_import'));
-        self::assertSame(0, $this->count('report_artifact'));
-        self::assertSame(0, $this->count('messenger_messages'));
+        self::assertSame(0, $this->countRows('report_import'));
+        self::assertSame(0, $this->countRows('report_artifact'));
+        self::assertSame(0, $this->countRows('messenger_messages'));
         self::assertSame(['status' => 'available', 'available' => true], $this->store->availability(hash('sha256', $bytes), strlen($bytes)));
         self::assertSame([], glob($this->directory.'/report-staging/.stage-*'));
         $recovered = $this->service($limits);
@@ -164,8 +164,8 @@ final class ReportIntakeTest extends KernelTestCase
         self::assertSame('queued', $queued['status']);
         self::assertSame(1, $this->store->usage(10)['files']);
         self::assertSame($queued, $this->submit($bytes, $metadata, $recovered), 'Equal replay bypasses a full pending/retained budget.');
-        self::assertSame(1, $this->count('report_import'));
-        self::assertSame(1, $this->count('messenger_messages'));
+        self::assertSame(1, $this->countRows('report_import'));
+        self::assertSame(1, $this->countRows('messenger_messages'));
     }
 
     public function testInterruptedNormalizationCommitsNoPartialCasesAndFreshLeaseNeverAcknowledgesWork(): void
@@ -178,8 +178,8 @@ final class ReportIntakeTest extends KernelTestCase
             catch (\RuntimeException) { }
             self::assertSame('failed', $this->operation($queued)['status']);
             self::assertNull($this->operation($queued)['parser_outcome']);
-            self::assertSame(0, $this->count('report_case'));
-            self::assertSame(0, $this->count('report_suite'));
+            self::assertSame(0, $this->countRows('report_case'));
+            self::assertSame(0, $this->countRows('report_suite'));
         } finally {
             $this->connection->executeStatement('DROP TRIGGER intake_test_case_failure ON report_case');
             $this->connection->executeStatement('DROP FUNCTION intake_test_reject_second_case()');
@@ -188,14 +188,14 @@ final class ReportIntakeTest extends KernelTestCase
         try { $this->intake->process($queued['operation_id']); self::fail('An active lease must cause recoverable redelivery, never an ACK.'); }
         catch (RecoverableMessageHandlingException) { }
         self::assertSame('running', $this->operation($queued)['status']);
-        self::assertSame(0, $this->count('report_case'));
+        self::assertSame(0, $this->countRows('report_case'));
         $this->connection->executeStatement("UPDATE report_import SET started_at = CURRENT_TIMESTAMP - INTERVAL '6 minutes' WHERE id = ?", [$queued['operation_id']]);
         $this->intake->process($queued['operation_id']);
         $completed = $this->operation($queued);
         self::assertSame('completed', $completed['status']);
         self::assertSame(2, $completed['summary']['cases']);
         $this->intake->process($queued['operation_id']);
-        self::assertSame(2, $this->count('report_case'));
+        self::assertSame(2, $this->countRows('report_case'));
     }
 
     public function testPostParseMissingAndCorruptOriginalRemainVisibleWithoutErasingObservations(): void
@@ -275,9 +275,9 @@ final class ReportIntakeTest extends KernelTestCase
             sort($codes);
             self::assertSame($sameRequest ? [0, 0] : [0, 1], $codes);
             self::assertCount(1, array_unique($ids));
-            self::assertSame(1, $this->count('report_import'));
-            self::assertSame(1, $this->count('report_artifact'));
-            self::assertSame(1, $this->count('messenger_messages'));
+            self::assertSame(1, $this->countRows('report_import'));
+            self::assertSame(1, $this->countRows('report_artifact'));
+            self::assertSame(1, $this->countRows('messenger_messages'));
         }
     }
 
@@ -321,7 +321,7 @@ final class ReportIntakeTest extends KernelTestCase
         self::assertSame('failed', $this->operation($active)['status']);
         $this->connection->executeStatement("UPDATE report_import SET completed_at = CURRENT_TIMESTAMP - INTERVAL '180 seconds' WHERE id = ?", [$old['operation_id']]);
         self::assertSame(1, $intake->cleanup()['pruned']);
-        self::assertSame(1, $this->count('report_import'));
+        self::assertSame(1, $this->countRows('report_import'));
         self::assertSame(self::twoCases(), $this->original($active));
     }
 
@@ -341,9 +341,9 @@ final class ReportIntakeTest extends KernelTestCase
         $process = $this->cliProcess(['xorgate:report:submit', $this->projectId(), $this->executionId(), '--input='.$this->directory.'/linked.json', '--file='.$report]);
         $process->run(); self::assertSame(2, $process->getExitCode());
         self::assertSame('invalid_input', $this->processJson($process)['error']['code']);
-        self::assertSame(0, $this->count('report_import'));
-        self::assertSame(0, $this->count('report_artifact'));
-        self::assertSame(0, $this->count('messenger_messages'));
+        self::assertSame(0, $this->countRows('report_import'));
+        self::assertSame(0, $this->countRows('report_artifact'));
+        self::assertSame(0, $this->countRows('messenger_messages'));
     }
 
     private function limits(int $pending = 100, int $retained = 1000, int $upload = 8388608, int $storage = 536870912): IntakeLimits
@@ -378,7 +378,7 @@ final class ReportIntakeTest extends KernelTestCase
         $stream = $this->store->open($operation['artifact']['sha256'], $operation['artifact']['bytes']);
         try { return stream_get_meta_data($stream)['uri']; } finally { fclose($stream); }
     }
-    private function count(string $table): int { return (int) $this->connection->fetchOne('SELECT COUNT(*) FROM '.$table); }
+    private function countRows(string $table): int { return (int) $this->connection->fetchOne('SELECT COUNT(*) FROM '.$table); }
     private function resetReports(): void { foreach (['messenger_messages', 'report_case', 'report_suite', 'report_import', 'report_artifact'] as $table) { $this->connection->executeStatement('DELETE FROM '.$table); } }
     private function resetRecords(): void { $this->resetReports(); foreach (['registry_request', 'execution_record', 'managed_project'] as $table) { $this->connection->executeStatement('DELETE FROM '.$table); } }
     private function consumeOne(): void

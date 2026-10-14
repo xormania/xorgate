@@ -218,6 +218,32 @@ XML;
         self::assertSame('tools/tests/shard-plan.test.mjs', $report->cases[0]['file']);
     }
 
+    public function testCapturedControlledPhpunitReportPreservesItsFourNativeOutcomes(): void
+    {
+        $path = dirname(__DIR__).'/Fixtures/JUnit/controlled-phpunit.xml';
+        $provenance = json_decode(file_get_contents(dirname(__DIR__).'/Fixtures/JUnit/controlled-phpunit.provenance.json'), true, 16, JSON_THROW_ON_ERROR);
+        $report = (new JUnitAdapter())->parse($path);
+        self::assertSame('parsed', $report->outcome);
+        self::assertCount(4, $report->cases);
+        self::assertCount(1, $report->suites);
+        self::assertSame(['passed', 'failure', 'error', 'skipped'], array_column($report->cases, 'native_outcome'));
+        self::assertSame(4, count(array_unique(array_column($report->cases, 'case_key'))));
+        self::assertSame(['tests' => 4, 'passed' => 1, 'failures' => 1, 'errors' => 1, 'skipped' => 1, 'unknown' => 0], $report->summary['observed_counts']);
+        self::assertSame(['tests' => 4, 'failures' => 1, 'errors' => 1, 'skipped' => 1], $report->suites[0]['declared_counts']);
+        self::assertSame($report->summary['observed_counts'], $report->suites[0]['observed_counts']);
+        self::assertNull($report->summary['declared_counts']['tests']);
+        self::assertSame([0.000185, 0.001212, 0.000181, 0.000113], array_column($report->cases, 'duration_seconds'));
+        self::assertSame(0.001690, $report->suites[0]['duration_seconds']);
+        self::assertEqualsWithDelta($provenance['observed']['sumTestcaseTimeSeconds'], array_sum(array_column($report->cases, 'duration_seconds')), 0.000000001);
+        self::assertSame('PHPUnit\\Framework\\ExpectationFailedException', $report->cases[1]['diagnostics'][0]['type']);
+        self::assertSame('RuntimeException', $report->cases[2]['diagnostics'][0]['type']);
+        self::assertSame('tests/Fixtures/JUnit/ProducerCases.php', $report->cases[0]['file']);
+        self::assertSame($provenance['retainedReport']['sha256'], hash_file('sha256', $path));
+        self::assertSame($provenance['retainedReport']['bytes'], filesize($path));
+        self::assertSame('controlled-native-producer-report', $provenance['classification']);
+        self::assertSame('13.4.2', $provenance['producer']['version']);
+    }
+
     private function parse(string $xml, ?ReportParseLimits $limits = null): ParsedReport
     {
         $path = tempnam(sys_get_temp_dir(), 'xorgate-junit-');

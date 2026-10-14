@@ -73,9 +73,9 @@
     "testcaseElements": 15,
     "outcomes": {
       "passed": 15,
-      "failed": 0,
       "error": 0,
-      "skipped": 0
+      "skipped": 0,
+      "failure": 0
     },
     "sumTestcaseTimeSeconds": 0.601737,
     "producerTimestamp": null,

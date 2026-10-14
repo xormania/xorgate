@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="App\Tests\Fixtures\JUnit\ProducerCases" file="tests/Fixtures/JUnit/ProducerCases.php" tests="4" assertions="2" errors="1" failures="1" skipped="1" time="0.001690">
+    <testcase name="testControlledPass" file="tests/Fixtures/JUnit/ProducerCases.php" line="15" class="App\Tests\Fixtures\JUnit\ProducerCases" classname="App.Tests.Fixtures.JUnit.ProducerCases" assertions="1" time="0.000185"/>
+    <testcase name="testControlledFailure" file="tests/Fixtures/JUnit/ProducerCases.php" line="20" class="App\Tests\Fixtures\JUnit\ProducerCases" classname="App.Tests.Fixtures.JUnit.ProducerCases" assertions="1" time="0.001212">
+      <failure type="PHPUnit\Framework\ExpectationFailedException">App\Tests\Fixtures\JUnit\ProducerCases::testControlledFailure
+Failed asserting that two strings are identical.
+--- Expected
++++ Actual
+@@ @@
+-'expected controlled value'
++'actual controlled value'
+
+tests/Fixtures/JUnit/ProducerCases.php:22</failure>
+    </testcase>
+    <testcase name="testControlledError" file="tests/Fixtures/JUnit/ProducerCases.php" line="25" class="App\Tests\Fixtures\JUnit\ProducerCases" classname="App.Tests.Fixtures.JUnit.ProducerCases" assertions="0" time="0.000181">
+      <error type="RuntimeException">App\Tests\Fixtures\JUnit\ProducerCases::testControlledError
+RuntimeException: Deliberate native JUnit error fixture.
+
+tests/Fixtures/JUnit/ProducerCases.php:27</error>
+    </testcase>
+    <testcase name="testControlledSkip" file="tests/Fixtures/JUnit/ProducerCases.php" line="30" class="App\Tests\Fixtures\JUnit\ProducerCases" classname="App.Tests.Fixtures.JUnit.ProducerCases" assertions="0" time="0.000113">
+      <skipped/>
+    </testcase>
+  </testsuite>
+</testsuites>
