@@ -1,0 +1,10 @@
+{% if cursor is not null or page.next_cursor is not null %}
+    <nav aria-label="Listing pages" class="flex flex-wrap items-center justify-between gap-3">
+        {% if cursor is not null %}
+            <twig:Button as="a" variant="outline" href="{{ path(route, route_parameters|merge({limit: page.limit})) }}">First page</twig:Button>
+        {% endif %}
+        {% if page.next_cursor is not null %}
+            <twig:Button as="a" variant="outline" href="{{ path(route, route_parameters|merge({limit: page.limit, cursor: page.next_cursor})) }}">Next page</twig:Button>
+        {% endif %}
+    </nav>
+{% endif %}

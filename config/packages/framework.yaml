@@ -1,5 +1,11 @@
+parameters:
+    xorgate.default_trusted_hosts: '^(localhost|127\.0\.0\.1|\[::1\]|php)$'
+
 framework:
     secret: '%env(APP_SECRET)%'
+    # A missing or empty override retains the local allowlist instead of disabling Host checks.
+    trusted_hosts:
+        - '%env(default:xorgate.default_trusted_hosts:trim:XORGATE_TRUSTED_HOSTS)%'
     csrf_protection: true
     http_method_override: false
     handle_all_throwables: true

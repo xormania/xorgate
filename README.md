@@ -2,7 +2,7 @@
 
 Xorgate is a testing and CI management system for projects in any language or framework. Its intended scope includes persistent execution data, logs, verification evidence, system coverage, diagnostics and operational insight. People interact through the web application; agents use MCP. Both interfaces use the same application services and records.
 
-This first foundation provides a Symfony 8.1 application in Symfony Docker, a UXor application layout, PostgreSQL persistence, a durable Messenger queue, an asynchronous worker, local artifact storage and MCP runtime tools. A persistent runtime probe demonstrates that these services work together. Project registration, test execution adapters, CI-provider integrations and coverage assessments remain subsequent domain work.
+The application provides a Symfony 8.1 runtime in Symfony Docker, a UXor operator interface, PostgreSQL persistence, a durable Messenger queue, an asynchronous worker, local artifact storage and MCP tools. Register language-neutral projects at `/projects` and preserve immutable execution provenance through the same web, MCP and CLI services. A persistent runtime probe demonstrates the asynchronous foundation. Report ingestion, test execution adapters, CI-provider integrations and coverage assessments remain subsequent domain work.
 
 Symfony and PHP are Xorgate's implementation runtime. Managed projects can use Rust, Python, TypeScript, JVM, .NET, Go, native code or mixed-language environments.
 
@@ -62,7 +62,7 @@ Call `xorgate_probe_dispatch` with `{}` to receive a generated `probe_id`. Call 
 
 The probe exercises Xorgate's own persistence, queue, worker and artifact path. It is a foundation diagnostic rather than a managed-project test runner. Ask the server for its tool schemas when integrating a client.
 
-The default web UI is for loopback development. HTTP MCP has token authentication; broader web-user and project permissions are subsequent implementation work.
+The default web UI is for loopback development. Symfony accepts only the configured trusted hosts, defaulting to loopback names/addresses and the internal `php` hostname. Configure `XORGATE_TRUSTED_HOSTS` as one anchored regular expression when adding a development hostname; retain `php` for container health checks and restart the application. HTTP MCP has token authentication; broader web-user and project permissions are subsequent implementation work.
 
 ## Probe capacity and retention
 
@@ -88,12 +88,13 @@ If recovery work fills the pending budget, inspect the failed transport and reco
 
 Artifact storage is mounted at `/var/lib/xorgate/artifacts`. Keep the database and artifact volumes together when backing up the application. `docker compose down` retains volumes; `docker compose down --volumes` removes persistent development data.
 
-The local foundation does not yet provide the full managed-project lifecycle, remote execution, CI integrations, log-search interface, coverage model or assessment workflows described in the design. The initial probe and correlated application logs make the asynchronous path available for extending those capabilities.
+The [project registry contract](docs/project-registry.md) describes registration, versioned metadata edits, immutable execution context, idempotent commands, bounded queries and admission limits. The application does not yet provide report ingestion, remote execution, CI integrations, log search, coverage calculations or assessment workflows. The initial probe and correlated application logs make the asynchronous path available for extending those capabilities.
 
 ## Development and design
 
 - [Development workflow](docs/development.md)
 - [Implementation plan and work orders](docs/implementation-plan.md)
+- [Project registry and execution provenance](docs/project-registry.md)
 - [System design and scope](docs/system-design.md)
 - [Symfony and UXor setup reference](docs/symfony-uxor-setup.md)
 - [Agent instructions](AGENTS.md)

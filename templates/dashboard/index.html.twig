@@ -7,6 +7,7 @@
 {% block sidebar %}
     <twig:Sidebar:Group label="Management">
         <twig:Sidebar:Item href="{{ path('app_dashboard') }}" route="app_dashboard">Overview</twig:Sidebar:Item>
+        <twig:Sidebar:Item href="{{ path('app_projects') }}" route="app_projects">Projects</twig:Sidebar:Item>
     </twig:Sidebar:Group>
 {% endblock %}
 {% block page_title %}Overview{% endblock %}
@@ -18,7 +19,7 @@
                 <div>
                     <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-body">Application foundation</p>
                     <h2 id="foundation-heading" class="text-xl font-semibold text-heading">Persistent services, shared interfaces</h2>
-                    <p class="mt-2 max-w-3xl text-sm text-body">This page reports the same runtime checks exposed to agents through MCP. Project registration, test adapters and coverage assessments will build on these services.</p>
+                    <p class="mt-2 max-w-3xl text-sm text-body">This page reports the same runtime checks exposed to agents through MCP. Use Projects to register metadata and retain execution context.</p>
                 </div>
                 <span data-xorgate-foundation data-xorgate-foundation-status="{{ foundation.ready ? 'ready' : 'unavailable' }}" class="rounded-full border border-default bg-neutral-secondary-soft px-3 py-1 text-sm font-medium text-heading">
                     {{ foundation.ready ? 'Foundation ready' : 'Attention required' }}
@@ -63,7 +64,7 @@
         <div class="grid gap-6 lg:grid-cols-2">
             <section aria-labelledby="evidence-heading" class="rounded-xl border border-default bg-neutral-primary p-5 md:p-6">
                 <h2 id="evidence-heading" class="text-lg font-semibold text-heading">Evidence and system coverage</h2>
-                <p class="mt-3 text-sm text-body">No managed-project evidence is represented in this foundation. Runtime readiness does not establish coverage or correctness of a managed system.</p>
+                <p class="mt-3 text-sm text-body">Report ingestion and coverage assessments are subsequent work. Runtime readiness and stored execution metadata do not establish coverage or correctness of a managed system.</p>
                 <p class="mt-3 text-sm text-body">The planned model connects components and behaviours to verification definitions, executions, original artifacts and traceable assessments.</p>
             </section>
             <section aria-labelledby="interfaces-heading" class="rounded-xl border border-default bg-neutral-primary p-5 md:p-6">

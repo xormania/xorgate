@@ -1,0 +1,45 @@
+{%- props
+    ## string The id of the control (or of the group), which the label points to and the help/error ids derive from (`<for>_help`, `<for>_error`, as in Symfony forms).
+    for,
+    ## string|null The visible label.
+    label = null,
+    ## string|null A hint below the control.
+    help = null,
+    ## string|string[]|null An error message, or several, below the control.
+    error = null,
+    ## boolean Whether the field is required (adds a marker to the label).
+    required = false,
+    ## 'div'|'fieldset' A `fieldset` (with the label as its `legend`) groups several controls, such as radios; any other value renders a `div`.
+    as = 'div',
+    ## array<string,string|bool> Extra attributes for the label (or legend), e.g. `{class: 'sr-only'}`; inline event handlers (`on…`) are left out.
+    labelAttr = {},
+    ## array<string,string|bool> Extra attributes for the help text; inline event handlers (`on…`) are left out.
+    helpAttr = {}
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+{%- set as = as|lower in ['div', 'fieldset'] ? as|lower : 'div' -%}
+{%- set _errors = error is iterable ? error : (error is null or error is same as('') ? [] : [error]) -%}
+{%- set _label_tag = as == 'fieldset' ? 'legend' : 'label' -%}
+<{{ as }} {{ attributes.defaults({class: 'w-full min-w-0'|tailwind_classes}) }}>
+    {%- if label %}
+        <{{ _label_tag }}{% if as != 'fieldset' %} for="{{ for }}"{% endif %} class="{{ ('mb-2.5 block text-sm font-medium text-heading ' ~ labelAttr.class|default(''))|tailwind_merge }}"
+            {%- for name, value in labelAttr|filter((value, name) => name not in ['class', 'for'] and not ((name ~ '')|trim("\x00..\x20", 'left')|lower starts with 'on') and value is not same as(false) and value is not null) %} {{ name|e('html_attr_relaxed') }}{% if value is not same as(true) %}="{{ value }}"{% endif %}{% endfor %}>
+            {{- label -}}
+            {%- if required %}<span class="ms-0.5 text-fg-danger-strong" aria-hidden="true">*</span>{% endif -%}
+        </{{ _label_tag }}>
+    {%- endif %}
+    {##- The control: an `Input`, `Select`, `Textarea`… with `id` set to `for`, and `aria-describedby`/`aria-invalid` as needed. -#}
+    {%- block content %}{% endblock -%}
+    {%- if help %}
+        <p id="{{ for }}_help" class="{{ ('mt-2.5 text-sm text-body ' ~ helpAttr.class|default(''))|tailwind_merge }}"
+            {%- for name, value in helpAttr|filter((value, name) => name not in ['class', 'id'] and not ((name ~ '')|trim("\x00..\x20", 'left')|lower starts with 'on') and value is not same as(false) and value is not null) %} {{ name|e('html_attr_relaxed') }}{% if value is not same as(true) %}="{{ value }}"{% endif %}{% endfor %}>{{ help }}</p>
+    {%- endif %}
+    {%- if _errors|length == 1 %}
+        <p id="{{ for }}_error" class="mt-2.5 text-sm text-fg-danger-strong">{{ _errors|first }}</p>
+    {%- elseif _errors|length > 1 %}
+        <ul id="{{ for }}_error" class="mt-2.5 list-inside list-disc space-y-1 text-sm text-fg-danger-strong">
+            {%- for message in _errors %}<li>{{ message }}</li>{% endfor -%}
+        </ul>
+    {%- endif %}
+</{{ as }}>

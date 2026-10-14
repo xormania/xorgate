@@ -1,0 +1,22 @@
+{%- props
+    ## string The headline saying what is empty.
+    title,
+    ## string|null What to do about it.
+    description = null
+-%}
+{#- the attributes given, in any case: no `on…` handler, `srcset` or `ping`; `href` and `formaction` through the link policy, `src` through the image policy -#}
+{%- set attributes = attributes.without(...attributes.all|keys).defaults(attributes.all|filter((value, name) => not ((name ~ '')|trim("\x00..\x20", 'left')|lower matches '/^(?:on|(?:srcset|ping)$)/'))|map((value, name) => (name ~ '')|trim("\x00..\x20", 'left')|lower not in ['href', 'formaction', 'src'] or value is null or value is same as(false) or value is same as(true) ? value : ((value ~ '')|replace({"\t": '', "\n": '', "\r": ''})|trim("\x00..\x20", 'left') matches ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? '/^(?:https?:|(?![a-z][a-z0-9+.-]*:))/i' : '/^(?:(?:https?|mailto|tel):|(?![a-z][a-z0-9+.-]*:))/i') ? value ~ '' : ((name ~ '')|trim("\x00..\x20", 'left')|lower == 'src' ? null : '#')))) -%}
+<div {{ attributes.defaults({class: 'flex flex-col items-center px-6 py-10 text-center'|tailwind_classes}) }}>
+    <div class="mb-4 flex size-12 items-center justify-center rounded-full bg-neutral-tertiary text-body">
+        {##- An icon illustrating the empty content. -#}
+        {%- block icon %}<twig:ux:icon name="flowbite:inbox-outline" class="size-6" aria-hidden="true" />{% endblock -%}
+    </div>
+    <h2 class="text-lg font-semibold text-heading">{{ title }}</h2>
+    {%- if description %}
+        <p class="mt-1 max-w-sm text-sm text-body">{{ description }}</p>
+    {%- endif %}
+    <div class="mt-6 flex flex-wrap justify-center gap-3 empty:hidden">
+        {##- The actions leading out of the empty state, typically a button. -#}
+        {%- block actions %}{% endblock -%}
+    </div>
+</div>

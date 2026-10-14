@@ -1,0 +1,45 @@
+{% extends 'layouts/management.html.twig' %}
+
+{% block title %}Xorgate · Execution context{% endblock %}
+{% block page_title %}Execution context{% endblock %}
+{% block page_description %}{{ project.name }} · {{ execution.execution_id }}{% endblock %}
+{% block page_before %}<a href="{{ path('app_project_show', {projectId: project.project_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to project</a>{% endblock %}
+
+{% block content %}
+    <div class="space-y-6" data-xorgate-execution-id="{{ execution.execution_id }}">
+        <p class="text-sm text-body">This immutable record preserves reported context. Unknown fields are shown explicitly. It contains no test outcome or coverage assessment.</p>
+        <twig:Card>
+            <twig:Card:Header><twig:Card:Title as="h2">Record identity</twig:Card:Title></twig:Card:Header>
+            <twig:Card:Content>
+                <dl class="grid gap-5 sm:grid-cols-2">
+                    <div><dt class="text-sm font-medium text-heading">Execution ID</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.execution_id }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Project ID</dt><dd class="mt-1 break-all text-sm text-body">{{ execution.project_id }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Observed at</dt><dd class="mt-1 text-sm text-body">{% if execution.observed_at is null %}Unknown{% else %}<time datetime="{{ execution.observed_at }}">{{ execution.observed_at }}</time>{% endif %}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Recorded at</dt><dd class="mt-1 text-sm text-body"><time datetime="{{ execution.created_at }}">{{ execution.created_at }}</time></dd></div>
+                </dl>
+            </twig:Card:Content>
+        </twig:Card>
+        {% set groups = {
+            source: {title: 'Source context', labels: {repository_identity: 'Repository identity', repository_url: 'Repository URL', tested_revision: 'Actual tested revision', workspace_fingerprint: 'Workspace fingerprint', pr_head_revision: 'PR head revision', pr_base_revision: 'PR base revision', pr_merge_revision: 'PR merge revision'}},
+            environment: {title: 'Environment', labels: {name: 'Environment name', runtimes: 'Observed runtimes', configuration_ref: 'Configuration reference'}},
+            producer: {title: 'Producer', labels: {name: 'Producer name', version: 'Producer version'}},
+            native_identity: {title: 'Native execution identity', labels: {provider: 'Provider', run_id: 'Run ID', run_attempt: 'Run attempt', job_id: 'Job ID', shard: 'Shard'}}
+        } %}
+        {% for key, group in groups %}
+            <twig:Card>
+                <twig:Card:Header><twig:Card:Title as="h2">{{ group.title }}</twig:Card:Title></twig:Card:Header>
+                <twig:Card:Content>
+                    <dl class="grid gap-5 sm:grid-cols-2">
+                        {% for field, label in group.labels %}
+                            {% set value = execution[key][field] %}
+                            <div>
+                                <dt class="text-sm font-medium text-heading">{{ label }}</dt>
+                                <dd class="mt-1 break-all text-sm text-body">{{ value is null or (field == 'runtimes' and value is empty) ? 'Unknown' : (field == 'runtimes' ? value|join(', ') : value) }}</dd>
+                            </div>
+                        {% endfor %}
+                    </dl>
+                </twig:Card:Content>
+            </twig:Card>
+        {% endfor %}
+    </div>
+{% endblock %}

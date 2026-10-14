@@ -71,10 +71,17 @@ jobs:
             assets/
             templates/components/
             templates/layouts/
+            templates/form/
             config/packages/uxor.yaml
+
+      - name: Reproduce the pinned UXor recipe installation
+        run: docker compose exec -T php bash bin/check-ui-install
 
       - name: Validate PHP, configuration and isolated service tests
         run: bin/check
+
+      - name: Prove project registration and execution provenance through UI, MCP and CLI
+        run: python3 tests/smoke/registry.py register
 
       - name: Prove MCP queues work while the worker is stopped
         run: |
@@ -95,6 +102,7 @@ jobs:
           docker compose restart
           docker compose up -d --wait --wait-timeout 120
           python3 tests/smoke/foundation.py persist
+          python3 tests/smoke/registry.py persist
 
       - name: Collect diagnostic output
         if: always()

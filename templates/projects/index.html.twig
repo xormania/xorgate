@@ -1,0 +1,48 @@
+{% extends 'layouts/management.html.twig' %}
+
+{% block title %}Xorgate · Projects{% endblock %}
+{% block page_title %}Projects{% endblock %}
+{% block page_description %}Registered projects and their reported execution context, across any language or runtime.{% endblock %}
+{% block page_actions %}
+    <twig:Button as="a" href="{{ path('app_project_new') }}">Register project</twig:Button>
+{% endblock %}
+
+{% block content %}
+    <div class="space-y-5" id="project-registry" data-xorgate-project-registry="{{ projects.items is empty ? 'empty' : 'populated' }}">
+        {% if projects.items is empty %}
+            <twig:EmptyState title="{{ cursor is null ? 'No projects registered' : 'No more projects' }}" description="{{ cursor is null ? 'Register a project to retain its repository metadata, runtime declarations and execution context.' : 'You have reached the end of this project listing.' }}" class="rounded-base border border-default bg-neutral-primary-soft">
+                <twig:block name="actions">
+                    <twig:Button as="a" href="{{ path(cursor is null ? 'app_project_new' : 'app_projects') }}">{{ cursor is null ? 'Register project' : 'Back to first page' }}</twig:Button>
+                </twig:block>
+            </twig:EmptyState>
+        {% else %}
+            <div class="overflow-x-auto rounded-base border border-default bg-neutral-primary-soft">
+                <twig:Table>
+                    <twig:Table:Caption>Registered projects</twig:Table:Caption>
+                    <twig:Table:Header>
+                        <twig:Table:Row>
+                            <twig:Table:Head>Project</twig:Table:Head>
+                            <twig:Table:Head>Repository identity</twig:Table:Head>
+                            <twig:Table:Head>Runtimes</twig:Table:Head>
+                            <twig:Table:Head>Updated</twig:Table:Head>
+                        </twig:Table:Row>
+                    </twig:Table:Header>
+                    <twig:Table:Body>
+                        {% for project in projects.items %}
+                            <twig:Table:Row>
+                                <twig:Table:Head scope="row">
+                                    <a href="{{ path('app_project_show', {projectId: project.project_id}) }}" class="font-medium text-fg-brand hover:underline focus-visible:outline-2 focus-visible:outline-brand-medium">{{ project.name }}</a>
+                                    <p class="mt-1 break-all text-xs font-normal text-body">{{ project.project_id }}</p>
+                                </twig:Table:Head>
+                                <twig:Table:Cell class="break-all">{{ project.repository_identity is null ? 'Unknown' : project.repository_identity }}</twig:Table:Cell>
+                                <twig:Table:Cell>{{ project.runtimes is empty ? 'Unknown' : project.runtimes|join(', ') }}</twig:Table:Cell>
+                                <twig:Table:Cell><time datetime="{{ project.updated_at }}">{{ project.updated_at }}</time></twig:Table:Cell>
+                            </twig:Table:Row>
+                        {% endfor %}
+                    </twig:Table:Body>
+                </twig:Table>
+            </div>
+        {% endif %}
+        {% include 'projects/_pagination.html.twig' with {page: projects, cursor: cursor, route: 'app_projects', route_parameters: {}} only %}
+    </div>
+{% endblock %}

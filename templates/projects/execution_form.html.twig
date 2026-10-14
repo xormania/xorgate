@@ -1,0 +1,29 @@
+{% extends 'layouts/management.html.twig' %}
+{% form_theme form 'form/flowbite_layout.html.twig' %}
+
+{% block title %}Xorgate · Record execution context{% endblock %}
+{% block page_title %}Record execution context{% endblock %}
+{% block page_description %}{{ project.name }}{% endblock %}
+{% block page_before %}<a href="{{ path('app_project_show', {projectId: project.project_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to project</a>{% endblock %}
+
+{% block content %}
+    <twig:Card class="max-w-3xl">
+        <twig:Card:Header><twig:Card:Title as="h2">Observed execution metadata</twig:Card:Title></twig:Card:Header>
+        <twig:Card:Content>
+            <p class="mb-5 text-sm text-body">Record only known context from an execution. Leave unknown values blank. This creates an immutable record; it does not launch a runner or execute a command.</p>
+            {{ form_start(form, {attr: {id: 'execution', novalidate: true}}) }}
+                {{ form_errors(form) }}
+                {{ form_errors(form.request_id) }}
+                {{ form_row(form.source) }}
+                {{ form_row(form.environment) }}
+                {{ form_row(form.producer) }}
+                {{ form_row(form.native_identity) }}
+                {{ form_row(form.observed_at) }}
+                <div class="flex flex-wrap gap-3">
+                    <twig:Button type="submit">Record context</twig:Button>
+                    <twig:Button as="a" variant="outline" href="{{ path('app_project_show', {projectId: project.project_id}) }}">Cancel</twig:Button>
+                </div>
+            {{ form_end(form) }}
+        </twig:Card:Content>
+    </twig:Card>
+{% endblock %}
