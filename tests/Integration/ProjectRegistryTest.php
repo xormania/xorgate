@@ -181,16 +181,24 @@ final class ProjectRegistryTest extends KernelTestCase
     public function testEvidenceContextRequiresAtLeastOneKnownSourceIdentifier(): void
     {
         $project = $this->registry->register($this->projectInput());
-        $unknown = $this->registry->recordExecution($project['project_id'], [
-            'request_id' => $this->requestId(), 'source' => ['tested_revision' => "\u{00A0}"],
-        ]);
-        self::assertNull($unknown['source']['tested_revision']);
+        $invisibleValues = [
+            "\u{00A0}", "\u{2003}", "\u{3000}", "\u{200B}", "\u{200C}", "\u{200D}",
+            "\u{FEFF}", "\u{FE0F}", "\u{3164}", "\u{115F}",
+            " \u{00A0}\u{200B}\u{200D}\u{FEFF}\u{FE0F}\u{3164}\u{3000} ",
+        ];
+        foreach ($invisibleValues as $value) {
+            $unknown = $this->registry->recordExecution($project['project_id'], [
+                'request_id' => $this->requestId(), 'source' => ['tested_revision' => $value],
+            ]);
+            self::assertNull($unknown['source']['tested_revision']);
+        }
         $requests = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request');
-        foreach ([
+        $contexts = [
             ['tested_revision' => null], ['tested_revision' => '   '],
-            ['tested_revision' => "\u{00A0}"], ['tested_revision' => "\u{2003}"], ['tested_revision' => "\u{3000}"],
             ['workspace_fingerprint' => '', 'pr_merge_revision' => null],
-        ] as $context) {
+            ...array_map(static fn (string $value): array => ['tested_revision' => $value], $invisibleValues),
+        ];
+        foreach ($contexts as $context) {
             try {
                 $this->registry->assertExecutionContext($project['project_id'], $unknown['execution_id'], $context);
                 self::fail('Unknown-only evidence context must not authorize attachment.');
@@ -199,22 +207,25 @@ final class ProjectRegistryTest extends KernelTestCase
             }
         }
         self::assertSame($requests, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request'));
-        self::assertCount(1, $this->registry->listExecutions($project['project_id'])['items']);
+        self::assertCount(count($invisibleValues), $this->registry->listExecutions($project['project_id'])['items']);
 
         // An opaque, nonempty "0" is a known revision even though PHP treats it as falsey.
+        $opaqueRevision = "revision\u{200C}id\u{FE0F}";
         $known = $this->registry->recordExecution($project['project_id'], [
-            'request_id' => $this->requestId(), 'source' => ['tested_revision' => "\u{00A0}0\u{2003}"],
+            'request_id' => $this->requestId(),
+            'source' => ['tested_revision' => "\u{00A0}0\u{2003}", 'pr_head_revision' => $opaqueRevision],
         ]);
         self::assertSame('0', $known['source']['tested_revision']);
+        self::assertSame($opaqueRevision, $known['source']['pr_head_revision']);
         $requests = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request');
         self::assertSame($known, $this->registry->assertExecutionContext($project['project_id'], $known['execution_id'], [
             'tested_revision' => '0', 'workspace_fingerprint' => null,
         ]));
         self::assertSame($known, $this->registry->assertExecutionContext($project['project_id'], $known['execution_id'], [
-            'tested_revision' => "\u{00A0}0\u{2003}\u{3000}", 'workspace_fingerprint' => null,
+            'tested_revision' => "\u{00A0}0\u{2003}\u{3000}", 'pr_head_revision' => $opaqueRevision, 'workspace_fingerprint' => null,
         ]));
         self::assertSame($requests, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request'));
-        self::assertCount(2, $this->registry->listExecutions($project['project_id'])['items']);
+        self::assertCount(count($invisibleValues) + 1, $this->registry->listExecutions($project['project_id'])['items']);
     }
 
     public function testUnknownSourceAndEnvironmentAreExplicitAndNotFabricated(): void

@@ -347,7 +347,16 @@ final class ProjectRegistry
         // Unicode separators and NEXT LINE are whitespace too; preserve characters within a value.
         $value = preg_replace('/\A[\s\p{Z}\x{0085}]+|[\s\p{Z}\x{0085}]+\z/u', '', $value);
 
-        return '' === $value ? null : $value;
+        // Invisible-only metadata is unknown. Keep format characters in meaningful identifiers,
+        // including joiners and variation selectors that participate in Unicode/emoji sequences.
+        foreach (preg_split('//u', $value, -1, PREG_SPLIT_NO_EMPTY) as $character) {
+            if (!\IntlChar::isUWhiteSpace($character) && !\IntlChar::isIDIgnorable($character)
+                && !\IntlChar::hasBinaryProperty($character, \IntlChar::PROPERTY_DEFAULT_IGNORABLE_CODE_POINT)) {
+                return $value;
+            }
+        }
+
+        return null;
     }
 
     private static function runtimes(mixed $value, string $field): array
