@@ -62,7 +62,7 @@ Call `xorgate_probe_dispatch` with `{}` to receive a generated `probe_id`. Call 
 
 The probe exercises Xorgate's own persistence, queue, worker and artifact path. It is a foundation diagnostic rather than a managed-project test runner. Ask the server for its tool schemas when integrating a client.
 
-The default web UI is for loopback development. Symfony accepts only the configured trusted hosts, defaulting to loopback names/addresses and the internal `php` hostname. Configure `XORGATE_TRUSTED_HOSTS` as a comma-separated list of anchored regular expressions when adding a development hostname; retain `php` for container health checks and restart the application. HTTP MCP has token authentication; broader web-user and project permissions are subsequent implementation work.
+The default web UI is for loopback development. Symfony accepts only the configured trusted hosts, defaulting to loopback names/addresses and the internal `php` hostname. Configure `XORGATE_TRUSTED_HOSTS` as one anchored regular expression when adding a development hostname; retain `php` for container health checks and restart the application. HTTP MCP has token authentication; broader web-user and project permissions are subsequent implementation work.
 
 ## Probe capacity and retention
 
