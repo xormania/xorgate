@@ -63,8 +63,8 @@ final class ReportIntakeTest extends KernelTestCase
     public function testNativeNodeAndPhpunitOriginalsNormalizeWithoutInventingExecutionVerdicts(): void
     {
         $node = file_get_contents(self::$kernel->getProjectDir().'/tests/Fixtures/JUnit/uxor-node.xml');
-        $phpunitPath = self::$kernel->getProjectDir().'/var/ci/controlled-producer-report.xml';
-        self::assertFileExists($phpunitPath, 'bin/check must first capture the actual four-outcome PHPUnit producer.');
+        $phpunitPath = self::$kernel->getProjectDir().'/tests/Fixtures/JUnit/controlled-phpunit.xml';
+        self::assertFileExists($phpunitPath, 'The curated native four-outcome PHPUnit fixture must be retained.');
         $phpunit = file_get_contents($phpunitPath);
         foreach ([[$node, 15, ['passed' => 15]], [$phpunit, 4, ['passed' => 1, 'failure' => 1, 'error' => 1, 'skipped' => 1]]] as [$bytes, $count, $outcomes]) {
             $queued = $this->submit($bytes);
@@ -73,7 +73,7 @@ final class ReportIntakeTest extends KernelTestCase
             self::assertNull($queued['summary']['cases']);
             self::assertSame(hash('sha256', $bytes), $queued['artifact']['sha256']);
             self::assertSame(strlen($bytes), $queued['artifact']['bytes']);
-            self::assertSame($this->execution, $queued['source_context']);
+            self::assertEquals($this->execution, $queued['source_context'], 'JSON object key order is not execution provenance.');
             $this->intake->process($queued['operation_id']);
             $completed = $this->operation($queued);
             self::assertSame('completed', $completed['status']);
@@ -148,7 +148,7 @@ final class ReportIntakeTest extends KernelTestCase
         $metadata = $this->metadata();
         $limits = $this->limits(pending: 1, retained: 1, upload: strlen($bytes) + 1, storage: strlen($bytes) + 1);
         $bus = $this->createMock(MessageBusInterface::class);
-        $bus->method('dispatch')->willThrowException(new \RuntimeException('Injected transport outage'));
+        $bus->expects(self::once())->method('dispatch')->willThrowException(new \RuntimeException('Injected transport outage'));
         $broken = $this->service($limits, $bus);
         try { $this->submit($bytes, $metadata, $broken); self::fail('Admission cannot claim success without a durable queue message.'); }
         catch (\RuntimeException) { }

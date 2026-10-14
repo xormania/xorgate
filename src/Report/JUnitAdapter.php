@@ -69,7 +69,7 @@ final class JUnitAdapter implements ReportAdapterInterface
 
             while (true) {
                 $read = $reader->read();
-                self::checkErrors($inputShape);
+                self::checkErrors($inputShape, $stream, $limits);
                 if (ftell($stream) > $limits->maxBytes) {
                     throw new ReportParseException('oversized', 'report_limit_exceeded');
                 }
@@ -162,25 +162,96 @@ final class JUnitAdapter implements ReportAdapterInterface
         }
     }
 
-    private static function checkErrors(string $inputShape): void
+    /** @param resource $stream */
+    private static function checkErrors(string $inputShape, mixed $stream, ReportParseLimits $limits): void
     {
         $errors = libxml_get_errors();
         libxml_clear_errors();
         $outcome = null;
+        $endPosition = null;
+        $ambiguousEnd = false;
+        $definiteMalformed = false;
         foreach ($errors as $error) {
             if ($error->level < LIBXML_ERR_ERROR) {
                 continue;
             }
-            // libxml's unfinished token/tag codes, not diagnostic text containing report data.
-            $candidate = 4 === $error->code
-                ? ('declaration_only' === $inputShape ? 'truncated' : 'malformed')
-                : (in_array($error->code, [34, 37, 40, 45, 47, 63, 77], true) ? 'truncated' : 'malformed');
+            // Push-parser code5 means unfinished input at EOF, but also extra epilog
+            // content before EOF. Reader lookahead can hide the root closing event,
+            // so compare numeric source coordinates rather than observed node state.
+            if (5 === $error->code && null === $endPosition) {
+                $endPosition = self::endPosition($stream, $limits);
+            }
+            $ambiguous = 5 === $error->code && (null === $endPosition || $error->line < 1 || $error->column < 1);
+            $ambiguousEnd = $ambiguousEnd || $ambiguous;
+            $candidate = match ($error->code) {
+                4 => 'declaration_only' === $inputShape ? 'truncated' : 'malformed',
+                5 => [$error->line, $error->column] === $endPosition ? 'truncated' : 'malformed',
+                34, 37, 40, 45, 47, 63, 77 => 'truncated',
+                default => 'malformed',
+            };
+            $definiteMalformed = $definiteMalformed || ('malformed' === $candidate && !$ambiguous);
             if (null === $outcome || 'malformed' === $candidate) {
                 $outcome = $candidate;
             }
         }
         if (null !== $outcome) {
-            throw new ReportParseException($outcome, 'report_'.$outcome);
+            throw new ReportParseException($outcome, $ambiguousEnd && !$definiteMalformed ? 'report_xml_end_ambiguous' : 'report_'.$outcome);
+        }
+    }
+
+    /** @param resource $stream */
+    private static function endPosition(mixed $stream, ReportParseLimits $limits): ?array
+    {
+        $position = ftell($stream);
+        try {
+            if (!rewind($stream)) {
+                return null;
+            }
+            // Only invalid code5 input needs this bounded coordinate check. No second
+            // XML tree/parser is built, and no report content enters the diagnostic.
+            $diagnosticMaximum = min($limits->maxBytes, 8_388_608);
+            $text = stream_get_contents($stream, $diagnosticMaximum + 1);
+            if (false === $text || strlen($text) > $diagnosticMaximum) {
+                return null;
+            }
+            $encoding = 'UTF-8';
+            if (str_starts_with($text, "\xFF\xFE\x00\x00") || str_starts_with($text, "\x00\x00\xFE\xFF")) {
+                return null;
+            }
+            foreach (["\xFF\xFE" => 'UTF-16LE', "\xFE\xFF" => 'UTF-16BE', "\xEF\xBB\xBF" => 'UTF-8'] as $bom => $detected) {
+                if (str_starts_with($text, $bom)) {
+                    $text = substr($text, strlen($bom));
+                    $encoding = $detected;
+                    break;
+                }
+            }
+            if (str_starts_with($text, "<\x00?\x00")) {
+                $encoding = 'UTF-16LE';
+            } elseif (str_starts_with($text, "\x00<\x00?")) {
+                $encoding = 'UTF-16BE';
+            }
+            if ('UTF-8' === $encoding && 1 === preg_match('/^<\?xml\s[^?]{0,512}\bencoding\s*=\s*(["\'])([A-Za-z][A-Za-z0-9._-]{0,39})\1/', substr($text, 0, 512), $declaration)) {
+                if (!in_array(strtoupper($declaration[2]), ['UTF-8', 'UTF8', 'ASCII', 'US-ASCII'], true)) {
+                    return null;
+                }
+            }
+            try {
+                if (!mb_check_encoding($text, $encoding)) {
+                    return null;
+                }
+                $text = mb_convert_encoding($text, 'UTF-8', $encoding);
+            } catch (\ValueError) {
+                // An encoding unsupported by mbstring cannot support an EOF assertion.
+                return null;
+            }
+            $text = str_replace(["\r\n", "\r"], "\n", $text);
+            $lastBreak = strrpos($text, "\n");
+
+            return [substr_count($text, "\n") + 1, mb_strlen(false === $lastBreak ? $text : substr($text, $lastBreak + 1), 'UTF-8') + 1];
+        } finally {
+            if (false !== $position) {
+                fseek($stream, $position);
+            }
         }
     }
 }

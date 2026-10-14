@@ -12,7 +12,7 @@ final class ReportParseException extends \RuntimeException
 {
     public function __construct(public readonly string $outcome, public readonly string $errorCode)
     {
-        parent::__construct(match ($outcome) {
+        parent::__construct('report_xml_end_ambiguous' === $errorCode ? 'The XML report could not be classified as malformed or truncated.' : match ($outcome) {
             'missing' => 'The retained report is unavailable.',
             'empty' => 'The report contains no XML document.',
             'truncated' => 'The XML report ends before its document is complete.',
