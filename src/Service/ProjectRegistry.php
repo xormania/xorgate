@@ -167,15 +167,15 @@ final class ProjectRegistry
     public function assertExecutionContext(string $projectId, string $executionId, array $expectedSource): array
     {
         self::fields($expectedSource, array_keys(self::SOURCE_FIELDS), 'source');
-        if ([] === $expectedSource) {
-            throw new \InvalidArgumentException('Supply at least one known source field to verify execution context.');
-        }
         $expected = [];
         foreach ($expectedSource as $field => $value) {
             $expected[$field] = self::text($value, self::SOURCE_FIELDS[$field], 'source.'.$field);
             if ('repository_url' === $field) {
                 self::repositoryUrl($expected[$field]);
             }
+        }
+        if ([] === array_filter($expected, static fn (?string $value): bool => null !== $value)) {
+            throw new \InvalidArgumentException('Supply at least one known source field to verify execution context.');
         }
         $execution = $this->getExecution($projectId, $executionId);
         foreach ($expected as $field => $value) {

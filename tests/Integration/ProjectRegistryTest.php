@@ -178,6 +178,34 @@ final class ProjectRegistryTest extends KernelTestCase
         }
     }
 
+    public function testEvidenceContextRequiresAtLeastOneKnownSourceIdentifier(): void
+    {
+        $project = $this->registry->register($this->projectInput());
+        $unknown = $this->registry->recordExecution($project['project_id'], ['request_id' => $this->requestId()]);
+        $requests = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request');
+        foreach ([['tested_revision' => null], ['tested_revision' => '   '], ['workspace_fingerprint' => '', 'pr_merge_revision' => null]] as $context) {
+            try {
+                $this->registry->assertExecutionContext($project['project_id'], $unknown['execution_id'], $context);
+                self::fail('Unknown-only evidence context must not authorize attachment.');
+            } catch (\InvalidArgumentException) {
+                self::assertSame($unknown, $this->registry->getExecution($project['project_id'], $unknown['execution_id']));
+            }
+        }
+        self::assertSame($requests, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request'));
+        self::assertCount(1, $this->registry->listExecutions($project['project_id'])['items']);
+
+        // An opaque, nonempty "0" is a known revision even though PHP treats it as falsey.
+        $known = $this->registry->recordExecution($project['project_id'], [
+            'request_id' => $this->requestId(), 'source' => ['tested_revision' => '0'],
+        ]);
+        $requests = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request');
+        self::assertSame($known, $this->registry->assertExecutionContext($project['project_id'], $known['execution_id'], [
+            'tested_revision' => '0', 'workspace_fingerprint' => null,
+        ]));
+        self::assertSame($requests, (int) $this->connection->fetchOne('SELECT COUNT(*) FROM registry_request'));
+        self::assertCount(2, $this->registry->listExecutions($project['project_id'])['items']);
+    }
+
     public function testUnknownSourceAndEnvironmentAreExplicitAndNotFabricated(): void
     {
         $project = $this->registry->register(['request_id' => $this->requestId(), 'name' => 'Local project']);
