@@ -5,3 +5,15 @@ monolog:
             path: php://stderr
             level: info
             formatter: monolog.formatter.json
+
+when@dev:
+    monolog:
+        handlers:
+            diagnostics:
+                type: rotating_file
+                path: '%kernel.logs_dir%/dev.log'
+                level: info
+                max_files: 3
+                file_permission: 0600
+                use_locking: true
+                formatter: monolog.formatter.json

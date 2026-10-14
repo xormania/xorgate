@@ -95,6 +95,43 @@ services:
             - ./:/workspace
             - tools_home:/home/dev
 
+    serena:
+        profiles: [serena]
+        image: ghcr.io/xormania/php-serena@sha256:9aa4981b585e76a812cc3070381e55488ffb86a850effa600779919c48b2d132
+        platform: linux/amd64
+        working_dir: /workspace
+        entrypoint: ['/usr/local/bin/library-serena']
+        command: ['--project', '/workspace', '--read-only', '--cache-dir', '/run/serena-cache', '--languages', 'php_phpactor,typescript', '--request-timeout', '180']
+        user: '${PUID:-1000}:${PGID:-1000}'
+        environment:
+            XDEBUG_MODE: 'off'
+        stdin_open: true
+        tty: false
+        init: true
+        network_mode: none
+        read_only: true
+        cap_drop: [ALL]
+        security_opt: ['no-new-privileges:true']
+        pids_limit: 128
+        mem_limit: 2g
+        tmpfs:
+            - '/tmp:rw,nosuid,nodev,size=512m'
+            - '/home/dev:rw,nosuid,nodev,size=512m,uid=${PUID:-1000},gid=${PGID:-1000},mode=0700'
+        volumes:
+            - type: bind
+              source: .
+              target: /workspace
+              read_only: ${XORGATE_SERENA_READ_ONLY:-true}
+            - type: volume
+              source: vendor
+              target: /workspace/vendor
+              read_only: true
+            - type: bind
+              source: ${XORGATE_SERENA_CACHE_DIR:-./.serena/cache}
+              target: /run/serena-cache
+              bind:
+                  create_host_path: false
+
 volumes:
     database:
     artifacts:

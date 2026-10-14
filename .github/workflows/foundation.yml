@@ -44,8 +44,22 @@ jobs:
               composer validate --no-check-lock --strict
             '
 
-      - name: Verify the clean production image builds its locked assets
-        run: docker build --target frankenphp_prod --tag xorgate-ci-production .
+      - name: Verify locked production assets and boot without development tools
+        run: |
+          docker build --target frankenphp_prod --tag xorgate-ci-production .
+          docker run --rm --entrypoint php xorgate-ci-production -r '
+            require "vendor/autoload.php";
+            (new Symfony\Component\Dotenv\Dotenv())->bootEnv(".env");
+            $kernel = new App\Kernel("prod", false);
+            $kernel->boot();
+            $routes = $kernel->getContainer()->get("router")->getRouteCollection();
+            if (!$routes->get("app_projects") || !$routes->get("app_project_new") || $routes->get("_profiler") || $routes->get("_wdt")
+                || Composer\InstalledVersions::isInstalled("symfony/ai-mate")
+                || Composer\InstalledVersions::isInstalled("symfony/web-profiler-bundle")) {
+              fwrite(STDERR, "Production routes or no-dev dependencies are incorrect.\n"); exit(1);
+            }
+            echo "Production kernel booted with application routes and no development tools.\n";
+          '
 
       - name: Bootstrap the development stack
         run: |
@@ -77,8 +91,13 @@ jobs:
       - name: Reproduce the pinned UXor recipe installation
         run: docker compose exec -T php bash bin/check-ui-install
 
-      - name: Validate PHP, configuration and isolated service tests
+      - name: Validate PHP, service tests and native Mate development diagnostics
         run: bin/check
+
+      - name: Prove the pinned Serena consumer MCP and persistent REPL session
+        run: |
+          bin/serena pull
+          python3 tests/smoke/development.py serena
 
       - name: Prove project registration and execution provenance through UI, MCP and CLI
         run: python3 tests/smoke/registry.py register
@@ -96,6 +115,7 @@ jobs:
         run: |
           docker compose up -d --wait worker
           python3 tests/smoke/foundation.py complete
+          python3 tests/smoke/development.py worker-log
 
       - name: Prove ordinary container restart preserves records and artifacts
         run: |

@@ -1,11 +1,14 @@
 # Developing Xorgate
 
-This repository is Xorgate's own Symfony 8.1 application. It manages projects independently of their implementation language. The foundation creates an operational path through web/MCP, persistent data, asynchronous work and artifact storage; the domain remains open for further design.
+This repository is Xorgate's own Symfony 8.1 application, running PHP 8.5 in Docker. Managed projects can use any language or framework. Symfony Console, Maker, Mate and Serena support development of this application; Xorgate's public MCP tools expose its project-management services.
+
+Use Docker with Compose and Bash for the application scripts, plus host Python 3 for live development smoke checks. PHP and Composer execute in the application container.
 
 ## Run and inspect the application
 
 ```bash
 ./bin/setup
+docker compose exec -T php php --version
 docker compose exec -T php php bin/console about
 docker compose exec -T php php bin/console debug:router
 docker compose exec -T php php bin/console doctrine:migrations:status
@@ -14,7 +17,9 @@ docker compose exec -T php php bin/console doctrine:migrations:status
 
 Use `./bin/setup --resolve` when initially generating absent locks or intentionally updating dependencies. Normal setup installs the reviewed lockfiles. Composer runs inside the PHP container; keep dependency resolution failures visible rather than silently selecting another installation mode.
 
-The development default is [HTTP port 8088](http://localhost:8088). Enable HTTPS with `SERVER_NAME='localhost, php:80' ./bin/setup`, then use [HTTPS port 8448](https://localhost:8448) with Caddy's local certificate trusted. The `php`, `worker` and `database` services share the application network. Keep the chosen Compose project name and port settings consistent across terminals.
+The development default is [HTTP port 8088](http://localhost:8088). Enable HTTPS with `SERVER_NAME='localhost, php:80' ./bin/setup`, then use [HTTPS port 8448](https://localhost:8448) with Caddy's local certificate trusted. Keep the chosen Compose project name and port settings consistent across terminals.
+
+Run application PHP commands in `php`, with `/app` as the working directory. The web process, Symfony Console and Mate then use the same installed `vendor` dependencies, application configuration, `var` cache volume and PostgreSQL network. `worker` uses the same image, dependency/cache volumes, artifact storage and database. This keeps a diagnostic tied to the application that serves requests and consumes messages.
 
 The framework rejects HTTP requests whose Host does not match `XORGATE_TRUSTED_HOSTS`, including reads and CSRF-protected writes. Its default anchored regex covers localhost, IPv4/IPv6 loopback and `php` for Compose health checks. For a custom development name, set `XORGATE_TRUSTED_HOSTS='^(localhost|127\.0\.0\.1|\[::1\]|php|xorgate\.test)$'` in `.env.local` and restart `php` and `worker`. Retain the internal health hostname. Missing or blank overrides use the default allowlist. `SERVER_NAME` configures Caddy separately; it does not authorize another application host. The live registry smoke tests both hostile-host reads and an otherwise-valid form POST under a hostile Host.
 
@@ -30,6 +35,75 @@ Run logs and the Tailwind watcher in separate terminals. Restart the worker afte
 docker compose restart worker
 ```
 
+## Framework and source tools
+
+| Tool | Responsibility | Execution context |
+| --- | --- | --- |
+| Symfony Console and Maker | Discover installed commands and generate code with their native conventions | `php` application service, `/app` |
+| Symfony AI Mate | Installed application diagnostics, tool/resource discovery and Symfony introspection | `./bin/mate`, using the same `php` service |
+| Serena | Source navigation, language-server queries and explicitly enabled source edits | `./bin/serena`, separate pinned container bound to this checkout |
+| Xorgate MCP | Runtime status, project registration and stored execution context | `/mcp` or `mcp:server xorgate` in the application |
+
+Discover the installed Makers and inspect their current arguments before generating code:
+
+```bash
+docker compose exec -T php php bin/console list make
+docker compose exec -T php php bin/console help make:command --format=json
+docker compose exec -T php php bin/console help make:test --format=json
+```
+
+Run the chosen `make:*` command in that same container. Review the generated changes and extend them for the application's behaviour. Installed command metadata determines the available arguments and options; a hand-written replacement generator can drift from the framework's attributes, autoconfiguration and test conventions.
+
+Mate is a development Composer dependency with the installed Symfony and Monolog extensions. `./bin/mate` runs `php vendor/bin/mate` through the application's `php` service and passes arguments to the native CLI. Its project configuration permits `APP_ENV=dev` or `test`, checks PHP 8.5 and binds cache/profiler/log paths to this application.
+
+```bash
+./bin/mate tools:list --format=json
+./bin/mate tools:inspect server-info
+./bin/mate tools:call server-info --format=json
+```
+
+Inspect a tool's actual parameters before calling it. Prefer a diagnostic's observed container, route or runtime facts when those are the question being investigated. Source navigation explains implementation; application diagnostics establish what the configured application reports. Mate 0.14 exposes these tools through its CLI and generated project instructions. The [example MCP configuration](../config/mcp.example.json) connects Serena and Xorgate's public MCP server.
+
+Keep Mate's initialized bootstrap and generated `mate/AGENT_INSTRUCTIONS.md` plus the managed `AI_MATE_INSTRUCTIONS` block in `AGENTS.md` under version control. Normal setup runs Composer install with scripts enabled; Mate's allowed Composer plugin runs discovery when `mate/extensions.php` is present. It does not initialize missing bootstrap files. After changing Mate extensions or project instructions, run native discovery again:
+
+```bash
+docker compose exec -T php composer dump-autoload
+./bin/mate discover --composer --no-interaction
+```
+
+Review the generated diff and keep manual project guidance outside that block. For first-time initialization of missing Mate bootstrap files, the native command is `./bin/mate init --no-interaction`.
+
+HTTP profiler collection is opt-in: visit an application route with `?profile=1`, then inspect its observed `X-Debug-Token` with the native profiler tools or `/_profiler` development routes. The toolbar stays disabled to preserve the application's CSP and page layout. Tests collect a profile only when the test enables it. Development logs remain on stderr and also rotate as JSON files in `var/log/`, retaining three daily files for Mate's Monolog diagnostics; `php` and `worker` share that volume.
+
+Read a profiler resource URI returned by a Mate diagnostic with `./bin/mate resources:read <returned-uri> --format=json`. Keep the observed token and URI associated with the request that produced the profile.
+
+Serena starts through an MCP client using `./bin/serena`. Run `./bin/setup` to install application dependencies, then pull the pinned Linux amd64 image with `./bin/serena pull`. Server startup uses the installed digest and never pulls implicitly. The default session mounts source read-only; configure `./bin/serena --write` when source editing is needed. Application `vendor` dependencies remain read-only in both modes. Its checkout binding and private index cache are described in the [setup reference](symfony-uxor-setup.md).
+
+Start with `initial_instructions`, then pass its returned `session_id` as `session` on each `serena_repl` call. Inspect `s.info('lsp', 'edit')` before calling the advertised facades. Each connection owns its REPL state; the per-worktree index survives connections in `.serena/cache/<image-digest>/`. PHP and TypeScript have semantic language-server support; Twig and YAML use text operations. A text search establishes its matches, while a PHP/TypeScript reference query covers the corresponding language-server scope. Use Mate or Symfony Console for application runtime facts.
+
+## Checks and evidence
+
+`./bin/check` runs Composer validation/platform checks, PHP and configuration/template/container lint, PHPUnit against a migrated test database, then `./bin/check-dev`. The test suffix keeps fixtures out of the development database.
+
+For focused development diagnostics after `./bin/setup`, run:
+
+```bash
+./bin/check-dev
+```
+
+This warms the application's development cache and uses host Python 3 to verify Mate environment/container facts and an opt-in HTTP profile from the running application. Results are retained in `var/ci/development.json`. For a nondefault application address, set `XORGATE_URL` to the URL used by the checks.
+
+Serena's real MCP/session acceptance check runs separately, after pulling its image:
+
+```bash
+./bin/serena pull
+python3 tests/smoke/development.py serena
+```
+
+It verifies the mounted checkout/dependencies, advertised source API and persistent REPL session. Docker CI additionally exercises shared worker logs, live public HTTP/MCP/CLI, worker/artifact completion, restart persistence and Toolkit installation reproduction. Inspect the recorded workflow results for the revision being assessed.
+
+For a changed behaviour, run the smallest check that actually exercises it, then the required repository checks. Keep command, exit status, source revision, dirty workspace state and relevant runtime facts with the result. Retain useful report/log artifacts when a check fails. A passing lint, generated class or Mate call establishes its own measured condition; it does not establish unrelated browser behaviour or managed-project coverage.
+
 ## Application structure
 
 | Path | Current responsibility |
@@ -44,7 +118,10 @@ docker compose restart worker
 | `templates/layouts/`, `templates/components/` | Application-owned installed UXor recipes |
 | `assets/` | AssetMapper, Stimulus and Tailwind sources |
 | `migrations/` | Persistent database changes |
-| `bin/setup`, `bin/install-ui`, `bin/check` | Reproducible setup, UI installation and verification |
+| `bin/setup`, `bin/install-ui`, `bin/check`, `bin/check-dev` | Reproducible setup, UI installation and focused/full verification |
+| `bin/mate`, `mate/` | Native Mate CLI wrapper, project configuration and generated instructions |
+| `bin/serena`, `.serena/` | Checkout-bound source tooling and private index cache |
+| `tests/smoke/development.py` | Observed Mate, profiler, shared worker-log and Serena consumer checks |
 
 `FoundationStatus::snapshot()` returns the application identity, timestamp and readiness checks for the database, artifact storage and queue. The dashboard and `xorgate_runtime_status` tool consume that result. A check's failure detail should describe the capability that is unavailable without returning credentials or exception text.
 
@@ -74,6 +151,7 @@ This is a consuming application: do not copy the demo's `../../../kit.css` impor
 Install additional recipes when implementing a screen, execute the dependency instructions printed by the installer, and lock any new icons before committing:
 
 ```bash
+docker compose exec -T php php bin/console ux:install badge --kit=https://github.com/xormania/uxor:9b2fa7309786cee435503de87cf0cd5f0a9d9782
 docker compose exec -T php php bin/console ux:icons:lock
 docker compose exec -T php php bin/console importmap:install
 docker compose exec -T php php bin/console tailwind:build
@@ -81,7 +159,11 @@ docker compose exec -T php php bin/console lint:twig templates
 docker compose exec -T php php bin/console lint:container
 ```
 
-Retain Turbo navigation. Keep interactive behaviour in Stimulus controllers, give stateful regions stable identities and decide whether Turbo or a Live Component owns a rendered region before adding partial updates.
+The `badge` command illustrates adding one recipe when a screen needs it. Read that pinned recipe's README, apply its printed Composer/importmap instructions, inspect the installed diff and record the selection. Run Toolkit commands in `APP_ENV=dev`, where ToolkitBundle is registered. Keep the existing kit pin unless an intentional recipe update has been reviewed.
+
+Native Symfony forms use `form/flowbite_layout.html.twig`, either through `{% form_theme form 'form/flowbite_layout.html.twig' %}` or the application's `twig.form_themes` setting. Keep CSRF protection enabled, render validation errors with HTTP 422, and redirect successful writes with HTTP 303. The theme renders fields through UXor components and connects labels, help and errors. Give forms explicit IDs; `form_start` does not automatically render the FormView ID.
+
+Retain Turbo navigation. Keep interactive behaviour in Stimulus controllers, give stateful regions stable identities and decide whether Turbo or a Live Component owns a rendered region before adding partial updates. Use theme roles and the installed component contracts, including toast streams for flash messages. For affected UI paths, check empty and unknown states, safe metadata display, invalid form retention, direct and Turbo visits, keyboard use and narrow-screen navigation under CSP.
 
 ## CSP and FrankenPHP workers
 

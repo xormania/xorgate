@@ -2,13 +2,27 @@
     "uxor": {
         "repository": "https://github.com/xormania/uxor",
         "commit": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
-        "recipes": ["theme", "layouts"]
+        "recipes": ["theme", "layouts", "form-theme", "table", "empty-state", "card"]
     },
     "symfony_docker_reference": "422756611d61e0108600ed7ec1370ec677d0e8d0",
     "frankenphp": "dunglas/frankenphp:1-php8.5@sha256:a052ae7cccd4a025eca17767e7acac57a4fc660a4f3dfc790be9b9cd5182d6e6",
     "xorder": {
         "repository": "https://github.com/xormania/xorder",
         "php_dev": "ghcr.io/xormania/php-dev@sha256:cd670b7c7b9624ce7dc7ee6b7b2a4d5b19ce36d6226f077a417667ae8505e000",
-        "verified_platform": "linux/amd64"
+        "verified_platform": "linux/amd64",
+        "php_serena": {
+            "image": "ghcr.io/xormania/php-serena@sha256:9aa4981b585e76a812cc3070381e55488ffb86a850effa600779919c48b2d132",
+            "version": "1.1.2",
+            "verified_platform": "linux/amd64",
+            "source_commit": "c9493dc8cbc423ced71358fd3deb50ea9ce19386",
+            "serena_source_commit": "b79e2a55f9d4072084977dd35bd07d31146d88b9",
+            "release": "https://github.com/xormania/xorder/releases/tag/php-serena/8.5-trixie/v1.1.2",
+            "verification": "https://github.com/xormania/xorder/actions/runs/38518179175",
+            "public_pull_verified_at": "2026-10-14T05:56:19.202029Z",
+            "assurance_receipt_sha256": "2cd247be2a8a035ea64010365ac00f006960fd579e06f4d91923ea7014e583c6",
+            "catalog_snapshot": "a0246e5238559cbdb47c0706559e0a0d568c77b8",
+            "catalog_acceptance_pull_request": "https://github.com/xormania/xorder/pull/59",
+            "catalog_status": "published_verified_pending_catalog_merge"
+        }
     }
 }

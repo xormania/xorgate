@@ -1,0 +1,12 @@
+{
+    "mcpServers": {
+        "serena": {
+            "command": "/absolute/path/to/xorgate/bin/serena",
+            "args": []
+        },
+        "xorgate": {
+            "command": "docker",
+            "args": ["compose", "--project-directory", "/absolute/path/to/xorgate", "-f", "/absolute/path/to/xorgate/compose.yaml", "exec", "-T", "php", "php", "bin/console", "mcp:server", "xorgate"]
+        }
+    }
+}
