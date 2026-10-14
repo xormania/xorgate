@@ -1,0 +1,18 @@
+when@dev:
+    web_profiler:
+        # Keep the strict application CSP; inspect the native profiler through its routes or Mate.
+        toolbar: false
+        intercept_redirects: false
+    framework:
+        profiler:
+            collect: false
+            collect_parameter: profile
+            only_exceptions: false
+
+when@test:
+    web_profiler:
+        toolbar: false
+        intercept_redirects: false
+    framework:
+        profiler:
+            collect: false

@@ -1,0 +1,85 @@
+name: Resolve development dependencies
+
+# Temporary bootstrap: review and commit the generated locks, then remove this workflow.
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/development-lock.yml'
+      - 'composer.json'
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      COMPOSE_PROJECT_NAME: xorgate-lock-ci
+      SERVER_NAME: ':80'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Build the actual PHP 8.5 application runtime
+        run: |
+          docker compose build php
+          docker compose run --rm --no-deps -T php php -r 'if (PHP_VERSION_ID < 80500 || PHP_VERSION_ID >= 80600) { fwrite(STDERR, "Development resolution requires PHP 8.5.\n"); exit(1); } echo "Measured PHP ".PHP_VERSION.PHP_EOL;'
+
+      - name: Resolve only the added development packages and their dependencies
+        run: |
+          docker compose run --rm --no-deps -T php composer update \
+            symfony/ai-mate symfony/ai-symfony-mate-extension symfony/ai-monolog-mate-extension symfony/web-profiler-bundle \
+            --with-all-dependencies --prefer-dist --no-interaction --no-progress --no-scripts
+
+      - name: Generate and discover native Mate consumer integration
+        run: |
+          docker compose run --rm --no-deps -T php php vendor/bin/mate init --no-interaction
+          docker compose run --rm --no-deps -T php composer dump-autoload --no-interaction
+          docker compose run --rm --no-deps -T php php bin/console cache:warmup --env=dev
+          docker compose run --rm --no-deps -T php php vendor/bin/mate discover --composer --no-interaction
+
+      - name: Preserve native generated modes and symlink targets
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p var/ci
+          generated=()
+          for path in composer.json composer.lock symfony.lock config/bundles.php \
+            config/packages/web_profiler.yaml config/routes/web_profiler.yaml \
+            mate .agents/skills .claude/skills AGENTS.md CLAUDE.md; do
+            if [[ -e "$path" || -L "$path" ]]; then
+              generated+=("$path")
+            fi
+          done
+          # tar retains links and modes; application-local credentials are never exported.
+          tar --exclude='**/.env.local' --exclude='.env.local' --exclude='mate/var' \
+            -czf var/ci/development-generated.tar.gz -- "${generated[@]}"
+
+      - name: Preserve generated text for maintainer review
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: development-lock-${{ github.sha }}
+          retention-days: 7
+          if-no-files-found: error
+          include-hidden-files: true
+          path: |
+            composer.json
+            composer.lock
+            symfony.lock
+            config/bundles.php
+            config/packages/web_profiler.yaml
+            config/routes/web_profiler.yaml
+            mate/**/*.php
+            mate/**/*.json
+            mate/**/*.md
+            mate/.gitignore
+            .agents/skills/**/SKILL.md
+            .claude/skills/**/SKILL.md
+            CLAUDE.md
+            AGENTS.md
+            var/ci/development-generated.tar.gz
+
+      - name: Remove the disposable resolution runtime
+        if: always()
+        run: docker compose down --volumes --remove-orphans
