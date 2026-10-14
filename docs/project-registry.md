@@ -4,6 +4,8 @@ WO-001 introduces stored project metadata and immutable imported execution conte
 
 The operator UI starts at `/projects`. Registration, editing, execution recording and queries all use `App\Service\ProjectRegistry`, also exposed by MCP and CLI. Native Symfony forms use UXor's installed `form-theme` recipe, with successful submissions redirecting with HTTP 303 and invalid forms rendering with HTTP 422. Tables use stored rows and bounded cursor navigation; an empty registry has an explicit empty state.
 
+HTTP requests must use a configured trusted host. The default loopback allowlist prevents an attacker-controlled Host from reading forms/data or submitting mutations, even with a valid CSRF token. See [development configuration](development.md) for custom hostnames.
+
 ## Commands, queries and identity
 
 Every mutation requires a caller-owned UUID `request_id`. A project receives a separate generated UUID `project_id`; an execution receives an `execution_id`. Display names and repository URLs are editable metadata, and two registrations can legitimately have the same URL. Editing requires the current positive `expected_version` and preserves project identity.

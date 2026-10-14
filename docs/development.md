@@ -16,6 +16,8 @@ Use `./bin/setup --resolve` when initially generating absent locks or intentiona
 
 The development default is [HTTP port 8088](http://localhost:8088). Enable HTTPS with `SERVER_NAME='localhost, php:80' ./bin/setup`, then use [HTTPS port 8448](https://localhost:8448) with Caddy's local certificate trusted. The `php`, `worker` and `database` services share the application network. Keep the chosen Compose project name and port settings consistent across terminals.
 
+The framework rejects HTTP requests whose Host is outside `XORGATE_TRUSTED_HOSTS`, including reads and CSRF-protected writes. Its default allowlist covers localhost, IPv4/IPv6 loopback and `php` for Compose health checks. For a custom development name, add an anchored pattern such as `^xorgate\.test$` to the comma-separated list in `.env.local`, retain the internal health hostname, and restart `php` and `worker`. `SERVER_NAME` configures Caddy separately; it does not authorize another application host. The live registry smoke tests both hostile-host reads and an otherwise-valid form POST under a hostile Host.
+
 ```bash
 docker compose logs -f php worker
 docker compose exec php php bin/console tailwind:build --watch

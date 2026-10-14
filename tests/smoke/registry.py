@@ -64,10 +64,13 @@ class BrowserSession:
         self.base_url = base_url
         self.opener = build_opener(HTTPCookieProcessor(CookieJar()), NoRedirect())
 
-    def request(self, path, fields=None):
+    def request(self, path, fields=None, host=None):
         url = urljoin(self.base_url + "/", path)
         data = urlencode(fields).encode() if fields is not None else None
-        request = Request(url, data=data, headers={"Accept": "text/html"})
+        headers = {"Accept": "text/html"}
+        if host is not None:
+            headers["Host"] = host
+        request = Request(url, data=data, headers=headers)
         try:
             response = self.opener.open(request, timeout=20)
         except HTTPError as error:
@@ -171,6 +174,21 @@ def register(client, browser):
     require(client.tool("xorgate_project_list").get("items") == [], "CSRF rejection wrote a project")
 
     fields["project[name]"] = "Smoke mixed runtime"
+    status, _, _, alias_page = browser.request("/projects", host="localhost")
+    require(status == 200 and alias_page.registry_state == "empty", "Trusted localhost alias did not render the registry")
+    for path in ("/projects", "/projects/new"):
+        status, _, content, rejected_page = browser.request(path, host="hostile.test")
+        require(status == 400, "An untrusted Host header reached a registry page")
+        require(rejected_page.registry_state is None and rejected_page.project_id is None and rejected_page.form_id is None,
+                "An untrusted Host response exposed registry data or a native form")
+        require(fields["project[_token]"] not in content and request_id not in content,
+                "An untrusted Host response exposed form credentials or request identity")
+    status, _, content, rejected_page = browser.request("/projects/new", fields, host="hostile.test")
+    require(status == 400, "An untrusted Host header accepted an otherwise valid native form")
+    require(rejected_page.form_id is None and fields["project[_token]"] not in content,
+            "An untrusted Host mutation response exposed a native form or its CSRF token")
+    require(client.tool("xorgate_project_list").get("items") == [], "Untrusted Host mutation wrote a project")
+
     status, headers, _, _ = browser.request("/projects/new", fields)
     require(status == 303 and headers.get("Location"), "Valid native form did not redirect with HTTP 303")
     status, _, _, shown = browser.request(headers["Location"])
