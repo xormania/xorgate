@@ -36,7 +36,7 @@
                                 <twig:Table:Cell>{{ operation.status }}</twig:Table:Cell>
                                 <twig:Table:Cell>{{ operation.parser_outcome is null ? 'Not recorded yet' : operation.parser_outcome }}</twig:Table:Cell>
                                 <twig:Table:Cell>
-                                    <a href="{{ path('app_report_artifact', {projectId: project.project_id, executionId: execution.execution_id, artifactId: operation.artifact.artifact_id}) }}" class="text-fg-brand hover:underline">{{ operation.artifact.availability.status }}</a>
+                                    <a href="{{ path('app_report_artifact', {projectId: project.project_id, executionId: execution.execution_id, artifactId: operation.artifact.artifact_id}) }}" class="text-fg-brand hover:underline">{{ operation.artifact.availability.status == 'present' ? 'Original present; integrity unchecked' : operation.artifact.availability.status }}</a>
                                 </twig:Table:Cell>
                                 <twig:Table:Cell><time datetime="{{ operation.created_at }}">{{ operation.created_at }}</time></twig:Table:Cell>
                             </twig:Table:Row>

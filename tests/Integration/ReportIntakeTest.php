@@ -155,17 +155,39 @@ final class ReportIntakeTest extends KernelTestCase
         self::assertSame(0, $this->countRows('report_import'));
         self::assertSame(0, $this->countRows('report_artifact'));
         self::assertSame(0, $this->countRows('messenger_messages'));
-        self::assertSame(['status' => 'available', 'available' => true], $this->store->availability(hash('sha256', $bytes), strlen($bytes)));
+        self::assertSame(['status' => 'available', 'available' => true, 'integrity_checked' => true], $this->store->availability(hash('sha256', $bytes), strlen($bytes)));
         self::assertSame([], glob($this->directory.'/report-staging/.stage-*'));
         $recovered = $this->service($limits);
+        self::assertSame('limited', $recovered->capacity()['status']);
+        self::assertSame('intake_blob_limit', $recovered->capacity()['reason'], 'An exact physical file ceiling must be reported before another upload is attempted.');
         try { $this->submit($bytes.' ', $this->metadata(), $recovered); self::fail('An orphan original still consumes physical storage.'); }
-        catch (IntakeCapacityException $exception) { self::assertContains($exception->capacity['reason'], ['intake_storage_limit', 'intake_blob_limit']); }
+        catch (IntakeCapacityException $exception) {
+            $capacity = $exception->capacity;
+            self::assertContains($capacity['reason'], ['intake_storage_limit', 'intake_blob_limit']);
+            $usage = ['pending' => 0, 'retained' => 0, 'created_last_minute' => 0, 'reference_bytes' => 0];
+            self::assertEquals($usage, array_intersect_key($capacity['usage'], $usage), 'Public storage rejection must include the operation counters used by the native capacity form.');
+            self::assertSame($recovered->capacity()['limits'], $capacity['limits'], 'A physical staging rejection must retain the complete installation limits.');
+            self::assertSame('physical_storage', $capacity['rejected_reservation']['measurement_scope']);
+        }
         $queued = $this->submit($bytes, $metadata, $recovered);
         self::assertSame('queued', $queued['status']);
         self::assertSame(1, $this->store->usage(10)['files']);
         self::assertSame($queued, $this->submit($bytes, $metadata, $recovered), 'Equal replay bypasses a full pending/retained budget.');
         self::assertSame(1, $this->countRows('report_import'));
         self::assertSame(1, $this->countRows('messenger_messages'));
+
+        // STDIN is a nonseekable replay: with the original filling storage, writing
+        // another spool would be refused before the request could be recognized.
+        $metadataPath = $this->directory.'/replay.json';
+        file_put_contents($metadataPath, json_encode($metadata, JSON_THROW_ON_ERROR));
+        $replay = $this->cliProcess(['xorgate:report:submit', $this->projectId(), $this->executionId(), '--input='.$metadataPath, '--file=-'], $bytes,
+            ['XORGATE_INTAKE_MAX_PENDING' => '1', 'XORGATE_INTAKE_MAX_RETAINED' => '1',
+                'XORGATE_INTAKE_MAX_UPLOAD_BYTES' => (string) strlen($bytes), 'XORGATE_INTAKE_MAX_STORAGE_BYTES' => (string) strlen($bytes)]);
+        $replay->run();
+        self::assertSame(0, $replay->getExitCode(), $replay->getErrorOutput());
+        self::assertSame($queued, $this->processJson($replay));
+        self::assertSame([], glob($this->directory.'/report-staging/.stage-*'));
+        self::assertSame(strlen($bytes), $this->store->usage(10)['physical_bytes']);
     }
 
     public function testInterruptedNormalizationCommitsNoPartialCasesAndFreshLeaseNeverAcknowledgesWork(): void
@@ -189,8 +211,13 @@ final class ReportIntakeTest extends KernelTestCase
         catch (RecoverableMessageHandlingException) { }
         self::assertSame('running', $this->operation($queued)['status']);
         self::assertSame(0, $this->countRows('report_case'));
-        $this->connection->executeStatement("UPDATE report_import SET started_at = CURRENT_TIMESTAMP - INTERVAL '6 minutes' WHERE id = ?", [$queued['operation_id']]);
-        $this->intake->process($queued['operation_id']);
+        // A worker died after receiving this message. The native transport must
+        // redeliver when the five-minute processing lease expires, without ACKing
+        // a fresh competing claim or waiting its former one-hour default.
+        self::assertCount(1, iterator_to_array(self::getContainer()->get('messenger.transport.async')->get()));
+        $this->connection->executeStatement("UPDATE report_import SET started_at = CURRENT_TIMESTAMP - INTERVAL '301 seconds' WHERE id = ?", [$queued['operation_id']]);
+        $this->connection->executeStatement("UPDATE messenger_messages SET delivered_at = CURRENT_TIMESTAMP - INTERVAL '301 seconds' WHERE queue_name = 'async'");
+        $this->consumeOne();
         $completed = $this->operation($queued);
         self::assertSame('completed', $completed['status']);
         self::assertSame(2, $completed['summary']['cases']);
@@ -213,6 +240,11 @@ final class ReportIntakeTest extends KernelTestCase
             self::assertSame('parsed', $current['parser_outcome']);
             self::assertSame($expected, $current['artifact']['availability']['status']);
             self::assertFalse($current['artifact']['availability']['available']);
+            $listed = $this->intake->listEvidence($this->projectId(), $this->executionId())['items'][0];
+            self::assertSame($current['operation_id'], $listed['operation_id']);
+            self::assertSame('corrupt' === $expected ? 'present' : 'missing', $listed['artifact']['availability']['status']);
+            self::assertFalse($listed['artifact']['availability']['integrity_checked']);
+            self::assertFalse($listed['artifact']['availability']['available'], 'Listing presence must not claim verified original bytes.');
             self::assertSame($cases, $this->intake->listObservations($this->projectId(), $this->executionId(), $queued['operation_id']));
             try { $this->original($queued); self::fail('Retrieval cannot return unverified original bytes.'); }
             catch (\RuntimeException) { }
@@ -234,9 +266,17 @@ final class ReportIntakeTest extends KernelTestCase
         touch($this->directory.'/'.$relative, time() - 7200);
         $stale = $this->store->stage($this->stream('abandoned staging'), 100);
         touch($stale['temporary'], time() - 7200);
+        $active = $this->store->stage($this->stream('slow active stream'), 100);
+        touch($active['temporary'], time() - 7200);
+        $activeDescriptor = fopen($active['temporary'], 'r+b');
+        self::assertTrue(flock($activeDescriptor, LOCK_EX | LOCK_NB));
         touch($knownPath, time() - 7200);
-        $cleaned = $this->store->cleanupOrphans([$queued['artifact']['sha256']], time() - 3600, 1);
-        self::assertSame(1, $cleaned['orphan_blobs']); self::assertSame(1, $cleaned['staged_files']);
+        try {
+            $cleaned = $this->store->cleanupOrphans([$queued['artifact']['sha256']], time() - 3600, 2);
+            self::assertSame(1, $cleaned['orphan_blobs']); self::assertSame(1, $cleaned['staged_files']);
+            self::assertFileExists($active['temporary'], 'Age cannot make a live locked stream reclaimable.');
+        } finally { flock($activeDescriptor, LOCK_UN); fclose($activeDescriptor); }
+        self::assertSame(1, $this->store->cleanupOrphans([$queued['artifact']['sha256']], time() - 3600, 2)['staged_files']);
         self::assertFileExists($knownPath);
         $owned = dirname($knownPath); $outside = $this->directory.'/unrelated';
         rename($owned, $outside); symlink($outside, $owned);
@@ -323,6 +363,104 @@ final class ReportIntakeTest extends KernelTestCase
         self::assertSame(1, $intake->cleanup()['pruned']);
         self::assertSame(1, $this->countRows('report_import'));
         self::assertSame(self::twoCases(), $this->original($active));
+    }
+
+    public function testRetentionDeletionFailureKeepsCommittedExpirationAndNextSweepReconcilesBytes(): void
+    {
+        $intake = $this->service($this->limits());
+        $old = $this->submit(self::twoCases(), $this->metadata(), $intake);
+        $intake->process($old['operation_id']);
+        $path = $this->blobPath($old);
+        $this->connection->executeStatement('DELETE FROM messenger_messages');
+        $this->connection->executeStatement("UPDATE report_artifact SET created_at = CURRENT_TIMESTAMP - INTERVAL '90 seconds'");
+        $this->connection->executeStatement("UPDATE report_import SET completed_at = CURRENT_TIMESTAMP - INTERVAL '90 seconds'");
+        $owned = dirname($path); $outside = $this->directory.'/retention-blocked';
+        rename($owned, $outside); symlink($outside, $owned);
+        try {
+            $sweep = $intake->cleanup();
+            self::assertSame('storage_cleanup_unavailable', $sweep['deferred']);
+            self::assertSame(1, $sweep['expired']);
+            $expired = $this->operation($old)['artifact'];
+            self::assertNotNull($expired['expired_at'], 'Expiration must commit before destructive file cleanup.');
+            self::assertSame('expired', $expired['availability']['status']);
+            self::assertFileExists($outside.'/'.basename($path), 'Unsafe deletion must not follow the substituted directory.');
+        } finally { unlink($owned); rename($outside, $owned); }
+        $retry = $intake->cleanup();
+        self::assertNull($retry['deferred']);
+        self::assertSame(0, $retry['expired'], 'A retry reconciles the committed expiry without expiring twice.');
+        self::assertFileDoesNotExist($path);
+        self::assertSame('expired', $this->operation($old)['artifact']['availability']['status']);
+        self::assertSame(2, $this->countRows('report_case'));
+    }
+
+    public function testRetentionCatalogPruningFailureCannotRollBackExpirationAfterOriginalDeletion(): void
+    {
+        $intake = $this->service($this->limits());
+        $old = $this->submit(self::twoCases(), $this->metadata(), $intake);
+        $intake->process($old['operation_id']);
+        $path = $this->blobPath($old);
+        $this->connection->executeStatement('DELETE FROM messenger_messages');
+        $this->connection->executeStatement("UPDATE report_artifact SET created_at = CURRENT_TIMESTAMP - INTERVAL '180 seconds'");
+        $this->connection->executeStatement("UPDATE report_import SET completed_at = CURRENT_TIMESTAMP - INTERVAL '180 seconds'");
+        $this->connection->executeStatement("CREATE FUNCTION intake_test_reject_catalog_prune() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'Injected expired catalog prune failure'; END $$");
+        $this->connection->executeStatement('CREATE TRIGGER intake_test_catalog_failure BEFORE DELETE ON report_artifact FOR EACH ROW EXECUTE FUNCTION intake_test_reject_catalog_prune()');
+        try {
+            try { $intake->cleanup(); self::fail('The injected final catalog prune failure must remain visible.'); }
+            catch (\RuntimeException) { }
+            $artifact = $this->intake->getArtifact($this->projectId(), $this->executionId(), $old['artifact']['artifact_id']);
+            self::assertNotNull($artifact['expired_at']);
+            self::assertSame('expired', $artifact['availability']['status'], 'A removed original must remain explained by committed expiration.');
+            self::assertFileDoesNotExist($path);
+            self::assertSame(0, $this->countRows('report_import'));
+            self::assertSame(1, $this->countRows('report_artifact'));
+        } finally {
+            $this->connection->executeStatement('DROP TRIGGER intake_test_catalog_failure ON report_artifact');
+            $this->connection->executeStatement('DROP FUNCTION intake_test_reject_catalog_prune()');
+        }
+        self::assertNull($intake->cleanup()['deferred']);
+        self::assertSame(0, $this->countRows('report_artifact'));
+        self::assertSame(0, $this->countRows('report_case'));
+    }
+
+    public function testConcurrentStagingSharesStorageBudgetAndCountsHardlinkedBytesOnce(): void
+    {
+        $original = $this->store->stage($this->stream(str_repeat('b', 32)), 64, 96, 4);
+        $this->store->publish($original);
+        self::assertSame(32, $this->store->usage(4)['physical_bytes'], 'Publication adds a hardlink, not a second inode of report bytes.');
+        self::assertSame(1, $this->store->usage(4)['physical_files']);
+        $this->store->discard($original);
+        $script = <<<'PHP'
+require 'vendor/autoload.php';
+$store = new App\Service\ReportArtifactStore($argv[1]);
+try {
+    $staged = $store->stage(STDIN, 64, 96, 4);
+    echo json_encode(['accepted' => true, 'staged' => $staged], JSON_THROW_ON_ERROR);
+} catch (App\Exception\IntakeCapacityException $exception) {
+    echo json_encode($exception->response(), JSON_THROW_ON_ERROR);
+    exit(1);
+}
+PHP;
+        $processes = [];
+        foreach (['s', 't'] as $byte) {
+            $process = new Process([PHP_BINARY, '-r', $script, $this->directory], self::$kernel->getProjectDir(), [], str_repeat($byte, 64));
+            $process->setTimeout(15); $process->start(); $processes[] = $process;
+        }
+        $codes = []; $staged = null;
+        foreach ($processes as $process) {
+            $codes[] = $process->wait(); $result = $this->processJson($process);
+            if (0 === $process->getExitCode()) { $staged = $result['staged']; }
+            else { self::assertSame('intake_storage_limit', $result['capacity']['reason']); }
+        }
+        sort($codes); self::assertSame([0, 1], $codes);
+        self::assertNotNull($staged);
+        $usage = $this->store->usage(4);
+        self::assertSame(32, $usage['bytes']);
+        self::assertSame(64, $usage['staging_bytes']);
+        self::assertSame(96, $usage['physical_bytes']);
+        self::assertSame(2, $usage['physical_files']);
+        self::assertSame(1, $usage['staging_files']);
+        $this->store->discard($staged);
+        self::assertSame(32, $this->store->usage(4)['physical_bytes']);
     }
 
     public function testCliRejectsWrappersSymlinksAndFifosBeforeReadingOrAdmitting(): void

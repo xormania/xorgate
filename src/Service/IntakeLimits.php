@@ -41,6 +41,8 @@ final class IntakeLimits
     }
 
     public function uploadMaximum(): int { return $this->maxUploadBytes; }
+    public function storageMaximum(): int { return $this->maxStorageBytes; }
+    public function fileMaximum(): int { return $this->maxRetained; }
     public function artifactRetention(): int { return $this->artifactRetentionSeconds; }
     public function recordRetention(): int { return $this->recordRetentionSeconds; }
 
@@ -48,15 +50,20 @@ final class IntakeLimits
     {
         $capacity = $this->snapshot();
         $physical = $this->store->availability($hash, $newReferenceBytes);
-        $newBlobBytes = 'missing' === $physical['status'] ? $newReferenceBytes : 0;
-        $reason = $capacity['reason'];
-        if (null === $reason && ($capacity['usage']['reference_bytes'] + ($newArtifact ? $newReferenceBytes : 0) > $this->maxStorageBytes
-            || $capacity['usage']['blob_bytes'] + $newBlobBytes > $this->maxStorageBytes)) {
-            $reason = 'intake_storage_limit';
-        }
-        if (null === $reason && $newBlobBytes > 0 && $capacity['usage']['blob_files'] >= $this->maxRetained) {
-            $reason = 'intake_blob_limit';
-        }
+        $newBlob = 'available' !== $physical['status'];
+        $usage = $capacity['usage'];
+        // A staged inode is already reserved and counted. Publishing its hardlink adds no bytes.
+        // Full snapshots remain honest while verified existing blobs can be reused without growth.
+        $reason = match (true) {
+            $usage['pending'] >= $this->maxPending => 'intake_pending_limit',
+            $usage['retained'] >= $this->maxRetained => 'intake_retained_limit',
+            $usage['created_last_minute'] >= $this->maxPerMinute => 'intake_rate_limit',
+            $usage['reference_bytes'] + ($newArtifact ? $newReferenceBytes : 0) > $this->maxStorageBytes
+                || $usage['physical_bytes'] > $this->maxStorageBytes => 'intake_storage_limit',
+            $usage['blob_scan_truncated'] || $usage['physical_files'] > $this->maxRetained
+                || ($newBlob && $usage['blob_files'] >= $this->maxRetained) => 'intake_blob_limit',
+            default => null,
+        };
         if (null !== $reason) {
             $capacity['status'] = 'limited';
             $capacity['reason'] = $reason;
@@ -71,13 +78,15 @@ final class IntakeLimits
         $physical = $this->store->usage($this->maxRetained);
         $usage = ['pending' => (int) $row['pending'], 'retained' => (int) $row['retained'],
             'created_last_minute' => (int) $row['recent'], 'reference_bytes' => $referenceBytes,
-            'blob_bytes' => $physical['bytes'], 'blob_files' => $physical['files'], 'blob_scan_truncated' => $physical['scan_truncated']];
+            'blob_bytes' => $physical['bytes'], 'blob_files' => $physical['files'], 'blob_scan_truncated' => $physical['scan_truncated'],
+            'staging_bytes' => $physical['staging_bytes'], 'staging_files' => $physical['staging_files'],
+            'physical_bytes' => $physical['physical_bytes'], 'physical_files' => $physical['physical_files']];
         $reason = match (true) {
             $usage['pending'] >= $this->maxPending => 'intake_pending_limit',
             $usage['retained'] >= $this->maxRetained => 'intake_retained_limit',
             $usage['created_last_minute'] >= $this->maxPerMinute => 'intake_rate_limit',
-            $referenceBytes >= $this->maxStorageBytes || $physical['bytes'] >= $this->maxStorageBytes => 'intake_storage_limit',
-            $physical['scan_truncated'] => 'intake_blob_limit',
+            $referenceBytes >= $this->maxStorageBytes || $physical['physical_bytes'] >= $this->maxStorageBytes => 'intake_storage_limit',
+            $physical['scan_truncated'] || $physical['files'] >= $this->maxRetained || $physical['physical_files'] >= $this->maxRetained => 'intake_blob_limit',
             default => null,
         };
 

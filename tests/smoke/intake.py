@@ -126,7 +126,7 @@ def check_original(client, browser, state, content):
     require(metadata == artifact, "Operation and artifact metadata disagree")
     require(metadata["sha256"] == hashlib.sha256(content).hexdigest() and metadata["bytes"] == len(content),
             "Original digest/size do not describe the actual producer bytes")
-    require(metadata["availability"] == {"status": "available", "available": True}, "Retained original is unavailable")
+    require(metadata["availability"] == {"status": "available", "available": True, "integrity_checked": True}, "Retained original is not verified")
     require(cli("xorgate:artifact:get", arguments["projectId"], arguments["executionId"], arguments["artifactId"]) == metadata,
             "CLI and MCP artifact metadata disagree")
     reconstructed = bytearray()
@@ -169,7 +169,15 @@ def check_views(client, browser, state, completed=False):
     require(page.state.get("data-xorgate-intake-status") == current["status"], "UI and durable operation status disagree")
     require("Content-Security-Policy" in headers, "Native intake page lost the application CSP")
     evidence = client.tool("xorgate_evidence_list", ids | {"limit": 1})
-    require(evidence["items"] == [current] and evidence["next_cursor"] is None, "Rejected submissions or redelivery created extra imports")
+    require(len(evidence["items"]) == 1 and evidence["next_cursor"] is None, "Rejected submissions or redelivery created extra imports")
+    listed = evidence["items"][0]
+    require(listed["artifact"]["availability"] == {"status": "present", "available": False, "integrity_checked": False},
+            "Evidence listing must report cheap presence without claiming verified original bytes")
+    listed_artifact = {key: value for key, value in listed["artifact"].items() if key != "availability"}
+    current_artifact = {key: value for key, value in current["artifact"].items() if key != "availability"}
+    require(listed_artifact == current_artifact and {key: value for key, value in listed.items() if key != "artifact"} ==
+            {key: value for key, value in current.items() if key != "artifact"},
+            "Evidence list changed operation identity, parser state or original metadata")
     status, _, evidence_page = browser.page(base + "/evidence")
     require(status == 200 and evidence_page.state.get("data-xorgate-evidence-state") == "populated", "UI evidence list does not show the stored import")
     if completed:

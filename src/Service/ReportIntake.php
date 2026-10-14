@@ -36,7 +36,24 @@ final class ReportIntake
     public function submit(string $projectId, string $executionId, array $metadata, $stream): array
     {
         [$projectId, $executionId, $input, $execution] = $this->context($projectId, $executionId, $metadata);
-        $staged = $this->store->stage($stream, $this->limits->uploadMaximum());
+        // Replays verify all supplied bytes without consuming another disk reservation.
+        $old = $this->database(fn () => $this->connection->fetchOne('SELECT id FROM report_import WHERE project_id = ? AND execution_id = ? AND report_role = ? AND request_id = ?',
+            [$projectId, $executionId, $input['report_role'], $input['request_id']]));
+        if (false !== $old) {
+            return $this->admit($projectId, $executionId, $input, $execution, $this->fingerprint($stream), null, true);
+        }
+        try {
+            $staged = $this->store->stage($stream, $this->limits->uploadMaximum(), $this->limits->storageMaximum(), $this->limits->fileMaximum());
+        } catch (IntakeCapacityException $exception) {
+            // The store knows only filesystem usage. Public adapters require the full
+            // current installation snapshot, with the rejected reservation kept distinct.
+            $capacity = $this->capacity();
+            $capacity['status'] = 'limited';
+            $capacity['reason'] = $exception->capacity['reason'];
+            $capacity['retry_after_seconds'] = null;
+            $capacity['rejected_reservation'] = ['measurement_scope' => 'physical_storage', 'usage' => $exception->capacity['usage']];
+            throw new IntakeCapacityException($capacity);
+        }
         try {
             return $this->admit($projectId, $executionId, $input, $execution, $staged, null);
         } finally {
@@ -70,13 +87,13 @@ final class ReportIntake
             ['sha256' => $artifact['sha256'], 'bytes' => (int) $artifact['bytes']], $artifactId);
     }
 
-    private function admit(string $projectId, string $executionId, array $input, array $execution, array $staged, ?string $artifactId): array
+    private function admit(string $projectId, string $executionId, array $input, array $execution, array $staged, ?string $artifactId, bool $replayOnly = false): array
     {
         $hashInput = $input;
         unset($hashInput['request_id']);
         $digest = hash('sha256', self::json(['identity_version' => 1, 'input' => $hashInput,
             'sha256' => $staged['sha256'], 'bytes' => $staged['bytes']]));
-        $operationId = $this->database(fn () => $this->connection->transactional(function () use ($projectId, $executionId, $input, $execution, $staged, $artifactId, $digest): string {
+        $operationId = $this->database(fn () => $this->connection->transactional(function () use ($projectId, $executionId, $input, $execution, $staged, $artifactId, $digest, $replayOnly): string {
             $this->limits->lock();
             $old = $this->connection->fetchAssociative('SELECT id, request_digest FROM report_import WHERE project_id = ? AND execution_id = ? AND report_role = ? AND request_id = ?',
                 [$projectId, $executionId, $input['report_role'], $input['request_id']]);
@@ -86,6 +103,9 @@ final class ReportIntake
                 }
 
                 return $old['id'];
+            }
+            if ($replayOnly) {
+                throw new RegistryNotFoundException('The report request is no longer retained. Submit a new request identity.');
             }
             $this->limits->assertCapacity($staged['bytes'], $staged['sha256'], null === $artifactId);
             $now = self::now();
@@ -140,7 +160,7 @@ final class ReportIntake
             'SELECT * FROM report_import WHERE project_id = ? AND execution_id = ?'.(null === $cursor ? '' : ' AND id > ?').' ORDER BY id LIMIT '.($limit + 1),
             null === $cursor ? [$projectId, $executionId] : [$projectId, $executionId, $cursor]));
 
-        return self::page($rows, $limit, fn (array $row) => $this->operation($row), 'operation_id');
+        return self::page($rows, $limit, fn (array $row) => $this->operation($row, false), 'operation_id');
     }
 
     public function listObservations(string $projectId, string $executionId, string $operationId, int $limit = 25, ?string $cursor = null): array
@@ -298,7 +318,8 @@ final class ReportIntake
     /** Queue protection is conservative across all shared async/failed work, including probes. */
     public function cleanup(): array
     {
-        return $this->database(fn () => $this->connection->transactional(function (): array {
+        // The expiration commit is the authorization to delete. Never unlink before it succeeds.
+        $result = $this->database(fn () => $this->connection->transactional(function (): array {
             $this->limits->lock();
             if (0 !== (int) $this->connection->fetchOne("SELECT COUNT(*) FROM messenger_messages WHERE queue_name IN ('async', 'failed')")) {
                 return ['schema_version' => 1, 'expired' => 0, 'pruned' => 0, 'orphan_blobs' => 0, 'staged_files' => 0, 'deferred' => 'queue_not_idle'];
@@ -309,19 +330,62 @@ final class ReportIntake
             $eligible = $this->connection->fetchAllAssociative("SELECT a.* FROM report_artifact a WHERE a.expired_at IS NULL AND a.created_at < ? AND NOT EXISTS (SELECT 1 FROM report_import i WHERE i.artifact_id = a.id AND (i.status <> 'completed' OR i.completed_at >= ?)) ORDER BY a.created_at, a.id LIMIT 100 FOR UPDATE", [$artifactCutoff, $artifactCutoff]);
             foreach ($eligible as $artifact) {
                 $this->connection->executeStatement('UPDATE report_artifact SET expired_at = ? WHERE id = ?', [$now, $artifact['id']]);
-                if (0 === (int) $this->connection->fetchOne('SELECT COUNT(*) FROM report_artifact WHERE sha256 = ? AND expired_at IS NULL', [$artifact['sha256']])) {
-                    $this->store->remove($artifact['sha256']);
-                }
             }
             $pruned = $this->connection->fetchFirstColumn("SELECT id FROM report_import WHERE status = 'completed' AND completed_at < ? ORDER BY completed_at, id LIMIT 100 FOR UPDATE", [$recordCutoff]);
             foreach ($pruned as $id) { $this->connection->delete('report_import', ['id' => $id]); }
+            return ['schema_version' => 1, 'expired' => count($eligible), 'pruned' => count($pruned),
+                'orphan_blobs' => 0, 'staged_files' => 0, 'deferred' => null];
+        }));
+        if (null !== $result['deferred']) { return $result; }
+
+        // This transaction only provides serialization for deletion; expiration is already durable.
+        // Old expired rows are retried on every sweep, independently of new expirations.
+        $files = $this->database(fn () => $this->connection->transactional(function (): array {
+            $this->limits->lock();
+            if (0 !== (int) $this->connection->fetchOne("SELECT COUNT(*) FROM messenger_messages WHERE queue_name IN ('async', 'failed')")) {
+                return ['orphan_blobs' => 0, 'staged_files' => 0, 'deferred' => 'queue_not_idle'];
+            }
+            $failed = false;
+            $expired = $this->connection->fetchFirstColumn('SELECT DISTINCT a.sha256 FROM report_artifact a WHERE a.expired_at IS NOT NULL AND NOT EXISTS (SELECT 1 FROM report_artifact active WHERE active.sha256 = a.sha256 AND active.expired_at IS NULL) ORDER BY a.sha256 LIMIT 100');
+            foreach ($expired as $hash) {
+                try { $this->store->remove($hash); }
+                catch (\Throwable) { $failed = true; }
+            }
+            $hashes = $this->connection->fetchFirstColumn('SELECT DISTINCT sha256 FROM report_artifact WHERE expired_at IS NULL');
+            try { $orphans = $this->store->cleanupOrphans($hashes, time() - 3600); }
+            catch (\Throwable) { $failed = true; $orphans = ['orphan_blobs' => 0, 'staged_files' => 0]; }
+
+            return array_merge($orphans, ['deferred' => $failed ? 'storage_cleanup_unavailable' : null]);
+        }));
+
+        // Catalogue retention does not depend on a successful filesystem deletion. Any leftover
+        // unreferenced blob remains accounted for and is retried by the bounded orphan sweep.
+        $this->database(fn () => $this->connection->transactional(function (): void {
+            $this->limits->lock();
             $unused = $this->connection->fetchFirstColumn('SELECT a.id FROM report_artifact a WHERE a.expired_at IS NOT NULL AND NOT EXISTS (SELECT 1 FROM report_import i WHERE i.artifact_id = a.id) ORDER BY a.id LIMIT 100');
             foreach ($unused as $id) { $this->connection->delete('report_artifact', ['id' => $id]); }
-            $hashes = $this->connection->fetchFirstColumn('SELECT DISTINCT sha256 FROM report_artifact WHERE expired_at IS NULL');
-            $orphans = $this->store->cleanupOrphans($hashes, time() - 3600);
-
-            return array_merge(['schema_version' => 1, 'expired' => count($eligible), 'pruned' => count($pruned), 'deferred' => null], $orphans);
         }));
+
+        return array_merge($result, $files);
+    }
+
+    /** @param resource $stream */
+    private function fingerprint($stream): array
+    {
+        if (!is_resource($stream) || 'stream' !== get_resource_type($stream)) {
+            throw new \InvalidArgumentException('Report content must be a readable stream.');
+        }
+        $digest = hash_init('sha256');
+        $bytes = 0;
+        while (!feof($stream)) {
+            $block = fread($stream, 65536);
+            if (false === $block || ('' === $block && !feof($stream))) { throw new \RuntimeException('Report content could not be read.'); }
+            $bytes += strlen($block);
+            if ($bytes > $this->limits->uploadMaximum()) { throw new \InvalidArgumentException('Report content exceeds the configured upload byte limit.'); }
+            hash_update($digest, $block);
+        }
+
+        return ['sha256' => hash_final($digest), 'bytes' => $bytes];
     }
 
     private function context(string $projectId, string $executionId, array $metadata): array
@@ -368,20 +432,20 @@ final class ReportIntake
         return $row;
     }
 
-    private function artifact(array $row): array
+    private function artifact(array $row, bool $verify = true): array
     {
         return ['schema_version' => 1, 'artifact_id' => $row['id'], 'project_id' => $row['project_id'], 'execution_id' => $row['execution_id'],
             'filename' => $row['filename'], 'media_type' => $row['media_type'], 'sha256' => $row['sha256'], 'bytes' => (int) $row['bytes'],
             'created_at' => self::iso($row['created_at']), 'expired_at' => null === $row['expired_at'] ? null : self::iso($row['expired_at']),
-            'availability' => null === $row['expired_at'] ? $this->store->availability($row['sha256'], (int) $row['bytes']) : ['status' => 'expired', 'available' => false]];
+            'availability' => null === $row['expired_at'] ? $this->store->availability($row['sha256'], (int) $row['bytes'], $verify) : ['status' => 'expired', 'available' => false, 'integrity_checked' => false]];
     }
 
-    private function operation(array $row): array
+    private function operation(array $row, bool $verify = true): array
     {
         return ['schema_version' => 1, 'operation_id' => $row['id'], 'correlation_id' => $row['id'], 'project_id' => $row['project_id'], 'execution_id' => $row['execution_id'],
             'request_id' => $row['request_id'], 'report_role' => $row['report_role'], 'format' => $row['format'], 'status' => $row['status'],
             'parser_outcome' => $row['parser_outcome'], 'valid_document' => null === $row['valid_document'] ? null : in_array($row['valid_document'], [true, 1, '1', 't', 'true'], true),
-            'artifact' => $this->getArtifact($row['project_id'], $row['execution_id'], $row['artifact_id']),
+            'artifact' => $this->artifact($this->artifactRow($row['project_id'], $row['execution_id'], $row['artifact_id']), $verify),
             'parser' => ['name' => $row['parser_name'], 'version' => $row['parser_version']], 'source_context' => self::decode($row['source_context']),
             'created_at' => self::iso($row['created_at']), 'started_at' => null === $row['started_at'] ? null : self::iso($row['started_at']),
             'completed_at' => null === $row['completed_at'] ? null : self::iso($row['completed_at']),

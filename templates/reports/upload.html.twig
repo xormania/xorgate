@@ -18,10 +18,13 @@
                     <div><dt class="text-sm font-medium text-heading">Retained operations</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.retained }} / {{ capacity.limits.retained }}</dd></div>
                     <div><dt class="text-sm font-medium text-heading">New operations in the last minute</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.created_last_minute }} / {{ capacity.limits.new_per_minute }}</dd></div>
                     <div><dt class="text-sm font-medium text-heading">Bytes referenced by retained artifacts</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.reference_bytes|number_format }} / {{ capacity.limits.storage_bytes|number_format }} bytes</dd></div>
-                    <div><dt class="text-sm font-medium text-heading">Measured stored blob bytes</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.blob_bytes|number_format }} / {{ capacity.limits.storage_bytes|number_format }} bytes</dd></div>
-                    <div><dt class="text-sm font-medium text-heading">Stored original blobs</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.blob_files }} / {{ capacity.limits.blob_files }}{{ capacity.usage.blob_scan_truncated ? ' (bounded scan stopped)' : '' }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Measured original blobs</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.blob_bytes|number_format }} bytes / {{ capacity.usage.blob_files }} files</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Measured staged uploads</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.staging_bytes|number_format }} bytes / {{ capacity.usage.staging_files }} files</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Global physical storage</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.physical_bytes|number_format }} / {{ capacity.limits.storage_bytes|number_format }} bytes</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Global physical files</dt><dd class="mt-1 text-sm text-body">{{ capacity.usage.physical_files }} / {{ capacity.limits.blob_files }}</dd></div>
                 </dl>
-                {% if capacity.usage.blob_scan_truncated %}<p class="mt-4 text-sm text-body">The blob scan reached its bound; measured blob bytes and file counts are partial.</p>{% endif %}
+                <p class="mt-4 text-sm text-body">The physical budget includes staged uploads and original blobs; shared stored bytes are counted once.</p>
+                {% if capacity.usage.blob_scan_truncated %}<p class="mt-4 text-sm text-body">The storage scan reached its bound; measured bytes and file counts are partial.</p>{% endif %}
             </twig:Card:Content>
         </twig:Card>
         <twig:Card class="max-w-3xl">
