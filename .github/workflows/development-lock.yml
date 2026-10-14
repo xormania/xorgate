@@ -42,43 +42,31 @@ jobs:
         if: always()
         shell: bash
         run: |
-          mkdir -p var/ci
-          generated=()
-          for path in composer.json composer.lock symfony.lock config/bundles.php \
-            config/packages/web_profiler.yaml config/routes/web_profiler.yaml \
-            mate .agents/skills .claude/skills AGENTS.md CLAUDE.md; do
-            if [[ -e "$path" || -L "$path" ]]; then
-              generated+=("$path")
-            fi
-          done
-          # tar retains links and modes; application-local credentials are never exported.
-          tar --exclude='**/.env.local' --exclude='.env.local' --exclude='mate/var' \
-            -czf var/ci/development-generated.tar.gz -- "${generated[@]}"
+          # Native init owns private directories inside the application container.
+          # Package there, outside the var volume, and export only a readable archive.
+          docker compose run --rm --no-deps -T php bash -c '
+            set -euo pipefail
+            generated=()
+            for path in composer.json composer.lock symfony.lock config/bundles.php \
+              config/packages/web_profiler.yaml config/routes/web_profiler.yaml \
+              mate .agents/skills .claude/skills AGENTS.md CLAUDE.md; do
+              if [[ -e "$path" || -L "$path" ]]; then
+                generated+=("$path")
+              fi
+            done
+            tar --exclude="**/.env.local" --exclude=".env.local" --exclude="mate/var" \
+              -czf /app/development-generated.tar.gz -- "${generated[@]}"
+            chmod 0644 /app/development-generated.tar.gz
+          '
 
-      - name: Preserve generated text for maintainer review
+      - name: Preserve the generated archive for maintainer review
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: development-lock-${{ github.sha }}
           retention-days: 7
           if-no-files-found: error
-          include-hidden-files: true
-          path: |
-            composer.json
-            composer.lock
-            symfony.lock
-            config/bundles.php
-            config/packages/web_profiler.yaml
-            config/routes/web_profiler.yaml
-            mate/**/*.php
-            mate/**/*.json
-            mate/**/*.md
-            mate/.gitignore
-            .agents/skills/**/SKILL.md
-            .claude/skills/**/SKILL.md
-            CLAUDE.md
-            AGENTS.md
-            var/ci/development-generated.tar.gz
+          path: development-generated.tar.gz
 
       - name: Remove the disposable resolution runtime
         if: always()
