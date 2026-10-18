@@ -219,6 +219,11 @@ final class ReportIntakeTest extends KernelTestCase
         $this->connection->executeStatement("UPDATE messenger_messages SET delivered_at = CURRENT_TIMESTAMP - INTERVAL '301 seconds' WHERE queue_name = 'async'");
         // Recovery belongs to a fresh worker process. Reusing the abandoned
         // PostgreSQL receiver also reuses its LISTEN/NOTIFY and idle polling state.
+        // The shared doctrine://default transport runs on this connection; an open transaction here would
+        // hold the fetched row's lock and hide it from the restarted consumer.
+        self::assertFalse($this->connection->isTransactionActive(), 'The test connection left a transaction open (nesting '.$this->connection->getTransactionNestingLevel().').');
+        $sessions = $this->connection->fetchAllAssociative("SELECT pid, state, xact_start, wait_event_type, left(query, 160) AS query FROM pg_stat_activity WHERE datname = current_database() AND pid <> pg_backend_pid()");
+        $locks = $this->connection->fetchAllAssociative("SELECT l.pid, l.locktype, l.mode, l.granted FROM pg_locks l WHERE l.relation = 'messenger_messages'::regclass");
         // The consumer log is kept in the failure message so an unconsumed redelivery explains itself.
         $worker = $this->cliProcess(['messenger:consume', 'async', '--limit=1', '--time-limit=20', '--sleep=0.01', '--no-interaction', '-vv']);
         $worker->setTimeout(30);
@@ -226,7 +231,7 @@ final class ReportIntakeTest extends KernelTestCase
         $workerLog = substr($worker->getOutput().$worker->getErrorOutput(), 0, 4000);
         self::assertSame(0, $worker->getExitCode(), $workerLog);
         $completed = $this->operation($queued);
-        self::assertSame('completed', $completed['status'], 'The restarted worker did not recover the expired lease. Queue rows: '.json_encode($this->connection->fetchAllAssociative('SELECT id, queue_name, delivered_at, available_at FROM messenger_messages')).'; consumer log: '.$workerLog);
+        self::assertSame('completed', $completed['status'], 'The restarted worker did not recover the expired lease. Queue rows: '.json_encode($this->connection->fetchAllAssociative('SELECT id, queue_name, delivered_at, available_at FROM messenger_messages')).'; other sessions before the consumer: '.json_encode($sessions).'; messenger_messages locks before the consumer: '.json_encode($locks).'; consumer log: '.$workerLog);
         self::assertSame(2, $completed['summary']['cases']);
         self::assertSame(0, $this->countRows('messenger_messages'), 'The restarted worker must ACK the recovered original message.');
         $this->intake->process($queued['operation_id']);
