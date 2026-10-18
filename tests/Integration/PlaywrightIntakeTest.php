@@ -79,8 +79,9 @@ final class PlaywrightIntakeTest extends KernelTestCase
         self::assertSame(0, $native['annotation_count']);
         self::assertNull($native['links']);
         self::assertSame('native', $native['summary']['retry_history']);
-        self::assertSame(['current' => 1, 'total' => 2], $native['summary']['shard']);
-        self::assertSame(['status' => 'unknown', 'reason' => 'no_execution_expectation'], $native['summary']['shard_completeness']);
+        // JSONB storage reorders object keys; compare key-sorted copies.
+        self::assertSame(['current' => 1, 'total' => 2], self::counted($native['summary']['shard']));
+        self::assertSame(['reason' => 'no_execution_expectation', 'status' => 'unknown'], self::counted($native['summary']['shard_completeness']));
         self::assertSame(0, $native['summary']['global_errors']['count']);
         self::assertIsFloat($native['timings']['queued_seconds']);
         self::assertIsFloat($native['timings']['processing_seconds']);
