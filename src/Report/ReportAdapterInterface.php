@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Report;
 
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+
 /** A report adapter reads retained bytes; storage and durable operation state belong to intake. */
+#[AutoconfigureTag('app.report_adapter')]
 interface ReportAdapterInterface
 {
     public function format(): string;

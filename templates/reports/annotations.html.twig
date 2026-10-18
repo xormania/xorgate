@@ -1,0 +1,63 @@
+{% extends 'layouts/management.html.twig' %}
+
+{% block title %}Xorgate · Report annotations{% endblock %}
+{% block page_title %}Report annotations{% endblock %}
+{% block page_description %}{{ project.name }} · {{ operation.report_role }}{% endblock %}
+{% block page_before %}<a href="{{ path('app_intake_operation', {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to report intake</a>{% endblock %}
+
+{% block content %}
+    <div class="space-y-6" data-xorgate-intake-operation-id="{{ operation.operation_id }}" data-xorgate-annotations-state="{{ annotations.items is empty ? 'empty' : 'populated' }}">
+        <p class="text-sm text-body">Annotations come from derived files such as failed-attempt records, durations and existing Jev assessments. This page lists annotations this import produced and annotations linked to it as native evidence. A link points at one exact native attempt or case; unmatched and ambiguous annotations stay visible with their reason. Assessments are advisory and do not change native outcomes. Jev is read from its retained file and is never called.</p>
+        {% if annotations.items is empty %}
+            <twig:EmptyState title="{{ cursor is null ? 'No annotations recorded' : 'No more annotations' }}" description="{{ operation.status in ['queued', 'running'] ? 'The worker has not committed this import yet. Refresh the operation to inspect its progress.' : (cursor is null ? 'No derived annotation was produced by, or linked to, this import.' : 'You have reached the end of this annotation listing.') }}" class="rounded-base border border-default bg-neutral-primary-soft" />
+        {% else %}
+            <div class="overflow-x-auto rounded-base border border-default bg-neutral-primary-soft">
+                <twig:Table>
+                    <twig:Table:Caption>Derived annotations</twig:Table:Caption>
+                    <twig:Table:Header><twig:Table:Row>
+                        <twig:Table:Head>Kind / target</twig:Table:Head>
+                        <twig:Table:Head>Link</twig:Table:Head>
+                        <twig:Table:Head>Source import</twig:Table:Head>
+                        <twig:Table:Head>Details</twig:Table:Head>
+                    </twig:Table:Row></twig:Table:Header>
+                    <twig:Table:Body>
+                        {% for annotation in annotations.items %}
+                            <twig:Table:Row data-xorgate-annotation-id="{{ annotation.annotation_id }}" data-xorgate-annotation-kind="{{ annotation.kind }}" data-xorgate-annotation-match="{{ annotation.match.status }}" data-xorgate-annotation-reason="{{ annotation.match.reason ?? 'none' }}" data-xorgate-annotation-target-attempt="{{ annotation.match.target_attempt_key ?? 'none' }}">
+                                <twig:Table:Head scope="row">
+                                    <span>{{ annotation.kind }}</span>
+                                    <p class="mt-1 break-all text-xs font-normal text-body">{{ annotation.target.title ?? 'No test title' }}</p>
+                                    <p class="mt-1 break-all text-xs font-normal text-body">{{ annotation.target.project ?? 'Unknown project' }} · retry {{ annotation.target.retry ?? 'unknown' }}</p>
+                                </twig:Table:Head>
+                                <twig:Table:Cell>
+                                    <span>{{ annotation.match.status }}</span>{% if annotation.match.reason is not null %}<p class="mt-1 text-xs text-body">{{ annotation.match.reason }}</p>{% endif %}
+                                    {% if annotation.match.target_operation_id is not null %}
+                                        <p class="mt-1 text-xs"><a class="text-fg-brand hover:underline" href="{{ path('app_intake_attempts', {projectId: project.project_id, executionId: execution.execution_id, operationId: annotation.match.target_operation_id}) }}">Native attempts</a></p>
+                                    {% endif %}
+                                </twig:Table:Cell>
+                                <twig:Table:Cell>
+                                    <a class="text-fg-brand hover:underline" href="{{ path('app_intake_operation', {projectId: project.project_id, executionId: execution.execution_id, operationId: annotation.operation_id}) }}">{{ annotation.relation == 'produced' ? 'This import' : 'Derived import' }}</a>
+                                    <p class="mt-1 text-xs text-body">{{ annotation.parser.name ?? 'Unknown parser' }} / {{ annotation.parser.version ?? 'unknown' }}</p>
+                                </twig:Table:Cell>
+                                <twig:Table:Cell>
+                                    <details><summary class="cursor-pointer text-sm font-medium text-heading">Annotation evidence</summary>
+                                        <dl class="mt-3 space-y-2 text-xs text-body">
+                                            <div><dt class="font-medium">Annotation ID</dt><dd class="break-all">{{ annotation.annotation_id }}</dd></div>
+                                            <div><dt class="font-medium">Annotation key</dt><dd class="break-all">{{ annotation.annotation_key }}</dd></div>
+                                            <div><dt class="font-medium">Target case / attempt</dt><dd class="break-all">{{ annotation.match.target_case_key ?? 'None' }} / {{ annotation.match.target_attempt_key ?? 'None' }}</dd></div>
+                                            <div><dt class="font-medium">Linked at</dt><dd>{{ annotation.match.linked_at ?? 'Not linked' }}</dd></div>
+                                        </dl>
+                                        <p class="mt-3 text-xs font-medium text-heading">Target</p>
+                                        <pre class="mt-1 whitespace-pre-wrap break-all text-xs text-body">{{ annotation.target|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE')) }}</pre>
+                                        <p class="mt-3 text-xs font-medium text-heading">Bounded data</p>
+                                        <pre class="mt-1 whitespace-pre-wrap break-all text-xs text-body">{{ annotation.data|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE')) }}</pre>
+                                    </details>
+                                </twig:Table:Cell>
+                            </twig:Table:Row>
+                        {% endfor %}
+                    </twig:Table:Body>
+                </twig:Table>
+            </div>
+        {% endif %}
+        {% include 'projects/_pagination.html.twig' with {page: annotations, cursor: cursor, route: 'app_intake_annotations', route_parameters: {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}} only %}
+    </div>
+{% endblock %}

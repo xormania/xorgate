@@ -12,7 +12,7 @@
             <div><dt class="text-sm font-medium text-heading">Expired at</dt><dd class="mt-1 text-sm text-body">{% if artifact.expired_at is null %}Not expired{% else %}<time datetime="{{ artifact.expired_at }}">{{ artifact.expired_at }}</time>{% endif %}</dd></div>
         </dl>
         {% if artifact.availability.available %}
-            <div class="mt-5"><twig:Button as="a" variant="outline" href="{{ path('app_report_download', {projectId: artifact.project_id, executionId: artifact.execution_id, artifactId: artifact.artifact_id}) }}" data-turbo="false" data-turbo-prefetch="false">Download original bytes</twig:Button></div>
+            <div class="mt-5 flex flex-wrap gap-3"><twig:Button as="a" variant="outline" href="{{ path('app_report_download', {projectId: artifact.project_id, executionId: artifact.execution_id, artifactId: artifact.artifact_id}) }}" data-turbo="false" data-turbo-prefetch="false">Download original bytes</twig:Button><twig:Button as="a" variant="outline" href="{{ path('app_report_log', {projectId: artifact.project_id, executionId: artifact.execution_id, artifactId: artifact.artifact_id}) }}">Read as bounded text</twig:Button></div>
         {% else %}
             <p class="mt-5 text-sm text-body">Original bytes are {{ artifact.availability.status }}. Stored parser observations remain separate from artifact availability.</p>
         {% endif %}

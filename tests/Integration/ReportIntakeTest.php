@@ -497,7 +497,7 @@ PHP;
     private function service(IntakeLimits $limits, ?MessageBusInterface $bus = null): ReportIntake
     {
         return new ReportIntake($this->connection, self::getContainer()->get(ProjectRegistry::class), $this->store,
-            $bus ?? self::getContainer()->get(MessageBusInterface::class), $limits, self::getContainer()->get(JUnitAdapter::class), new NullLogger());
+            $bus ?? self::getContainer()->get(MessageBusInterface::class), $limits, [self::getContainer()->get(JUnitAdapter::class)], new NullLogger());
     }
 
     private function metadata(): array { return ['request_id' => self::id(), 'source' => ['tested_revision' => 'fixture-source-revision']]; }
@@ -522,7 +522,7 @@ PHP;
         try { return stream_get_meta_data($stream)['uri']; } finally { fclose($stream); }
     }
     private function countRows(string $table): int { return (int) $this->connection->fetchOne('SELECT COUNT(*) FROM '.$table); }
-    private function resetReports(): void { foreach (['messenger_messages', 'report_case', 'report_suite', 'report_import', 'report_artifact'] as $table) { $this->connection->executeStatement('DELETE FROM '.$table); } }
+    private function resetReports(): void { foreach (['messenger_messages', 'report_annotation', 'report_attempt', 'report_case', 'report_suite', 'report_import', 'report_artifact'] as $table) { $this->connection->executeStatement('DELETE FROM '.$table); } }
     private function resetRecords(): void { $this->resetReports(); foreach (['registry_request', 'execution_record', 'managed_project'] as $table) { $this->connection->executeStatement('DELETE FROM '.$table); } }
     private function consumeOne(): void
     {

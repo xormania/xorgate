@@ -8,12 +8,14 @@ use App\Exception\RegistryConflictException;
 use App\Exception\RegistryNotFoundException;
 use App\Exception\IntakeCapacityException;
 use App\Message\NormalizeReport;
-use App\Report\JUnitAdapter;
 use App\Report\ParsedReport;
+use App\Report\ReportAdapterInterface;
 use App\Report\ReportParseException;
 use App\Report\ReportParseLimits;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Messenger\Exception\RecoverableMessageHandlingException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Uid\Uuid;
@@ -21,15 +23,40 @@ use Symfony\Component\Uid\Uuid;
 /** Shared metadata commands; durable normalization is owned by the native Messenger worker. */
 final class ReportIntake
 {
+    /** Annotation kinds that refer to one native attempt or one native case. Others describe the run itself. */
+    private const ATTEMPT_KINDS = ['failed_attempt', 'jev_assessment'];
+    private const CASE_KINDS = ['test_duration'];
+    private const NATIVE_FORMAT = 'playwright-json';
+    public const LOG_WINDOW_MAXIMUM = 32768;
+
+    /** @var array<string, ReportAdapterInterface> */
+    private readonly array $adapters;
+
+    /** @param iterable<ReportAdapterInterface> $adapters */
     public function __construct(
         private readonly Connection $connection,
         private readonly ProjectRegistry $registry,
         private readonly ReportArtifactStore $store,
         private readonly MessageBusInterface $bus,
         private readonly IntakeLimits $limits,
-        private readonly JUnitAdapter $adapter,
+        #[AutowireIterator('app.report_adapter')] iterable $adapters,
         private readonly LoggerInterface $logger,
     ) {
+        $installed = [];
+        foreach ($adapters as $adapter) {
+            if (!$adapter instanceof ReportAdapterInterface || isset($installed[$adapter->format()])) {
+                throw new \LogicException('Report adapters must implement the adapter contract with distinct formats.');
+            }
+            $installed[$adapter->format()] = $adapter;
+        }
+        ksort($installed);
+        $this->adapters = $installed;
+    }
+
+    /** @return array<string, string> Installed adapter formats and versions, sorted by format. */
+    public function formats(): array
+    {
+        return array_map(static fn (ReportAdapterInterface $adapter): string => $adapter->version(), $this->adapters);
     }
 
     /** @param resource $stream */
@@ -126,12 +153,12 @@ final class ReportIntake
                 fclose($stream);
             }
             $id = Uuid::v7()->toRfc4122();
-            $supported = $input['format'] === $this->adapter->format();
+            $adapter = $this->adapters[$input['format']] ?? null;
             $this->connection->insert('report_import', ['id' => $id, 'project_id' => $projectId, 'execution_id' => $executionId,
                 'artifact_id' => $artifactId, 'request_id' => $input['request_id'], 'request_digest' => $digest,
                 'report_role' => $input['report_role'], 'format' => $input['format'], 'source_context' => self::json($execution),
-                'status' => 'queued', 'parser_name' => $supported ? $this->adapter->format() : null,
-                'parser_version' => $supported ? $this->adapter->version() : null, 'created_at' => $now]);
+                'status' => 'queued', 'parser_name' => $adapter?->format(),
+                'parser_version' => $adapter?->version(), 'created_at' => $now]);
             // Doctrine Messenger uses this connection: catalogue, operation and message commit together.
             $this->bus->dispatch(new NormalizeReport($id));
 
@@ -175,11 +202,149 @@ final class ReportIntake
             'SELECT * FROM report_case WHERE operation_id = ?'.(null === $cursor ? '' : ' AND id > ?').' ORDER BY id LIMIT '.($limit + 1),
             null === $cursor ? [$operation['id']] : [$operation['id'], $cursor]));
 
+        $references = self::NATIVE_FORMAT === $operation['format'] ? $this->annotationReferences($operation['id'], 'target_case_key', array_column($rows, 'case_key')) : [];
+
         return self::page($rows, $limit, static fn (array $row): array => array_merge(self::decode($row['data']), [
             'observation_id' => $row['id'], 'operation_id' => $operation['id'], 'artifact_id' => $operation['artifact_id'],
             'project_id' => $operation['project_id'], 'execution_id' => $operation['execution_id'],
             'parser' => ['name' => $operation['parser_name'], 'version' => $operation['parser_version']],
-        ]), 'observation_id');
+        ], self::NATIVE_FORMAT === $operation['format'] ? ['annotations' => $references[$row['case_key']]['items'] ?? [],
+            'annotation_count' => $references[$row['case_key']]['count'] ?? 0] : []), 'observation_id');
+    }
+
+    /** Native attempts in report order, each with bounded references to derived annotations linked to it. */
+    public function listAttempts(string $projectId, string $executionId, string $operationId, int $limit = 25, ?string $cursor = null): array
+    {
+        $operation = $this->operationRow($projectId, $executionId, $operationId);
+        self::limit($limit);
+        $cursor = null === $cursor ? null : ProjectRegistry::canonicalId($cursor);
+        if (null !== $cursor && false === $this->database(fn () => $this->connection->fetchOne('SELECT id FROM report_attempt WHERE operation_id = ? AND id = ?', [$operation['id'], $cursor]))) {
+            throw new RegistryNotFoundException('The attempt cursor was not found in this import.');
+        }
+        $rows = $this->database(fn () => $this->connection->fetchAllAssociative(
+            'SELECT a.id, a.case_key, a.attempt_key, a.data, c.data AS case_data FROM report_attempt a LEFT JOIN report_case c ON c.operation_id = a.operation_id AND c.case_key = a.case_key WHERE a.operation_id = ?'
+            .(null === $cursor ? '' : ' AND a.id > ?').' ORDER BY a.id LIMIT '.($limit + 1),
+            null === $cursor ? [$operation['id']] : [$operation['id'], $cursor]));
+        $references = $this->annotationReferences($operation['id'], 'target_attempt_key', array_column(array_slice($rows, 0, $limit), 'attempt_key'));
+
+        return self::page($rows, $limit, static function (array $row) use ($operation, $references): array {
+            $case = null === $row['case_data'] ? [] : self::decode($row['case_data']);
+            $context = [];
+            foreach (['name', 'title_path', 'full_title', 'file', 'line', 'column', 'project', 'project_id', 'spec_id', 'test_id', 'expected_status', 'native_outcome', 'expected_failure'] as $field) {
+                $context[$field] = $case[$field] ?? null;
+            }
+
+            return array_merge(self::decode($row['data']), [
+                'attempt_id' => $row['id'], 'operation_id' => $operation['id'], 'artifact_id' => $operation['artifact_id'],
+                'project_id' => $operation['project_id'], 'execution_id' => $operation['execution_id'],
+                'parser' => ['name' => $operation['parser_name'], 'version' => $operation['parser_version']],
+                'case' => $context,
+                'annotations' => $references[$row['attempt_key']]['items'] ?? [],
+                'annotation_count' => $references[$row['attempt_key']]['count'] ?? 0,
+            ]);
+        }, 'attempt_id');
+    }
+
+    /** Annotations produced by this import, or linked to it as native evidence, with their explicit link state. */
+    public function listAnnotations(string $projectId, string $executionId, string $operationId, int $limit = 25, ?string $cursor = null): array
+    {
+        $operation = $this->operationRow($projectId, $executionId, $operationId);
+        self::limit($limit);
+        $cursor = null === $cursor ? null : ProjectRegistry::canonicalId($cursor);
+        if (null !== $cursor && false === $this->database(fn () => $this->connection->fetchOne('SELECT id FROM report_annotation WHERE id = ? AND (operation_id = ? OR target_operation_id = ?)', [$cursor, $operation['id'], $operation['id']]))) {
+            throw new RegistryNotFoundException('The annotation cursor was not found for this import.');
+        }
+        $rows = $this->database(fn () => $this->connection->fetchAllAssociative(
+            'SELECT n.*, i.artifact_id, i.parser_name, i.parser_version FROM report_annotation n JOIN report_import i ON i.id = n.operation_id WHERE (n.operation_id = ? OR n.target_operation_id = ?)'
+            .(null === $cursor ? '' : ' AND n.id > ?').' ORDER BY n.id LIMIT '.($limit + 1),
+            null === $cursor ? [$operation['id'], $operation['id']] : [$operation['id'], $operation['id'], $cursor]));
+
+        return self::page($rows, $limit, static fn (array $row): array => [
+            'annotation_id' => $row['id'], 'operation_id' => $row['operation_id'], 'artifact_id' => $row['artifact_id'],
+            'project_id' => $row['project_id'], 'execution_id' => $row['execution_id'],
+            'relation' => $row['operation_id'] === $operation['id'] ? 'produced' : 'linked_to_native',
+            'parser' => ['name' => $row['parser_name'], 'version' => $row['parser_version']],
+            'annotation_key' => $row['annotation_key'], 'kind' => $row['kind'],
+            'target' => self::decode($row['target']), 'data' => self::decode($row['data']),
+            'match' => ['status' => $row['match_status'], 'reason' => $row['match_reason'],
+                'target_operation_id' => $row['target_operation_id'], 'target_case_key' => $row['target_case_key'],
+                'target_attempt_key' => $row['target_attempt_key'], 'linked_at' => null === $row['linked_at'] ? null : self::iso($row['linked_at'])],
+        ], 'annotation_id');
+    }
+
+    /** @return array<string, array{items: list<array>, count: int}> */
+    private function annotationReferences(string $operationId, string $column, array $keys): array
+    {
+        if ([] === $keys) { return []; }
+        $rows = $this->database(fn () => $this->connection->fetchAllAssociative(
+            'SELECT * FROM (SELECT id, operation_id, kind, match_status, '.$column.' AS target_key, COUNT(*) OVER (PARTITION BY '.$column.') AS total, ROW_NUMBER() OVER (PARTITION BY '.$column.' ORDER BY id) AS position FROM report_annotation WHERE target_operation_id = ? AND '.$column.' IN (?)) refs WHERE position <= 20 ORDER BY target_key, id',
+            [$operationId, array_values(array_unique($keys))], [1 => ArrayParameterType::STRING]));
+        $references = [];
+        foreach ($rows as $row) {
+            $references[$row['target_key']]['count'] = (int) $row['total'];
+            $references[$row['target_key']]['items'][] = ['annotation_id' => $row['id'], 'operation_id' => $row['operation_id'], 'kind' => $row['kind'], 'match_status' => $row['match_status']];
+        }
+
+        return $references;
+    }
+
+    /**
+     * A bounded, verified text window over retained bytes. Offsets are byte offsets into the original;
+     * content is decoded as UTF-8 with replacement characters, flagged rather than hidden.
+     */
+    public function readLogWindow(string $projectId, string $executionId, string $artifactId, int $offset = 0, int $limit = self::LOG_WINDOW_MAXIMUM): array
+    {
+        if ($offset < 0 || $offset > 2147483647 || $limit < 1 || $limit > self::LOG_WINDOW_MAXIMUM) {
+            throw new \InvalidArgumentException('Log offsets must be nonnegative and windows must be between 1 and 32768 bytes.');
+        }
+        $artifact = $this->getArtifact($projectId, $executionId, $artifactId);
+        if ($offset > $artifact['bytes']) { throw new \InvalidArgumentException('The log offset is beyond the original artifact size.'); }
+        $stream = $this->openArtifact($projectId, $executionId, $artifactId);
+        try {
+            // One preceding byte tells whether the window starts at a line boundary.
+            $start = max(0, $offset - 1);
+            if (0 !== fseek($stream, $start) || false === ($bytes = fread($stream, $limit + ($offset - $start)))) {
+                throw new \RuntimeException('Original log bytes could not be read.');
+            }
+        } finally { fclose($stream); }
+        $previous = $offset > $start ? substr($bytes, 0, 1) : null;
+        $content = $offset > $start ? substr($bytes, 1) : $bytes;
+        $end = $offset + strlen($content);
+        if ($end < $artifact['bytes']) {
+            // Do not split a UTF-8 sequence at the window end; the next window starts at its lead byte.
+            $content = substr($content, 0, strlen($content) - self::incompleteUtf8Tail($content));
+            $end = $offset + strlen($content);
+        }
+        $eof = $end >= $artifact['bytes'];
+        $valid = mb_check_encoding($content, 'UTF-8');
+        if ($valid) {
+            $text = $content;
+        } else {
+            $substitute = mb_substitute_character();
+            mb_substitute_character(0xFFFD);
+            try { $text = mb_scrub($content, 'UTF-8'); } finally { mb_substitute_character($substitute); }
+        }
+
+        return ['schema_version' => 1, 'artifact' => $artifact, 'offset' => $offset, 'returned_bytes' => strlen($content),
+            'next_offset' => $eof ? null : $end, 'previous_offset' => 0 === $offset ? null : max(0, $offset - $limit), 'eof' => $eof,
+            'starts_mid_line' => null !== $previous && "\n" !== $previous,
+            'ends_mid_line' => !$eof && '' !== $content && "\n" !== $content[strlen($content) - 1],
+            'utf8_lossy' => !$valid, 'content_text' => $text];
+    }
+
+    /** Bytes at the end of $content that begin a UTF-8 sequence it does not complete (0 to 3). */
+    private static function incompleteUtf8Tail(string $content): int
+    {
+        $length = strlen($content);
+        for ($back = 1; $back <= min(3, $length - 1); ++$back) {
+            $byte = ord($content[$length - $back]);
+            if (0x80 === ($byte & 0xC0)) { continue; }
+            $needed = match (true) { 0xC0 === ($byte & 0xE0) => 2, 0xE0 === ($byte & 0xF0) => 3, 0xF0 === ($byte & 0xF8) => 4, default => 1 };
+
+            return $needed > $back ? $back : 0;
+        }
+
+        return 0;
     }
 
     public function getArtifact(string $projectId, string $executionId, string $artifactId): array
@@ -246,16 +411,17 @@ final class ReportIntake
                 $this->finish($row, $claim, null, $outcome, 'report_'.$outcome, 'Original report bytes are '.$outcome.'.', $started);
                 return;
             }
-            if ($row['format'] !== $this->adapter->format()) {
+            $adapter = $this->adapters[$row['format']] ?? null;
+            if (null === $adapter || null === $row['parser_name']) {
                 $this->finish($row, $claim, null, 'unsupported', 'report_unsupported', 'The report format has no installed adapter.', $started);
                 return;
             }
-            if ($row['parser_version'] !== $this->adapter->version()) {
+            if ($row['parser_version'] !== $adapter->version()) {
                 throw new \RuntimeException('The recorded parser version is not available in this worker.');
             }
             $stream = $this->store->open($artifact['sha256'], (int) $artifact['bytes']);
             try {
-                $parsed = $this->adapter->parseStream($stream, new ReportParseLimits(maxBytes: $this->limits->uploadMaximum()));
+                $parsed = $adapter->parseStream($stream, new ReportParseLimits(maxBytes: $this->limits->uploadMaximum()));
             } finally { fclose($stream); }
             $this->finish($row, $claim, $parsed, $parsed->outcome, null, null, $started);
         } catch (ReportParseException $exception) {
@@ -278,9 +444,17 @@ final class ReportIntake
 
     private function finish(array $operation, string $claim, ?ParsedReport $parsed, string $outcome, ?string $errorCode, ?string $errorMessage, int $started): void
     {
-        $completed = $this->database(fn () => $this->connection->transactional(function () use ($operation, $claim, $parsed, $outcome, $errorCode, $errorMessage): bool {
+        $completed = $this->database(fn () => $this->connection->transactional(function () use ($operation, $claim, $parsed, $outcome, $errorCode, $errorMessage, $started): bool {
             $current = $this->connection->fetchAssociative('SELECT status, claim_token FROM report_import WHERE id = ? FOR UPDATE', [$operation['id']]);
             if (false === $current || 'completed' === $current['status'] || $claim !== $current['claim_token']) { return false; }
+            $attempts = $parsed?->attempts ?? [];
+            $annotations = $parsed?->annotations ?? [];
+            $native = null !== $parsed && self::NATIVE_FORMAT === $operation['format'] && in_array($outcome, ['parsed', 'partial'], true);
+            if ($native || [] !== $annotations) {
+                // Native and derived imports of one execution link under one execution-scoped lock, so
+                // concurrently completing imports always observe each other's committed rows.
+                $this->connection->executeQuery('SELECT pg_advisory_xact_lock(hashtextextended(CAST(? AS text), 3))', ['report_annotation_link:'.$operation['execution_id']]);
+            }
             if (null !== $parsed) {
                 foreach ($parsed->suites as $suite) {
                     $this->connection->insert('report_suite', ['operation_id' => $operation['id'], 'suite_key' => $suite['suite_key'], 'data' => self::json($suite)]);
@@ -288,18 +462,117 @@ final class ReportIntake
                 foreach ($parsed->cases as $case) {
                     $this->connection->insert('report_case', ['id' => Uuid::v7()->toRfc4122(), 'operation_id' => $operation['id'], 'case_key' => $case['case_key'], 'data' => self::json($case)]);
                 }
+                foreach ($attempts as $attempt) {
+                    $this->connection->insert('report_attempt', ['id' => Uuid::v7()->toRfc4122(), 'operation_id' => $operation['id'],
+                        'case_key' => $attempt['case_key'], 'attempt_key' => $attempt['attempt_key'],
+                        'retry' => is_int($attempt['retry'] ?? null) ? $attempt['retry'] : null, 'data' => self::json($attempt)]);
+                }
+                foreach ($annotations as $annotation) {
+                    $kind = (string) $annotation['kind'];
+                    $linkable = in_array($kind, self::ATTEMPT_KINDS, true) || in_array($kind, self::CASE_KINDS, true);
+                    $this->connection->insert('report_annotation', ['id' => Uuid::v7()->toRfc4122(), 'operation_id' => $operation['id'],
+                        'project_id' => $operation['project_id'], 'execution_id' => $operation['execution_id'],
+                        'annotation_key' => $annotation['annotation_key'], 'kind' => $kind,
+                        'target' => self::json(is_array($annotation['target'] ?? null) ? $annotation['target'] : []),
+                        'data' => self::json(is_array($annotation['data'] ?? null) ? $annotation['data'] : []),
+                        'match_status' => $linkable ? 'unmatched' : 'not_applicable',
+                        'match_reason' => $linkable ? 'native_report_not_imported' : null]);
+                }
             }
-            $summary = null === $parsed ? null : ['cases' => count($parsed->cases), 'suites' => count($parsed->suites),
-                'observed_counts' => $parsed->summary['observed_counts'], 'declared_counts' => $parsed->summary['declared_counts'],
-                'retry_history' => $parsed->summary['retry_history'] ?? 'not_inferred'];
+            $summary = null === $parsed ? null : array_merge($parsed->summary, ['cases' => count($parsed->cases), 'suites' => count($parsed->suites),
+                'attempts' => count($attempts), 'annotations' => count($annotations),
+                'observed_counts' => $parsed->summary['observed_counts'] ?? null, 'declared_counts' => $parsed->summary['declared_counts'] ?? null,
+                'retry_history' => $parsed->summary['retry_history'] ?? 'not_inferred']);
             $valid = null !== $parsed ? 'true' : (in_array($outcome, ['malformed', 'truncated', 'empty'], true) ? 'false' : null);
-            $this->connection->executeStatement("UPDATE report_import SET status = 'completed', parser_outcome = ?, valid_document = ?, summary = ?, limitations = ?, error_code = ?, error_message = ?, completed_at = ?, claim_token = NULL WHERE id = ?",
-                [$outcome, $valid, null === $summary ? null : self::json($summary), self::json($parsed?->limitations ?? []), $errorCode, $errorMessage, self::now(), $operation['id']]);
+            // Worker wall time from claim to this completing statement: parse plus observation writes.
+            $elapsed = max(0, (int) round((hrtime(true) - $started) / 1000000));
+            $this->connection->executeStatement("UPDATE report_import SET status = 'completed', parser_outcome = ?, valid_document = ?, summary = ?, limitations = ?, error_code = ?, error_message = ?, completed_at = ?, processing_ms = ?, claim_token = NULL WHERE id = ?",
+                [$outcome, $valid, null === $summary ? null : self::json($summary), self::json($parsed?->limitations ?? []), $errorCode, $errorMessage, self::now(), min($elapsed, 2147483647), $operation['id']]);
+            // Linking reads native rows only. It never inserts attempts or cases, so derived files cannot double count.
+            if ($native) {
+                $this->linkAnnotations($operation['project_id'], $operation['execution_id'], null);
+            } elseif ([] !== $annotations) {
+                $this->linkAnnotations($operation['project_id'], $operation['execution_id'], $operation['id']);
+            }
             return true;
         }));
         if ($completed) {
             $this->processingLog('info', 'report.normalization_completed', $operation, $started, $outcome, $parsed);
         }
+    }
+
+    /** Re-evaluate link-eligible annotations of one execution, or of one annotation import, against completed native imports. */
+    private function linkAnnotations(string $projectId, string $executionId, ?string $annotationOperationId): void
+    {
+        $kinds = array_merge(self::ATTEMPT_KINDS, self::CASE_KINDS);
+        $rows = $this->connection->fetchAllAssociative('SELECT id, kind, target, match_status, match_reason, target_operation_id, target_case_key, target_attempt_key FROM report_annotation WHERE project_id = ? AND execution_id = ? AND kind IN (?)'
+            .(null === $annotationOperationId ? '' : ' AND operation_id = ?').' ORDER BY id',
+            null === $annotationOperationId ? [$projectId, $executionId, $kinds] : [$projectId, $executionId, $kinds, $annotationOperationId],
+            [2 => ArrayParameterType::STRING]);
+        if ([] === $rows) { return; }
+        $natives = (int) $this->connection->fetchOne("SELECT COUNT(*) FROM report_import WHERE project_id = ? AND execution_id = ? AND status = 'completed' AND format = ? AND parser_outcome IN ('parsed', 'partial')",
+            [$projectId, $executionId, self::NATIVE_FORMAT]);
+        $now = self::now();
+        foreach ($rows as $row) {
+            $result = $this->matchAnnotation($projectId, $executionId, $row['kind'], self::decode($row['target']), $natives);
+            if ($result['status'] === $row['match_status'] && $result['reason'] === $row['match_reason'] && $result['operation_id'] === $row['target_operation_id']
+                && $result['case_key'] === $row['target_case_key'] && $result['attempt_key'] === $row['target_attempt_key']) {
+                continue;
+            }
+            $this->connection->executeStatement('UPDATE report_annotation SET match_status = ?, match_reason = ?, target_operation_id = ?, target_case_key = ?, target_attempt_key = ?, linked_at = ? WHERE id = ?',
+                [$result['status'], $result['reason'], $result['operation_id'], $result['case_key'], $result['attempt_key'], 'linked' === $result['status'] ? $now : null, $row['id']]);
+        }
+    }
+
+    /** @return array{status: string, reason: ?string, operation_id: ?string, case_key: ?string, attempt_key: ?string} */
+    private function matchAnnotation(string $projectId, string $executionId, string $kind, array $target, int $natives): array
+    {
+        $none = static fn (string $status, string $reason): array => ['status' => $status, 'reason' => $reason, 'operation_id' => null, 'case_key' => null, 'attempt_key' => null];
+        if (0 === $natives) { return $none('unmatched', 'native_report_not_imported'); }
+        $attemptLevel = in_array($kind, self::ATTEMPT_KINDS, true);
+        $conditions = ['i.project_id = ?', 'i.execution_id = ?', "i.status = 'completed'", 'i.format = ?', "i.parser_outcome IN ('parsed', 'partial')"];
+        $parameters = [$projectId, $executionId, self::NATIVE_FORMAT];
+        $project = self::scalarText($target['project'] ?? null);
+        if (null !== $project) { $conditions[] = "c.data->>'project' = ?"; $parameters[] = $project; }
+        if ($attemptLevel) {
+            $spec = self::scalarText($target['spec_id'] ?? null);
+            $test = self::scalarText($target['test_id'] ?? null);
+            $retry = $target['retry'] ?? null;
+            if ((null === $spec && null === $test) || !is_int($retry)) { return $none('unmatched', 'target_incomplete'); }
+            if (null !== $spec) { $conditions[] = "c.data->>'spec_id' = ?"; $parameters[] = $spec; }
+            else { $conditions[] = "c.data->>'test_id' = ?"; $parameters[] = $test; }
+            $conditions[] = "COALESCE(a.retry, CAST(a.data->>'index' AS integer)) = ?";
+            $parameters[] = $retry;
+            $matches = $this->connection->fetchAllAssociative('SELECT a.operation_id, a.case_key, a.attempt_key FROM report_attempt a JOIN report_case c ON c.operation_id = a.operation_id AND c.case_key = a.case_key JOIN report_import i ON i.id = a.operation_id WHERE '
+                .implode(' AND ', $conditions).' ORDER BY a.operation_id, a.id LIMIT 50', $parameters);
+        } else {
+            $file = self::scalarText($target['file'] ?? null);
+            $title = self::scalarText($target['title'] ?? null);
+            if (null === $file || null === $title) { return $none('unmatched', 'target_incomplete'); }
+            $conditions[] = "c.data->>'file' = ?";
+            $parameters[] = $file;
+            $line = $target['line'] ?? null;
+            if (is_int($line)) { $conditions[] = "c.data->>'line' = ?"; $parameters[] = (string) $line; }
+            else { $conditions[] = "c.data->>'line' IS NULL"; }
+            $candidates = $this->connection->fetchAllAssociative('SELECT c.operation_id, c.case_key, c.data FROM report_case c JOIN report_import i ON i.id = c.operation_id WHERE '
+                .implode(' AND ', $conditions).' ORDER BY c.operation_id, c.id LIMIT 200', $parameters);
+            $matches = [];
+            foreach ($candidates as $candidate) {
+                $case = self::decode($candidate['data']);
+                $path = array_values(array_filter(is_array($case['title_path'] ?? null) ? $case['title_path'] : [], 'is_string'));
+                $name = is_string($case['name'] ?? null) ? $case['name'] : null;
+                // UXor durations name a test by its describe path and title joined with Playwright's separator.
+                $full = is_string($case['full_title'] ?? null) ? $case['full_title'] : (null === $name ? null : implode(' › ', [...$path, $name]));
+                if (null !== $full && $title === $full) {
+                    $matches[] = ['operation_id' => $candidate['operation_id'], 'case_key' => $candidate['case_key'], 'attempt_key' => null];
+                }
+            }
+        }
+        if ([] === $matches) { return $none('unmatched', $attemptLevel ? 'attempt_not_found' : 'case_not_found'); }
+        if (count(array_unique(array_column($matches, 'operation_id'))) > 1) { return $none('ambiguous', 'multiple_native_imports'); }
+        if (count($matches) > 1) { return $none('ambiguous', $attemptLevel ? 'multiple_attempts' : 'multiple_cases'); }
+
+        return ['status' => 'linked', 'reason' => null] + $matches[0];
     }
 
     private function processingLog(string $level, string $event, array $operation, int $started, ?string $outcome = null, ?ParsedReport $parsed = null): void
@@ -332,7 +605,11 @@ final class ReportIntake
                 $this->connection->executeStatement('UPDATE report_artifact SET expired_at = ? WHERE id = ?', [$now, $artifact['id']]);
             }
             $pruned = $this->connection->fetchFirstColumn("SELECT id FROM report_import WHERE status = 'completed' AND completed_at < ? ORDER BY completed_at, id LIMIT 100 FOR UPDATE", [$recordCutoff]);
-            foreach ($pruned as $id) { $this->connection->delete('report_import', ['id' => $id]); }
+            foreach ($pruned as $id) {
+                // A derived annotation never silently points at pruned native evidence.
+                $this->connection->executeStatement("UPDATE report_annotation SET match_status = 'unmatched', match_reason = 'native_report_pruned', target_operation_id = NULL, target_case_key = NULL, target_attempt_key = NULL, linked_at = NULL WHERE target_operation_id = ?", [$id]);
+                $this->connection->delete('report_import', ['id' => $id]);
+            }
             return ['schema_version' => 1, 'expired' => count($eligible), 'pruned' => count($pruned),
                 'orphan_blobs' => 0, 'staged_files' => 0, 'deferred' => null];
         }));
@@ -449,8 +726,33 @@ final class ReportIntake
             'parser' => ['name' => $row['parser_name'], 'version' => $row['parser_version']], 'source_context' => self::decode($row['source_context']),
             'created_at' => self::iso($row['created_at']), 'started_at' => null === $row['started_at'] ? null : self::iso($row['started_at']),
             'completed_at' => null === $row['completed_at'] ? null : self::iso($row['completed_at']),
-            'summary' => null === $row['summary'] ? ['cases' => null, 'suites' => null, 'observed_counts' => null, 'declared_counts' => null] : self::decode($row['summary']),
-            'limitations' => self::decode($row['limitations']), 'error' => null === $row['error_code'] ? null : ['code' => $row['error_code'], 'message' => $row['error_message']]];
+            'summary' => $summary = (null === $row['summary'] ? ['cases' => null, 'suites' => null, 'observed_counts' => null, 'declared_counts' => null] : self::decode($row['summary'])),
+            'limitations' => self::decode($row['limitations']), 'error' => null === $row['error_code'] ? null : ['code' => $row['error_code'], 'message' => $row['error_message']],
+            'timings' => self::timings($row),
+            'attempt_count' => is_int($summary['attempts'] ?? null) ? $summary['attempts'] : null,
+            'annotation_count' => is_int($summary['annotations'] ?? null) ? $summary['annotations'] : null,
+            'links' => is_int($summary['annotations'] ?? null) && $summary['annotations'] > 0 ? $this->linkCounts($row['id']) : null];
+    }
+
+    /** Stage durations from stored timestamps; null marks a stage or measurement that has not happened. */
+    private static function timings(array $row): array
+    {
+        $seconds = static fn (?string $from, ?string $to): ?float => null === $from || null === $to ? null
+            : round((float) (new \DateTimeImmutable($to))->format('U.u') - (float) (new \DateTimeImmutable($from))->format('U.u'), 3);
+
+        return ['queued_seconds' => $seconds($row['created_at'], $row['started_at']),
+            'processing_seconds' => 'completed' === $row['status'] ? $seconds($row['started_at'], $row['completed_at']) : null,
+            'parse_ms' => null === ($row['processing_ms'] ?? null) ? null : (int) $row['processing_ms']];
+    }
+
+    private function linkCounts(string $operationId): array
+    {
+        $counts = ['linked' => 0, 'unmatched' => 0, 'ambiguous' => 0, 'not_applicable' => 0];
+        foreach ($this->database(fn () => $this->connection->fetchAllAssociative('SELECT match_status, COUNT(*) AS total FROM report_annotation WHERE operation_id = ? GROUP BY match_status', [$operationId])) as $row) {
+            $counts[$row['match_status']] = (int) $row['total'];
+        }
+
+        return $counts;
     }
 
     private function database(callable $operation): mixed
@@ -474,6 +776,11 @@ final class ReportIntake
         }
 
         return null;
+    }
+
+    private static function scalarText(mixed $value): ?string
+    {
+        return is_string($value) && '' !== $value ? $value : (is_int($value) ? (string) $value : null);
     }
 
     private static function limit(int $limit): void { if ($limit < 1 || $limit > 100) { throw new \InvalidArgumentException('limit must be between 1 and 100.'); } }

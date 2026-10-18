@@ -17,6 +17,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class ReportUploadType extends AbstractType
 {
+    /** Display names for known adapter formats; an installed format without a name is shown by its selector. */
+    private const LABELS = [
+        'junit' => 'JUnit XML',
+        'playwright-json' => 'Playwright JSON report (results.json)',
+        'playwright-failed-attempts' => 'UXor failed attempts (failed-attempts.json)',
+        'playwright-durations' => 'UXor durations (durations.json)',
+        'jev-assessment' => 'Existing Jev assessment (assessment.json)',
+        'text-log' => 'Text log',
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -31,15 +41,15 @@ final class ReportUploadType extends AbstractType
             ])
             ->add('format', ChoiceType::class, [
                 'label' => 'Report format',
-                'choices' => ['JUnit XML' => 'junit'],
-                'help' => 'The worker will inspect the uploaded bytes. Unsupported report structure is reported explicitly.',
+                'choices' => self::choices($options['formats']),
+                'help' => 'The installed adapter that will read these bytes. Derived files annotate native evidence and never add attempts. Unsupported report structure is reported explicitly.',
                 'constraints' => [new Assert\NotBlank()],
             ])
             ->add('report', FileType::class, [
                 'label' => 'Original report',
                 'mapped' => false,
                 'help' => 'Upload the original report bytes. A file must be selected again after a rejected submission.',
-                'attr' => ['accept' => '.xml,application/xml,text/xml'],
+                'attr' => ['accept' => '.xml,.json,.log,.txt,application/xml,text/xml,application/json,text/plain'],
                 'constraints' => [new Assert\NotNull(message: 'Select a report file.'), new Assert\File(maxSize: $options['max_bytes'])],
             ])
         ;
@@ -76,8 +86,21 @@ final class ReportUploadType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired('max_bytes');
+        $resolver->setDefault('formats', ['junit']);
+        $resolver->setAllowedTypes('formats', 'string[]');
         $resolver->setAllowedTypes('max_bytes', 'int');
         $resolver->setAllowedValues('max_bytes', static fn (int $value): bool => $value > 0);
         $resolver->setDefaults(['csrf_protection' => true]);
+    }
+
+    /** @param list<string> $formats */
+    private static function choices(array $formats): array
+    {
+        $choices = [];
+        foreach ($formats as $format) {
+            $choices[self::LABELS[$format] ?? $format] = $format;
+        }
+
+        return $choices;
     }
 }
