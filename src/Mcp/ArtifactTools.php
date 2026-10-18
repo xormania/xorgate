@@ -88,7 +88,7 @@ final class ArtifactTools
         return $this->result(fn (): array => $this->intake->listAttempts($projectId, $executionId, $operationId, $limit, $cursor));
     }
 
-    #[McpTool(name: 'xorgate_annotations_list', description: 'List bounded derived annotations (failed-attempt records, durations, existing Jev assessments, producer status and errors outside tests) produced by one import or linked to one native import. Each carries its exact target, bounded data and explicit match status: linked, unmatched, ambiguous or not_applicable with a reason. Advisory assessments never rewrite native outcomes.', outputSchema: self::OUTPUT)]
+    #[McpTool(name: 'xorgate_annotations_list', description: 'List bounded derived annotations (failed-attempt records, durations, existing Jev assessments, producer status and errors outside tests) produced by one import or linked to one native import. Each carries its exact target, bounded data and explicit match status: linked, unmatched, ambiguous or not_applicable with a reason. Advisory assessments never rewrite native outcomes; Jev assessments are read from their retained files and Jev is never called.', outputSchema: self::OUTPUT)]
     #[Schema(additionalProperties: false)]
     public function annotations(#[Schema(definition: self::UUID)] string $projectId, #[Schema(definition: self::UUID)] string $executionId, #[Schema(definition: self::UUID)] string $operationId, #[Schema(minimum: 1, maximum: 100)] int $limit = 25, #[Schema(maxLength: 36)] ?string $cursor = null): array
     {

@@ -179,9 +179,22 @@ final class ReportIntakeController extends AbstractController
             return $this->errorResponse($error);
         }
 
-        // Twig escapes markup; control characters such as terminal escapes are shown as control pictures, not sent raw.
-        return $this->render('reports/log.html.twig', $context + ['window' => $window, 'limit' => $limit,
-            'display_text' => preg_replace_callback('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', static fn (array $match): string => mb_chr("\x7F" === $match[0] ? 0x2421 : 0x2400 + ord($match[0]), 'UTF-8'), $window['content_text'])]);
+        // Twig escapes markup. C0 controls such as terminal escapes are shown as control pictures; C1 controls and
+        // bidirectional overrides, which could reorder the displayed text, are shown as their code points.
+        $display = preg_replace_callback('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x{80}-\x{9F}\x{200E}\x{200F}\x{202A}-\x{202E}\x{2066}-\x{2069}]/u', static function (array $match): string {
+            $code = mb_ord($match[0], 'UTF-8');
+
+            return match (true) {
+                0x7F === $code => "\u{2421}",
+                $code < 0x20 => mb_chr(0x2400 + $code, 'UTF-8'),
+                default => sprintf('<U+%04X>', $code),
+            };
+        }, $window['content_text']);
+        if (null === $display) {
+            return $this->errorResponse(new \RuntimeException('The log window could not be prepared for display.'));
+        }
+
+        return $this->render('reports/log.html.twig', $context + ['window' => $window, 'limit' => $limit, 'display_text' => $display]);
     }
 
     #[Route('/artifacts/{artifactId}', name: 'app_report_artifact', requirements: ['artifactId' => self::UUID_ROUTE], methods: ['GET'])]

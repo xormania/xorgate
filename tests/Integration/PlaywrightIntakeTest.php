@@ -344,8 +344,8 @@ final class PlaywrightIntakeTest extends KernelTestCase
     {
         $tester = new CommandTester((new Application(self::$kernel))->find($command));
         $positional = array_filter($arguments, 'is_int', ARRAY_FILTER_USE_KEY);
-        $options = [];
-        foreach (array_filter($arguments, 'is_string', ARRAY_FILTER_USE_KEY) as $name => $value) { $options['--'.$name] = $value; }
+        // Option keys are given with their leading dashes, as CommandTester expects them.
+        $options = array_filter($arguments, 'is_string', ARRAY_FILTER_USE_KEY);
         $names = 'xorgate:log:read' === $command ? ['artifact-id'] : ['operation-id'];
         $input = ['project-id' => $this->projectId(), 'execution-id' => $this->executionId()] + array_combine($names, array_values($positional)) + $options;
         self::assertSame(0, $tester->execute($input, ['interactive' => false]), $tester->getDisplay());

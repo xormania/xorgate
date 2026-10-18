@@ -69,7 +69,7 @@
                     <section class="mt-5" aria-labelledby="global-errors-heading" data-xorgate-global-errors="{{ summary.global_errors.count ?? 'unknown' }}">
                         <h3 id="global-errors-heading" class="text-sm font-medium text-heading">Errors outside tests: {{ summary.global_errors.count ?? 'unknown' }}</h3>
                         {% if (summary.global_errors.items ?? []) is not empty %}
-                            <ul class="mt-2 space-y-2">{% for error in summary.global_errors.items %}<li><pre class="overflow-x-auto whitespace-pre-wrap break-all text-xs text-body">{{ error.message }}</pre>{% if (error.location ?? null) is not null %}<p class="text-xs text-body">{{ error.location.file ?? 'Unknown file' }}:{{ error.location.line ?? '?' }}</p>{% endif %}</li>{% endfor %}</ul>
+                            <ul class="mt-2 space-y-2">{% for error in summary.global_errors.items %}<li><pre class="overflow-x-auto whitespace-pre-wrap break-all text-xs text-body">{{ error.message ?? 'No message recorded' }}</pre>{% if (error.location ?? null) is not null %}<p class="text-xs text-body">{{ error.location.file ?? 'Unknown file' }}:{{ error.location.line ?? '?' }}</p>{% endif %}</li>{% endfor %}</ul>
                         {% endif %}
                         {% if summary.global_errors.truncated ?? false %}<p class="mt-2 text-xs text-body">Further errors are retained in the original artifact.</p>{% endif %}
                     </section>
@@ -77,7 +77,9 @@
                 <div class="mt-5 flex flex-wrap gap-3">
                     <twig:Button as="a" variant="outline" href="{{ path('app_intake_attempts', {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}) }}" data-xorgate-attempts-link="{{ operation.operation_id }}">Native attempts</twig:Button>
                     <twig:Button as="a" variant="outline" href="{{ path('app_intake_annotations', {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}) }}" data-xorgate-annotations-link="{{ operation.operation_id }}">Annotations</twig:Button>
-                    <twig:Button as="a" variant="outline" href="{{ path('app_report_log', {projectId: project.project_id, executionId: execution.execution_id, artifactId: operation.artifact.artifact_id}) }}" data-xorgate-log-link="{{ operation.artifact.artifact_id }}">Read original as text</twig:Button>
+                    {% if operation.artifact.availability.available %}
+                        <twig:Button as="a" variant="outline" href="{{ path('app_report_log', {projectId: project.project_id, executionId: execution.execution_id, artifactId: operation.artifact.artifact_id}) }}" data-xorgate-log-link="{{ operation.artifact.artifact_id }}">Read original as text</twig:Button>
+                    {% endif %}
                 </div>
                 {% if operation.limitations is not empty %}
                     <ul class="mt-4 list-inside list-disc space-y-2 text-sm text-body">{% for limitation in operation.limitations %}<li>{{ limitation is iterable ? limitation|json_encode : limitation }}</li>{% endfor %}</ul>
