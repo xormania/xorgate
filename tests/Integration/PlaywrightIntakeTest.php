@@ -223,6 +223,52 @@ final class PlaywrightIntakeTest extends KernelTestCase
         self::assertSame(36, $this->countRows('report_attempt'));
     }
 
+    public function testPruningOneNativeImportRelinksAgainstTheRemainingOne(): void
+    {
+        $failedBytes = $this->fixture('controlled-failed-attempts.json');
+        $nativeBytes = $this->fixture('controlled-results.json');
+        $failed = $this->complete($failedBytes, 'playwright-failed-attempts');
+        $first = $this->complete($nativeBytes, 'playwright-json', 'first-native-copy');
+        $second = $this->complete($nativeBytes, 'playwright-json', 'second-native-copy');
+        self::assertNotSame($first['request_id'], $second['request_id']);
+        self::assertSame(['linked' => 0, 'unmatched' => 0, 'ambiguous' => 6, 'not_applicable' => 0], $this->operation($failed)['links']);
+
+        // Direct process() calls leave the dispatched messages queued; cleanup defers while async/failed work remains.
+        $this->connection->executeStatement('DELETE FROM messenger_messages');
+        $retention = $this->intake->capacity()['limits']['record_retention_seconds'];
+        $aged = (new \DateTimeImmutable('-'.($retention + 86400).' seconds', new \DateTimeZone('UTC')))->format('Y-m-d\TH:i:s.uP');
+        $this->connection->executeStatement('UPDATE report_import SET completed_at = ? WHERE id = ?', [$aged, $first['operation_id']]);
+        $sweep = $this->intake->cleanup();
+        self::assertSame([null, 1], [$sweep['deferred'], $sweep['pruned']]);
+
+        $relinked = $this->operation($failed);
+        self::assertSame(['linked' => 6, 'unmatched' => 0, 'ambiguous' => 0, 'not_applicable' => 0], $relinked['links']);
+        $annotations = $this->annotations($failed);
+        self::assertCount(6, $annotations);
+        foreach ($annotations as $annotation) {
+            self::assertSame('linked', $annotation['match']['status']);
+            self::assertSame($second['operation_id'], $annotation['match']['target_operation_id']);
+            self::assertNotNull($annotation['match']['target_attempt_key']);
+        }
+
+        $this->connection->executeStatement('DELETE FROM messenger_messages');
+        $this->connection->executeStatement('UPDATE report_import SET completed_at = ? WHERE id = ?', [$aged, $second['operation_id']]);
+        $sweep = $this->intake->cleanup();
+        self::assertSame([null, 1], [$sweep['deferred'], $sweep['pruned']]);
+        self::assertSame(['linked' => 0, 'unmatched' => 6, 'ambiguous' => 0, 'not_applicable' => 0], $this->operation($failed)['links']);
+        $annotations = $this->annotations($failed);
+        self::assertCount(6, $annotations);
+        foreach ($annotations as $annotation) {
+            self::assertSame(['unmatched', 'native_report_pruned', null, null], [$annotation['match']['status'], $annotation['match']['reason'],
+                $annotation['match']['target_operation_id'], $annotation['match']['target_attempt_key']]);
+        }
+        self::assertSame(0, $this->countRows('report_attempt'));
+
+        $indexes = $this->connection->fetchFirstColumn("SELECT indexname FROM pg_indexes WHERE tablename = 'report_case'");
+        self::assertContains('report_case_spec', $indexes);
+        self::assertContains('report_case_location', $indexes);
+    }
+
     public function testSetupFailureGlobalErrorsAndMalformedDiagnosisLeaveExecutionEvidenceVisible(): void
     {
         $notReached = $this->complete($this->fixture('not-reached-failed-attempts.json'), 'playwright-failed-attempts');

@@ -23,10 +23,15 @@ final class Version20261018000000 extends AbstractMigration
         $this->addSql('CREATE INDEX report_annotation_operation_page ON report_annotation (operation_id, id)');
         $this->addSql('CREATE INDEX report_annotation_execution_status ON report_annotation (project_id, execution_id, match_status)');
         $this->addSql('CREATE INDEX report_annotation_target ON report_annotation (target_operation_id, target_attempt_key)');
+        // Linking looks up native cases by the identities derived files carry, once per annotation.
+        $this->addSql("CREATE INDEX report_case_spec ON report_case (operation_id, (data->>'spec_id'))");
+        $this->addSql("CREATE INDEX report_case_location ON report_case (operation_id, (data->>'file'), (data->>'line'))");
     }
 
     public function down(Schema $schema): void
     {
+        $this->addSql('DROP INDEX report_case_location');
+        $this->addSql('DROP INDEX report_case_spec');
         $this->addSql('DROP TABLE report_annotation');
         $this->addSql('DROP TABLE report_attempt');
         $this->addSql('ALTER TABLE report_import DROP COLUMN processing_ms');

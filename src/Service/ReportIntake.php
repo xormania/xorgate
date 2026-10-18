@@ -453,7 +453,7 @@ final class ReportIntake
             if ($native || [] !== $annotations) {
                 // Native and derived imports of one execution link under one execution-scoped lock, so
                 // concurrently completing imports always observe each other's committed rows.
-                $this->connection->executeQuery('SELECT pg_advisory_xact_lock(hashtextextended(CAST(? AS text), 3))', ['report_annotation_link:'.$operation['execution_id']]);
+                $this->linkLock($operation['execution_id']);
             }
             if (null !== $parsed) {
                 foreach ($parsed->suites as $suite) {
@@ -501,8 +501,13 @@ final class ReportIntake
         }
     }
 
+    private function linkLock(string $executionId): void
+    {
+        $this->connection->executeQuery('SELECT pg_advisory_xact_lock(hashtextextended(CAST(? AS text), 3))', ['report_annotation_link:'.$executionId]);
+    }
+
     /** Re-evaluate link-eligible annotations of one execution, or of one annotation import, against completed native imports. */
-    private function linkAnnotations(string $projectId, string $executionId, ?string $annotationOperationId): void
+    private function linkAnnotations(string $projectId, string $executionId, ?string $annotationOperationId, string $absentReason = 'native_report_not_imported'): void
     {
         $kinds = array_merge(self::ATTEMPT_KINDS, self::CASE_KINDS);
         $rows = $this->connection->fetchAllAssociative('SELECT id, kind, target, match_status, match_reason, target_operation_id, target_case_key, target_attempt_key FROM report_annotation WHERE project_id = ? AND execution_id = ? AND kind IN (?)'
@@ -514,7 +519,7 @@ final class ReportIntake
             [$projectId, $executionId, self::NATIVE_FORMAT]);
         $now = self::now();
         foreach ($rows as $row) {
-            $result = $this->matchAnnotation($projectId, $executionId, $row['kind'], self::decode($row['target']), $natives);
+            $result = $this->matchAnnotation($projectId, $executionId, $row['kind'], self::decode($row['target']), $natives, $absentReason);
             if ($result['status'] === $row['match_status'] && $result['reason'] === $row['match_reason'] && $result['operation_id'] === $row['target_operation_id']
                 && $result['case_key'] === $row['target_case_key'] && $result['attempt_key'] === $row['target_attempt_key']) {
                 continue;
@@ -525,10 +530,10 @@ final class ReportIntake
     }
 
     /** @return array{status: string, reason: ?string, operation_id: ?string, case_key: ?string, attempt_key: ?string} */
-    private function matchAnnotation(string $projectId, string $executionId, string $kind, array $target, int $natives): array
+    private function matchAnnotation(string $projectId, string $executionId, string $kind, array $target, int $natives, string $absentReason): array
     {
         $none = static fn (string $status, string $reason): array => ['status' => $status, 'reason' => $reason, 'operation_id' => null, 'case_key' => null, 'attempt_key' => null];
-        if (0 === $natives) { return $none('unmatched', 'native_report_not_imported'); }
+        if (0 === $natives) { return $none('unmatched', $absentReason); }
         $attemptLevel = in_array($kind, self::ATTEMPT_KINDS, true);
         $conditions = ['i.project_id = ?', 'i.execution_id = ?', "i.status = 'completed'", 'i.format = ?', "i.parser_outcome IN ('parsed', 'partial')"];
         $parameters = [$projectId, $executionId, self::NATIVE_FORMAT];
@@ -604,11 +609,18 @@ final class ReportIntake
             foreach ($eligible as $artifact) {
                 $this->connection->executeStatement('UPDATE report_artifact SET expired_at = ? WHERE id = ?', [$now, $artifact['id']]);
             }
-            $pruned = $this->connection->fetchFirstColumn("SELECT id FROM report_import WHERE status = 'completed' AND completed_at < ? ORDER BY completed_at, id LIMIT 100 FOR UPDATE", [$recordCutoff]);
-            foreach ($pruned as $id) {
+            $pruned = $this->connection->fetchAllAssociative("SELECT id, project_id, execution_id, format FROM report_import WHERE status = 'completed' AND completed_at < ? ORDER BY completed_at, id LIMIT 100 FOR UPDATE", [$recordCutoff]);
+            $relink = [];
+            foreach ($pruned as $import) {
                 // A derived annotation never silently points at pruned native evidence.
-                $this->connection->executeStatement("UPDATE report_annotation SET match_status = 'unmatched', match_reason = 'native_report_pruned', target_operation_id = NULL, target_case_key = NULL, target_attempt_key = NULL, linked_at = NULL WHERE target_operation_id = ?", [$id]);
-                $this->connection->delete('report_import', ['id' => $id]);
+                $this->connection->executeStatement("UPDATE report_annotation SET match_status = 'unmatched', match_reason = 'native_report_pruned', target_operation_id = NULL, target_case_key = NULL, target_attempt_key = NULL, linked_at = NULL WHERE target_operation_id = ?", [$import['id']]);
+                $this->connection->delete('report_import', ['id' => $import['id']]);
+                if (self::NATIVE_FORMAT === $import['format']) { $relink[$import['execution_id']] = $import['project_id']; }
+            }
+            // Remaining native imports may now resolve annotations that were ambiguous or pointed at the pruned import.
+            foreach ($relink as $executionId => $projectId) {
+                $this->linkLock((string) $executionId);
+                $this->linkAnnotations($projectId, (string) $executionId, null, 'native_report_pruned');
             }
             return ['schema_version' => 1, 'expired' => count($eligible), 'pruned' => count($pruned),
                 'orphan_blobs' => 0, 'staged_files' => 0, 'deferred' => null];
