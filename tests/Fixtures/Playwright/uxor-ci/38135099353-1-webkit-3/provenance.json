@@ -1,0 +1,435 @@
+{
+  "schema_version": 1,
+  "fixture": "uxor-ci/38135099353-1-webkit-3/",
+  "classification": "genuine-github-actions-artifact",
+  "role": "red: one test failed both its attempts; the shard job and the run concluded failure",
+  "repository": "xormania/uxor",
+  "head_sha": "71f7dffe771b932e3158026146db093f7bc9bb50",
+  "head_branch": "dev",
+  "event": "push",
+  "display_title": "ci(security): enforce repository trust policy (supersedes #109) (#117)",
+  "workflow": ".github/workflows/ci.yml",
+  "workflowURL": "https://github.com/xormania/uxor/blob/71f7dffe771b932e3158026146db093f7bc9bb50/.github/workflows/ci.yml",
+  "run_id": 38135099353,
+  "run_attempt": 1,
+  "run_html_url": "https://github.com/xormania/uxor/actions/runs/38135099353",
+  "run_conclusion": "failure",
+  "run_created_at": "2026-10-11T11:18:55Z",
+  "run_updated_at": "2026-10-11T11:28:34Z",
+  "runAttempts": [
+    {
+      "run_attempt": 1,
+      "conclusion": "failure",
+      "note": "The run was not re-run; attempt 1 is its only attempt."
+    }
+  ],
+  "job": {
+    "id": 114457320257,
+    "name": "Demo + Playwright (webkit 3/3)",
+    "conclusion": "failure",
+    "run_attempt": 1,
+    "html_url": "https://github.com/xormania/uxor/actions/runs/38135099353/job/114457320257",
+    "started_at": "2026-10-11T11:19:23Z",
+    "completed_at": "2026-10-11T11:27:52Z",
+    "head_sha": "71f7dffe771b932e3158026146db093f7bc9bb50",
+    "labels": [
+      "ubuntu-latest"
+    ],
+    "nonSuccessSteps": [
+      {
+        "number": 6,
+        "name": "Log in to the build cache's registry",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 13,
+        "name": "The sync leaves tracked files unchanged",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 14,
+        "name": "The demo's composer.json and composer.lock are valid",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 15,
+        "name": "sync-demo copies what ux:install copies",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 19,
+        "name": "Playwright (smoke + every README example + upstream recipe specs)",
+        "conclusion": "failure"
+      },
+      {
+        "number": 51,
+        "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+        "conclusion": "skipped"
+      }
+    ],
+    "source": "https://api.github.com/repos/xormania/uxor/actions/runs/38135099353/jobs?per_page=100&filter=all"
+  },
+  "shard": "webkit 3/3",
+  "artifacts": {
+    "results": {
+      "provider": "GitHub Actions",
+      "id": 11700763009,
+      "name": "playwright-results-webkit-3",
+      "url": "https://api.github.com/repos/xormania/uxor/actions/artifacts/11700763009",
+      "archive_download_url": "https://api.github.com/repos/xormania/uxor/actions/artifacts/11700763009/zip",
+      "size_in_bytes": 52733,
+      "digest": "sha256:89280abc29024210276d96929d853fbe669cba4f4f85120d3b13bce3b8ebe477",
+      "created_at": "2026-10-11T11:27:22Z",
+      "expires_at": "2026-11-10T11:27:21Z",
+      "downloadedZipSHA256": "89280abc29024210276d96929d853fbe669cba4f4f85120d3b13bce3b8ebe477",
+      "downloadedZipBytes": 52733,
+      "zipDigestVerified": true,
+      "files": [
+        {
+          "path": "durations.json",
+          "bytes": 93991,
+          "sha256": "079ab1f730e7f902c60325d7283d05bb95ab944a3cdd74429a8a792c2ef95d17",
+          "retainedAs": "38135099353-1-webkit-3/durations.json"
+        },
+        {
+          "path": "failed-attempts.json",
+          "bytes": 3880,
+          "sha256": "f758fb1768e351a347dfa4af1c68a988287d526997b327850999271832564cc0",
+          "retainedAs": "38135099353-1-webkit-3/failed-attempts.json"
+        },
+        {
+          "path": "job-metrics.json",
+          "bytes": 673,
+          "sha256": "338b6b4ded33447c4b347362999c9d6e2e453b69d8cbb6e0bb7a6c471da1d43a",
+          "retainedAs": null
+        },
+        {
+          "path": "results.json",
+          "bytes": 353730,
+          "sha256": "00bae934b5587525554c18104a439c660963a1db9387c3cb1bd6937457db3592",
+          "retainedAs": "38135099353-1-webkit-3/results.json"
+        },
+        {
+          "path": "shard-plan.json",
+          "bytes": 110985,
+          "sha256": "8e0e1add7d0035c69d3bf4e937eb464201d52ea979d6357bb63739276db70859",
+          "retainedAs": null
+        },
+        {
+          "path": "summary.md",
+          "bytes": 5546,
+          "sha256": "d3619f6198c293ca07919a22dc4b374de923b86e9c76e8aaf6b2c1ca37d19de8",
+          "retainedAs": "38135099353-1-webkit-3/summary.md"
+        }
+      ]
+    },
+    "jev": {
+      "provider": "GitHub Actions",
+      "id": 11700967630,
+      "name": "jev-webkit-3-38135099353-1",
+      "url": "https://api.github.com/repos/xormania/uxor/actions/artifacts/11700967630",
+      "archive_download_url": "https://api.github.com/repos/xormania/uxor/actions/artifacts/11700967630/zip",
+      "size_in_bytes": 6559,
+      "digest": "sha256:9a7fa8047c98aa5c74cadda61c51264127ad59146c7dda4968bfb1531099bd49",
+      "created_at": "2026-10-11T11:27:47Z",
+      "expires_at": "2026-11-10T11:27:46Z",
+      "downloadedZipSHA256": "9a7fa8047c98aa5c74cadda61c51264127ad59146c7dda4968bfb1531099bd49",
+      "downloadedZipBytes": 6559,
+      "zipDigestVerified": true,
+      "files": [
+        {
+          "path": "attempts/01-smoke-webkit-demo-app-retry0/assessment.json",
+          "bytes": 9461,
+          "sha256": "e62c8d487a8e53f5aba54bb933c52990b0a9ace741274580cdc6bf68c0773e25",
+          "retainedAs": "38135099353-1-webkit-3/jev/attempts/01-smoke-webkit-demo-app-retry0/assessment.json"
+        },
+        {
+          "path": "attempts/02-smoke-webkit-demo-app-retry1/assessment.json",
+          "bytes": 10770,
+          "sha256": "a9d13119600f17e22f9a0c02c4ef62d220ad1643f023a209fa49f419f8876a70",
+          "retainedAs": "38135099353-1-webkit-3/jev/attempts/02-smoke-webkit-demo-app-retry1/assessment.json"
+        },
+        {
+          "path": "summary.md",
+          "bytes": 2250,
+          "sha256": "f75f609659956d3bb7b4b310b4e17d0c9acdb67d407718c2f1899a7887fc892b",
+          "retainedAs": "38135099353-1-webkit-3/jev/summary.md"
+        }
+      ]
+    }
+  },
+  "otherArtifactsOfThisShard": [
+    {
+      "name": "playwright-report-webkit-3",
+      "retained": false,
+      "reason": "7-day retention; it was no longer listed for this run when retrieved."
+    },
+    {
+      "path": "job-metrics.json",
+      "inArtifact": "playwright-results-webkit-3",
+      "retained": false,
+      "reason": "CI timing metrics, not an adapter input; recorded by digest under artifacts.results.files."
+    },
+    {
+      "path": "shard-plan.json",
+      "inArtifact": "playwright-results-webkit-3",
+      "retained": false,
+      "reason": "UXor's shard timing plan (mode 'timings'); recorded by digest under artifacts.results.files."
+    }
+  ],
+  "absentFiles": [],
+  "retrieval": {
+    "method": "GitHub REST API through the session proxy: runs, attempts/<n>/jobs and artifacts listings, then GET /actions/artifacts/<id>/zip (302 to blob storage), unzip.",
+    "retrievedAt": "2026-10-18T15:14Z",
+    "zipVerification": "sha256 of the downloaded ZIP equals the artifact's API digest; each retained file equals the extracted bytes."
+  },
+  "redaction": {
+    "kind": "none",
+    "description": "Retained bytes are exactly the extracted artifact files. Runner paths (/home/runner/work/uxor/uxor) are kept as written by the producer."
+  },
+  "secretScan": {
+    "patterns": [
+      "TYPESAFE",
+      "token",
+      "ghp_",
+      "Bearer",
+      "password",
+      "secret",
+      "api_key/api-key",
+      "authorization",
+      "credential"
+    ],
+    "caseInsensitive": true,
+    "findings": [
+      "No credential or token value found.",
+      "jev assessments: policy.connection.credential is '[REDACTED]' as UXor's tool writes it; response.usage input_tokens/output_tokens are token counts.",
+      "results.json/durations.json: 'password' occurs in test titles (forgot-password); 'credential' occurs in rendered repository documentation text of the demo."
+    ]
+  },
+  "observed": {
+    "results": {
+      "playwrightVersion": "1.58.2",
+      "configShard": null,
+      "configShardNote": "null: UXor ran this shard from its own timing plan (shard-plan.json mode 'timings', Playwright --test-list), not with Playwright's --shard, so the native report names no shard; the shard is named only by the UXor summaries' label.",
+      "rootDir": "/home/runner/work/uxor/uxor",
+      "workers": {
+        "configured": 2,
+        "actual": 2
+      },
+      "configProjects": [
+        "smoke",
+        "examples",
+        "smoke-firefox",
+        "examples-firefox",
+        "smoke-webkit",
+        "examples-webkit"
+      ],
+      "testProjects": {
+        "smoke-webkit": 243,
+        "examples-webkit": 8
+      },
+      "stats": {
+        "startTime": "2026-10-11T11:20:41.151Z",
+        "duration": 399406.14,
+        "expected": 250,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "globalErrors": 0,
+      "tests": 251,
+      "results": 252,
+      "nativeOutcomes": {
+        "expected": 250,
+        "unexpected": 1
+      },
+      "resultStatuses": {
+        "passed": 250,
+        "failed": 2
+      },
+      "expectedStatuses": {
+        "passed": 251
+      },
+      "notableTests": [
+        {
+          "specId": "ef579179509eb381a0ba-38dd12d15db225582da2",
+          "project": "smoke-webkit",
+          "file": "tests/e2e/demo-app.spec.ts",
+          "line": 298,
+          "titlePath": [],
+          "title": "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico",
+          "expectedStatus": "passed",
+          "nativeOutcome": "unexpected",
+          "results": [
+            {
+              "retry": 0,
+              "status": "failed",
+              "durationMs": 8752,
+              "startTime": "2026-10-11T11:22:07.001Z",
+              "attachments": 2
+            },
+            {
+              "retry": 1,
+              "status": "failed",
+              "durationMs": 10849,
+              "startTime": "2026-10-11T11:22:17.840Z",
+              "attachments": 2
+            }
+          ]
+        }
+      ]
+    },
+    "failedAttempts": {
+      "schema": 1,
+      "status": "valid",
+      "reason": null,
+      "sha": "71f7dffe771b932e3158026146db093f7bc9bb50",
+      "ref": "dev",
+      "runUrl": "https://github.com/xormania/uxor/actions/runs/38135099353",
+      "runAttempt": 1,
+      "shard": "webkit 3/3",
+      "projects": [
+        "smoke-webkit",
+        "examples-webkit"
+      ],
+      "runtime": {
+        "Node": "v22.23.3",
+        "PHP": "8.5.11",
+        "Symfony": "8.1.8",
+        "Turbo": "8.0.23",
+        "Playwright": "1.58.2"
+      },
+      "counts": {
+        "passed": 250,
+        "failed": 1,
+        "flaky": 0,
+        "skipped": 0
+      },
+      "testsListed": 1,
+      "attempts": [
+        {
+          "testId": "ef579179509eb381a0ba-38dd12d15db225582da2@smoke-webkit",
+          "project": "smoke-webkit",
+          "title": "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico",
+          "retry": 0,
+          "status": "failed",
+          "outcome": "failed",
+          "durationMs": 8752,
+          "startTime": "2026-10-11T11:22:07.001Z"
+        },
+        {
+          "testId": "ef579179509eb381a0ba-38dd12d15db225582da2@smoke-webkit",
+          "project": "smoke-webkit",
+          "title": "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico",
+          "retry": 1,
+          "status": "failed",
+          "outcome": "failed",
+          "durationMs": 10849,
+          "startTime": "2026-10-11T11:22:17.840Z"
+        }
+      ],
+      "globalErrors": 0
+    },
+    "jevAssessments": [
+      {
+        "version": 1,
+        "status": "assessed",
+        "reason": null,
+        "likely_cause": "unknown",
+        "job": "Demo + Playwright (webkit 3/3)",
+        "context": {
+          "GITHUB_REPOSITORY": "xormania/uxor",
+          "GITHUB_SHA": "71f7dffe771b932e3158026146db093f7bc9bb50",
+          "GITHUB_RUN_ID": "38135099353",
+          "GITHUB_RUN_ATTEMPT": "1",
+          "shard": "webkit 3/3"
+        },
+        "attempt": {
+          "testId": "ef579179509eb381a0ba-38dd12d15db225582da2@smoke-webkit",
+          "project": "smoke-webkit",
+          "retry": 0,
+          "status": "failed",
+          "outcome": "failed"
+        },
+        "model": "jev-1.13.0",
+        "min_confidence": 0.65,
+        "credentialField": "[REDACTED]",
+        "answers": {
+          "failure_kind": {
+            "choice": "unknown",
+            "confidence": 0.26
+          },
+          "causal_excerpt": {
+            "choice": "excerpt_0",
+            "confidence": 0.94
+          }
+        },
+        "selected_excerpt": {
+          "id": "excerpt_0",
+          "source": "test_error",
+          "line_start": 1,
+          "line_end": 11,
+          "partial": false
+        },
+        "input_sha256": "8074f90c8313cf5a6e7719d434a02fc292b01297183ef3915559830aa5747e63",
+        "elapsed_seconds": 3.878,
+        "requestAndResponseRetained": true,
+        "path": "jev/attempts/01-smoke-webkit-demo-app-retry0/assessment.json"
+      },
+      {
+        "version": 1,
+        "status": "assessed",
+        "reason": null,
+        "likely_cause": "unknown",
+        "job": "Demo + Playwright (webkit 3/3)",
+        "context": {
+          "GITHUB_REPOSITORY": "xormania/uxor",
+          "GITHUB_SHA": "71f7dffe771b932e3158026146db093f7bc9bb50",
+          "GITHUB_RUN_ID": "38135099353",
+          "GITHUB_RUN_ATTEMPT": "1",
+          "shard": "webkit 3/3"
+        },
+        "attempt": {
+          "testId": "ef579179509eb381a0ba-38dd12d15db225582da2@smoke-webkit",
+          "project": "smoke-webkit",
+          "retry": 1,
+          "status": "failed",
+          "outcome": "failed"
+        },
+        "model": "jev-1.13.0",
+        "min_confidence": 0.65,
+        "credentialField": "[REDACTED]",
+        "answers": {
+          "failure_kind": {
+            "choice": "unknown",
+            "confidence": 0.26
+          },
+          "causal_excerpt": {
+            "choice": "excerpt_0",
+            "confidence": 0.88
+          }
+        },
+        "selected_excerpt": {
+          "id": "excerpt_0",
+          "source": "test_error",
+          "line_start": 1,
+          "line_end": 16,
+          "partial": false
+        },
+        "input_sha256": "c58a202788a61825eb5b05f287aa702679393f01497b36bbec01b24cb1c3c509",
+        "elapsed_seconds": 0.157,
+        "requestAndResponseRetained": true,
+        "path": "jev/attempts/02-smoke-webkit-demo-app-retry1/assessment.json"
+      }
+    ]
+  },
+  "limitations": [
+    "Genuine UXor CI artifact; it says nothing about Xorgate or any other managed project, and its pass counts are not a coverage claim.",
+    "This is a test failure, not a setup failure: failed-attempts.json status is 'valid' and no not-reached reason applies. A genuine setup failure is retained separately in uxor-ci/38122728519-1-chromium-3.",
+    "The native report carries no config.shard (UXor's own timing plan selected the shard's tests); only the UXor summaries name the shard label 'webkit 3/3'.",
+    "The shard's test selection depends on shard-plan.json, which is not retained, so shard completeness cannot be judged from the retained files.",
+    "The HTML report, traces and demo server log of this failure were not retained (the report artifact had expired).",
+    "Only the failing shard of the run's ten demo shards is retained; the nine green shards are not part of this fixture.",
+    "The Jev assessments are the advisory output of an external classifier (model jev-1.13.0) at the time of the run; they do not change the native failure."
+  ]
+}

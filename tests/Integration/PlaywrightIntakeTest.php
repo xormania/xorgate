@@ -14,11 +14,18 @@ use Symfony\Component\Uid\Uuid;
 
 /**
  * Real migrated PostgreSQL with controlled Playwright producer output and UXor tool-derived files
- * (tests/Fixtures/Playwright). Genuine UXor CI artifacts are not part of this suite.
+ * (tests/Fixtures/Playwright), plus genuine UXor GitHub Actions artifacts of a retry-recovered, a red and a setup-failed
+ * demo shard (tests/Fixtures/Playwright/uxor-ci, each with its provenance.json).
  */
 final class PlaywrightIntakeTest extends KernelTestCase
 {
     private const FLAKY = 'flaky: fails on the first attempt, passes on retry';
+    private const GENUINE = 'tests/Fixtures/Playwright/uxor-ci';
+    private const GENUINE_GREEN = '38195645868-1-chromium-3';
+    private const GENUINE_RED = '38135099353-1-webkit-3';
+    private const GENUINE_NOT_REACHED = '38122728519-1-chromium-3';
+    private const GENUINE_FLAKY = 'the link dialog sets allowed links, refuses other schemes, and removes links';
+    private const GENUINE_FAILED = 'every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico';
 
     private Connection $connection;
     private string $directory;
@@ -351,6 +358,106 @@ final class PlaywrightIntakeTest extends KernelTestCase
         self::assertSame(["\u{20AC}cd\n\u{FFFD}\n", true, true], [$rest['content_text'], $rest['utf8_lossy'], $rest['eof']]);
     }
 
+    /**
+     * Genuine UXor CI artifacts (exact bytes, digests in each provenance.json): main run 38195645868 attempt 1 (green) shard
+     * chromium 3/4, where one test failed on retry 0 and passed on retry 1, and dev run 38135099353 attempt 1 (red) shard
+     * webkit 3/3, where one test failed both attempts. Both shards carry the Jev assessments UXor CI uploaded. Run
+     * 38122728519 attempt 1 shard chromium 3/4 failed in setup: no native report exists, only UXor's not-reached summaries.
+     */
+    public function testGenuineUxorCiRunsPreserveRetryRecoveryAndRedEvidence(): void
+    {
+        $directory = self::$kernel->getProjectDir().'/'.self::GENUINE;
+        if (!is_dir($directory.'/'.self::GENUINE_GREEN) || !is_dir($directory.'/'.self::GENUINE_RED) || !is_dir($directory.'/'.self::GENUINE_NOT_REACHED)) {
+            self::markTestSkipped('Genuine UXor CI artifacts are absent: '.self::GENUINE);
+        }
+        $green = $directory.'/'.self::GENUINE_GREEN;
+        self::assertGreaterThan(65536, filesize($green.'/results.json'), 'The genuine report exceeds the inline limit and is streamed.');
+
+        $native = $this->completeFile($green.'/results.json', 'playwright-json');
+        self::assertContains($native['parser_outcome'], ['parsed', 'partial']);
+        self::assertTrue($native['valid_document']);
+        self::assertSame(427, $native['summary']['cases']);
+        self::assertSame(428, $native['attempt_count']);
+        self::assertGreaterThan($native['summary']['cases'], $native['attempt_count'], 'Retries are attempts beside their test, not extra tests.');
+        self::assertSame('1.58.2', $native['summary']['playwright_version']);
+        self::assertSame(['expected' => 426, 'flaky' => 1, 'skipped' => 0, 'unexpected' => 0], self::counted($native['summary']['declared_counts']));
+        // UXor selects a shard's tests with its own timing plan (--test-list), so the native report records no config.shard.
+        self::assertNull($native['summary']['shard'], 'No shard may be invented when the native report names none.');
+        self::assertSame(['reason' => 'no_execution_expectation', 'status' => 'unknown'], self::counted($native['summary']['shard_completeness']));
+        self::assertSame(0, $native['summary']['global_errors']['count']);
+
+        $attempts = $this->allAttempts($native);
+        self::assertCount(428, $attempts);
+        self::assertCount(428, array_unique(array_column($attempts, 'attempt_key')));
+        $flaky = array_values(array_filter($attempts, static fn (array $a): bool => 'flaky' === $a['case']['native_outcome']));
+        self::assertSame([[0, 'failed', false], [1, 'passed', true]], array_map(static fn (array $a): array => [$a['retry'], $a['status'], $a['matches_expected']], $flaky),
+            'The genuine failed first attempt must survive beside its passing retry.');
+        self::assertSame([self::GENUINE_FLAKY, 'smoke', 'tests/e2e/editor.spec.ts', 105, 'd2f56d7d370f0ba02e91-8d02256f9849e5216112'],
+            [$flaky[0]['case']['name'], $flaky[0]['case']['project'], $flaky[0]['case']['file'], $flaky[0]['case']['line'], $flaky[0]['case']['spec_id']]);
+        self::assertSame($flaky[0]['case_key'], $flaky[1]['case_key']);
+        self::assertSame(['expected' => 426, 'flaky' => 1], self::counted(array_count_values(array_column(array_column(array_filter($attempts, static fn (array $a): bool => 0 === $a['index']), 'case'), 'native_outcome'))));
+
+        $failed = $this->completeFile($green.'/failed-attempts.json', 'playwright-failed-attempts');
+        self::assertSame(['completed', 'parsed', 'valid'], [$failed['status'], $failed['parser_outcome'], $failed['summary']['producer']['status']]);
+        self::assertSame(['failed' => 0, 'flaky' => 1, 'passed' => 426, 'skipped' => 0], self::counted($failed['summary']['counts']));
+        self::assertSame('chromium 3/4', $failed['summary']['shard_label']);
+        self::assertSame(0, $failed['attempt_count']);
+        self::assertSame(['linked' => 1, 'unmatched' => 0, 'ambiguous' => 0], array_intersect_key($failed['links'], ['linked' => 0, 'unmatched' => 0, 'ambiguous' => 0]));
+        $records = $this->annotations($failed);
+        self::assertSame(['failed_attempt'], array_values(array_unique(array_column($records, 'kind'))), 'A valid summary has no producer status record.');
+        self::assertCount(1, $records);
+        foreach ($records as $record) {
+            self::assertSame(['linked', $native['operation_id']], [$record['match']['status'], $record['match']['target_operation_id']]);
+            self::assertSame($flaky[0]['attempt_key'], $record['match']['target_attempt_key'], 'The record names the failed retry-0 attempt.');
+        }
+        self::assertSame(428, $this->operation($native)['attempt_count'], 'Derived imports must not add native attempts.');
+        self::assertSame(428, $this->countRows('report_attempt'));
+
+        $jev = $this->completeFile($green.'/jev/attempts/01-smoke-editor-retry0/assessment.json', 'jev-assessment');
+        $assessment = $this->annotations($jev);
+        self::assertCount(1, $assessment);
+        self::assertSame(['jev_assessment', 'linked', $flaky[0]['attempt_key']], [$assessment[0]['kind'], $assessment[0]['match']['status'], $assessment[0]['match']['target_attempt_key']]);
+        self::assertSame(['assessed', null, 'unknown', 'jev-1.13.0'], [$assessment[0]['data']['status'], $assessment[0]['data']['reason'], $assessment[0]['data']['likely_cause'], $assessment[0]['data']['method']['model']]);
+        self::assertSame(['38195645868', '1', '9b2fa7309786cee435503de87cf0cd5f0a9d9782'], [$assessment[0]['data']['context']['run_id'], $assessment[0]['data']['context']['run_attempt'], $assessment[0]['data']['context']['sha']]);
+        self::assertSame(2, $this->attempts($native, $flaky[0]['attempt_key'])['annotation_count'], 'The failed record and the assessment both reference one attempt.');
+        self::assertSame(['flaky', 'passed'], [$this->attempts($native, $flaky[1]['attempt_key'])['case']['native_outcome'], $this->attempts($native, $flaky[1]['attempt_key'])['status']],
+            'The advisory assessment leaves the native verdict unchanged.');
+        self::assertSame(self::normalized($this->operation($native)), $this->cli('xorgate:operation:get', [$native['operation_id']]));
+
+        // The red shard is another run: a separate execution of the same project.
+        $this->execution = $this->newExecution($this->projectId());
+        $red = $directory.'/'.self::GENUINE_RED;
+        $redNative = $this->completeFile($red.'/results.json', 'playwright-json');
+        self::assertContains($redNative['parser_outcome'], ['parsed', 'partial']);
+        self::assertSame([251, 252], [$redNative['summary']['cases'], $redNative['attempt_count']]);
+        self::assertSame(['expected' => 250, 'flaky' => 0, 'skipped' => 0, 'unexpected' => 1], self::counted($redNative['summary']['declared_counts']));
+        $unexpected = array_values(array_filter($this->allAttempts($redNative), static fn (array $a): bool => 'unexpected' === $a['case']['native_outcome']));
+        self::assertSame([[0, 'failed', false], [1, 'failed', false]], array_map(static fn (array $a): array => [$a['retry'], $a['status'], $a['matches_expected']], $unexpected));
+        self::assertSame([self::GENUINE_FAILED, 'smoke-webkit', 'passed', false], [$unexpected[0]['case']['name'], $unexpected[0]['case']['project'], $unexpected[0]['case']['expected_status'], $unexpected[0]['case']['expected_failure']],
+            'An unexpected failure is distinguishable from an expected one.');
+        $redFailed = $this->completeFile($red.'/failed-attempts.json', 'playwright-failed-attempts');
+        self::assertSame(['valid', 'webkit 3/3'], [$redFailed['summary']['producer']['status'], $redFailed['summary']['shard_label']]);
+        self::assertSame(['failed' => 1, 'flaky' => 0, 'passed' => 250, 'skipped' => 0], self::counted($redFailed['summary']['counts']));
+        self::assertSame(2, $redFailed['links']['linked']);
+        self::assertSame(array_column($unexpected, 'attempt_key'), array_column(array_column($this->annotations($redFailed), 'match'), 'target_attempt_key'));
+        $redJev = $this->annotations($this->completeFile($red.'/jev/attempts/02-smoke-webkit-demo-app-retry1/assessment.json', 'jev-assessment'));
+        self::assertSame(['linked', $unexpected[1]['attempt_key'], 'assessed', 'unknown'], [$redJev[0]['match']['status'], $redJev[0]['match']['target_attempt_key'], $redJev[0]['data']['status'], $redJev[0]['data']['likely_cause']]);
+        self::assertSame([252, 'unexpected'], [$this->operation($redNative)['attempt_count'], $this->attempts($redNative, $unexpected[1]['attempt_key'])['case']['native_outcome']]);
+        self::assertSame(428 + 252, $this->countRows('report_attempt'));
+
+        // A genuine setup failure: the tests were not reached, so there is no native report to import.
+        $this->execution = $this->newExecution($this->projectId());
+        $setup = $directory.'/'.self::GENUINE_NOT_REACHED;
+        self::assertFileDoesNotExist($setup.'/results.json');
+        $notReached = $this->completeFile($setup.'/failed-attempts.json', 'playwright-failed-attempts');
+        self::assertSame(['not-reached', "tests not reached: setup failed at Plan the shard's tests"], [$notReached['summary']['producer']['status'], $notReached['summary']['producer']['reason']]);
+        self::assertNull($notReached['summary']['counts'], 'A shard whose tests did not run has no counts, not zero passes.');
+        $status = $this->annotations($notReached);
+        self::assertSame(['producer_status'], array_column($status, 'kind'));
+        self::assertSame(['not-reached', 'chromium 3/4', 'not_applicable'], [$status[0]['data']['status'], $status[0]['data']['shard_label'], $status[0]['match']['status']]);
+        self::assertSame(428 + 252, $this->countRows('report_attempt'), 'A setup failure adds no attempts.');
+    }
+
     private function fixture(string $name): string
     {
         $path = self::$kernel->getProjectDir().'/tests/Fixtures/Playwright/'.$name;
@@ -377,11 +484,42 @@ final class PlaywrightIntakeTest extends KernelTestCase
         return $completed;
     }
 
+    /** Files over the 64 KiB inline limit are streamed, as the CLI and web upload do. */
+    private function completeFile(string $path, string $format, ?string $role = null): array
+    {
+        $stream = fopen($path, 'rb');
+        try {
+            $queued = $this->intake->submit($this->projectId(), $this->executionId(), ['request_id' => self::id(), 'format' => $format,
+                'report_role' => $role ?? $format, 'source' => ['tested_revision' => 'fixture-source-revision']], $stream);
+        } finally {
+            fclose($stream);
+        }
+        $this->intake->process($queued['operation_id']);
+        $completed = $this->operation($queued);
+        self::assertSame('completed', $completed['status']);
+
+        return $completed;
+    }
+
+    /** Every attempt of a native import, through the keyset pages. */
+    private function allAttempts(array $operation): array
+    {
+        $items = [];
+        $cursor = null;
+        for ($page = 0; $page < 100; ++$page) {
+            $listed = $this->intake->listAttempts($this->projectId(), $this->executionId(), $operation['operation_id'], 100, $cursor);
+            $items = [...$items, ...$listed['items']];
+            if (null === ($cursor = $listed['next_cursor'])) {
+                return $items;
+            }
+        }
+        self::fail('Attempt pages did not end.');
+    }
+
     private function attempts(array $operation, ?string $attemptKey = null): array
     {
-        $items = $this->intake->listAttempts($this->projectId(), $this->executionId(), $operation['operation_id'], 100)['items'];
-        if (null === $attemptKey) { return $items; }
-        foreach ($items as $item) { if ($attemptKey === $item['attempt_key']) { return $item; } }
+        if (null === $attemptKey) { return $this->intake->listAttempts($this->projectId(), $this->executionId(), $operation['operation_id'], 100)['items']; }
+        foreach ($this->allAttempts($operation) as $item) { if ($attemptKey === $item['attempt_key']) { return $item; } }
         self::fail('The attempt was not listed.');
     }
 

@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "status": "valid",
+  "reason": null,
+  "sha": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+  "ref": "main",
+  "runUrl": "https://github.com/xormania/uxor/actions/runs/38195645868",
+  "runAttempt": 1,
+  "shard": "chromium 3/4",
+  "projects": [
+    "smoke",
+    "examples"
+  ],
+  "runtime": {
+    "Node": "v22.23.3",
+    "PHP": "8.5.11",
+    "Symfony": "8.1.8",
+    "Turbo": "8.0.23",
+    "Playwright": "1.58.2"
+  },
+  "counts": {
+    "passed": 426,
+    "failed": 0,
+    "flaky": 1,
+    "skipped": 0
+  },
+  "tests": [
+    {
+      "project": "smoke",
+      "title": "the link dialog sets allowed links, refuses other schemes, and removes links",
+      "file": "tests/e2e/editor.spec.ts",
+      "line": 105,
+      "outcome": "flaky",
+      "attempts": 2,
+      "attemptMs": [
+        1842,
+        1810
+      ],
+      "passedOnRetry": 1
+    }
+  ],
+  "attempts": [
+    {
+      "testId": "d2f56d7d370f0ba02e91-8d02256f9849e5216112@smoke",
+      "specId": "d2f56d7d370f0ba02e91-8d02256f9849e5216112",
+      "project": "smoke",
+      "file": "tests/e2e/editor.spec.ts",
+      "line": 105,
+      "title": "the link dialog sets allowed links, refuses other schemes, and removes links",
+      "titlePath": [
+        "the link dialog sets allowed links, refuses other schemes, and removes links"
+      ],
+      "shard": "chromium 3/4",
+      "retry": 0,
+      "status": "failed",
+      "outcome": "flaky",
+      "durationMs": 1842,
+      "startTime": "2026-10-12T02:28:49.014Z",
+      "workerIndex": 0,
+      "error": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"<p><a rel=\\\"noopener noreferrer nofollow\\\" href=\\\"/pricing\\\">See pricing</a></p>\"\nReceived: \"<p>See pricing<a rel=\\\"noopener noreferrer nofollow\\\" href=\\\"/pricing\\\">/pricing</a></p>\"",
+      "errorLocation": {
+        "file": "tests/e2e/editor.spec.ts",
+        "line": 122,
+        "column": 42
+      }
+    }
+  ],
+  "globalErrors": []
+}

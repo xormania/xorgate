@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "fixture": "uxor-ci/38122728519-1-chromium-3/",
+  "classification": "genuine-github-actions-artifact",
+  "role": "red setup failure: the shard's tests were not reached (setup failed at Plan the shard's tests); every demo shard of the run failed the same way",
+  "repository": "xormania/uxor",
+  "head_sha": "f932602c4bde5c02c2295826c1fb121d2d67dbd8",
+  "head_branch": "claude/release-security",
+  "event": "push",
+  "display_title": "Merge remote-tracking branch 'origin/dev' into claude/release-security",
+  "workflow": ".github/workflows/ci.yml",
+  "workflowURL": "https://github.com/xormania/uxor/blob/f932602c4bde5c02c2295826c1fb121d2d67dbd8/.github/workflows/ci.yml",
+  "run_id": 38122728519,
+  "run_attempt": 1,
+  "run_html_url": "https://github.com/xormania/uxor/actions/runs/38122728519",
+  "run_conclusion": "failure",
+  "run_created_at": "2026-10-11T07:50:26Z",
+  "run_updated_at": "2026-10-11T07:56:23Z",
+  "runAttempts": [
+    {
+      "run_attempt": 1,
+      "conclusion": "failure",
+      "note": "The run was not re-run; attempt 1 is its only attempt."
+    }
+  ],
+  "job": {
+    "id": 114420959828,
+    "name": "Demo + Playwright (chromium 3/4)",
+    "conclusion": "failure",
+    "run_attempt": 1,
+    "html_url": "https://github.com/xormania/uxor/actions/runs/38122728519/job/114420959828",
+    "started_at": "2026-10-11T07:54:26Z",
+    "completed_at": "2026-10-11T07:56:04Z",
+    "head_sha": "f932602c4bde5c02c2295826c1fb121d2d67dbd8",
+    "labels": [
+      "ubuntu-latest"
+    ],
+    "nonSuccessSteps": [
+      {
+        "number": 6,
+        "name": "Log in to the build cache's registry",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 13,
+        "name": "The sync leaves tracked files unchanged",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 14,
+        "name": "The demo's composer.json and composer.lock are valid",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 15,
+        "name": "sync-demo copies what ux:install copies",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 18,
+        "name": "Plan the shard's tests",
+        "conclusion": "failure"
+      },
+      {
+        "number": 19,
+        "name": "Playwright (smoke + every README example + upstream recipe specs)",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 20,
+        "name": "Read the results",
+        "conclusion": "failure"
+      },
+      {
+        "number": 25,
+        "name": "Jev diagnosis (advisory)",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 51,
+        "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+        "conclusion": "skipped"
+      }
+    ],
+    "source": "https://api.github.com/repos/xormania/uxor/actions/runs/38122728519/jobs?per_page=100&filter=all"
+  },
+  "shard": "chromium 3/4",
+  "artifacts": {
+    "results": {
+      "provider": "GitHub Actions",
+      "id": 11696026781,
+      "name": "playwright-results-chromium-3",
+      "url": "https://api.github.com/repos/xormania/uxor/actions/artifacts/11696026781",
+      "archive_download_url": "https://api.github.com/repos/xormania/uxor/actions/artifacts/11696026781/zip",
+      "size_in_bytes": 1805,
+      "digest": "sha256:1cf29d079272600efbceeb0800b4f88d98887d75e37a5d522eed27995d58c5a4",
+      "created_at": "2026-10-11T07:55:57Z",
+      "expires_at": "2026-11-10T07:55:56Z",
+      "downloadedZipSHA256": "1cf29d079272600efbceeb0800b4f88d98887d75e37a5d522eed27995d58c5a4",
+      "downloadedZipBytes": 1805,
+      "zipDigestVerified": true,
+      "files": [
+        {
+          "path": "durations.json",
+          "bytes": 561,
+          "sha256": "aa19430a44aedf20caac8c1464423a815895f5d1165bf679d34f87598d90dfe5",
+          "retainedAs": "38122728519-1-chromium-3/durations.json"
+        },
+        {
+          "path": "failed-attempts.json",
+          "bytes": 528,
+          "sha256": "033290d9aa660a063f5daa4a49577f521648a7bb0f0840353338325cf683495b",
+          "retainedAs": "38122728519-1-chromium-3/failed-attempts.json"
+        },
+        {
+          "path": "job-metrics.json",
+          "bytes": 695,
+          "sha256": "2643ae48c3cde59eaf0ed295900a63fe50fc7789a9360d2ae982d81e790dc318",
+          "retainedAs": null
+        },
+        {
+          "path": "summary.md",
+          "bytes": 364,
+          "sha256": "78bdc94be34440c5247ed4ac6a681ca6407068e3d01d07a96a839f1b24130d3c",
+          "retainedAs": "38122728519-1-chromium-3/summary.md"
+        }
+      ]
+    },
+    "jev": null
+  },
+  "otherArtifactsOfThisShard": [
+    {
+      "name": "jev-chromium-3-38122728519-1",
+      "retained": false,
+      "reason": "Not uploaded: the Jev step runs only when tests failed or were flaky, and no test ran (step 25 skipped)."
+    },
+    {
+      "name": "playwright-report-chromium-3",
+      "retained": false,
+      "reason": "Not listed for this run (7-day retention, or nothing to upload)."
+    },
+    {
+      "path": "job-metrics.json",
+      "inArtifact": "playwright-results-chromium-3",
+      "retained": false,
+      "reason": "CI timing metrics, not an adapter input; recorded by digest under artifacts.results.files."
+    }
+  ],
+  "absentFiles": [
+    {
+      "path": "results.json",
+      "reason": "Not in the artifact: Playwright never ran (step 19 skipped), so no native report exists. failed-attempts.json and durations.json record status 'not-reached'."
+    },
+    {
+      "path": "shard-plan.json",
+      "reason": "Not in the artifact: the plan step itself failed."
+    }
+  ],
+  "retrieval": {
+    "method": "GitHub REST API through the session proxy: runs, attempts/<n>/jobs and artifacts listings, then GET /actions/artifacts/<id>/zip (302 to blob storage), unzip.",
+    "retrievedAt": "2026-10-18T15:23Z",
+    "zipVerification": "sha256 of the downloaded ZIP equals the artifact's API digest; each retained file equals the extracted bytes."
+  },
+  "redaction": {
+    "kind": "none",
+    "description": "Retained bytes are exactly the extracted artifact files. Runner paths (/home/runner/work/uxor/uxor) are kept as written by the producer."
+  },
+  "secretScan": {
+    "patterns": [
+      "TYPESAFE",
+      "token",
+      "ghp_",
+      "Bearer",
+      "password",
+      "secret",
+      "api_key/api-key",
+      "authorization",
+      "credential"
+    ],
+    "caseInsensitive": true,
+    "findings": [
+      "No match for any pattern in the retained files."
+    ]
+  },
+  "observed": {
+    "results": null,
+    "failedAttempts": {
+      "schema": 1,
+      "status": "not-reached",
+      "reason": "tests not reached: setup failed at Plan the shard's tests",
+      "sha": "f932602c4bde5c02c2295826c1fb121d2d67dbd8",
+      "ref": "claude/release-security",
+      "runUrl": "https://github.com/xormania/uxor/actions/runs/38122728519",
+      "runAttempt": 1,
+      "shard": "chromium 3/4",
+      "projects": [],
+      "runtime": {
+        "Node": "v22.23.3",
+        "PHP": "8.5.11",
+        "Symfony": "8.1.8",
+        "Turbo": "8.0.23"
+      },
+      "counts": null,
+      "testsListed": 0,
+      "attempts": [],
+      "globalErrors": 0
+    },
+    "jevAssessments": []
+  },
+  "limitations": [
+    "Genuine UXor CI artifact of a feature branch (claude/release-security) merge commit; it says nothing about Xorgate or any other managed project.",
+    "There is no native results.json: this fixture shows a setup failure through the UXor summaries only (status 'not-reached', counts null, reason 'tests not reached: setup failed at Plan the shard's tests').",
+    "The failed step's log is not retained; why the plan step failed is not recorded here.",
+    "Only one of the run's ten (identically failed) demo shards is retained."
+  ]
+}

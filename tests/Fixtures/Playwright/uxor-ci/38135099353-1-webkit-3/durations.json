@@ -1,0 +1,3450 @@
+{
+  "schema": 1,
+  "status": "valid",
+  "sha": "71f7dffe771b932e3158026146db093f7bc9bb50",
+  "ref": "dev",
+  "runUrl": "https://github.com/xormania/uxor/actions/runs/38135099353",
+  "runAttempt": 1,
+  "shard": "webkit 3/3",
+  "projects": [
+    "smoke-webkit",
+    "examples-webkit"
+  ],
+  "runtime": {
+    "Node": "v22.23.3",
+    "PHP": "8.5.11",
+    "Symfony": "8.1.8",
+    "Turbo": "8.0.23",
+    "Playwright": "1.58.2"
+  },
+  "wallMs": 399406,
+  "summedTestMs": 765898,
+  "attempts": 252,
+  "untimedAttempts": 0,
+  "workers": {
+    "configured": 2,
+    "actual": 2
+  },
+  "slowest": [
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 298,
+      "title": "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico",
+      "outcome": "failed",
+      "durationMs": 19601,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        8752,
+        10849
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 205,
+      "title": "every Input pads its text the same, with or without a type",
+      "outcome": "passed",
+      "durationMs": 13903,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        13903
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/counts.spec.ts",
+      "line": 77,
+      "title": "data-table-live: sort, page and filter each make one Live request",
+      "outcome": "passed",
+      "durationMs": 9705,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        9705
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 65,
+      "title": "on a desktop the navbar menu marks the current page, opens its submenus and visits their links",
+      "outcome": "passed",
+      "durationMs": 7685,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        7685
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "line": 33,
+      "title": "form fields: one choice, several choices and a remote search are submitted",
+      "outcome": "passed",
+      "durationMs": 7645,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        7645
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 250,
+      "title": "dropdown › replaced or updated by a Turbo Stream while open, the new one starts closed, works, and no listener is left",
+      "outcome": "passed",
+      "durationMs": 6976,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6976
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.calendar.spec.ts",
+      "line": 107,
+      "title": "Live properties follow the picks, and bounds, locale and a clear from the server update the grid",
+      "outcome": "passed",
+      "durationMs": 6733,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6733
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-interrupt.spec.ts",
+      "line": 325,
+      "title": "page size: Back after history changed, before the frame rendered, leaves a consistent table",
+      "outcome": "passed",
+      "durationMs": 6579,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6579
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 250,
+      "title": "drawer › replaced or updated by a Turbo Stream while open, the new one starts closed, works, and no listener is left",
+      "outcome": "passed",
+      "durationMs": 6523,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6523
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 153,
+      "title": "flash messages show on every layout: the logout notice on the auth layout, not later on the dashboard",
+      "outcome": "passed",
+      "durationMs": 6522,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6522
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "tests": 71,
+      "durationMs": 221667,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/demo-app.spec.ts",
+      "tests": 35,
+      "durationMs": 97708,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "tests": 7,
+      "durationMs": 27914,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.data-table-interrupt.spec.ts",
+      "tests": 5,
+      "durationMs": 25898,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/counts.spec.ts",
+      "tests": 5,
+      "durationMs": 25713,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/csp.spec.ts",
+      "tests": 14,
+      "durationMs": 24806,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/forms.spec.ts",
+      "tests": 3,
+      "durationMs": 22809,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "tests": 7,
+      "durationMs": 21303,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/motion.spec.ts",
+      "tests": 9,
+      "durationMs": 20168,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "tests": 6,
+      "durationMs": 18777,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "tests": 3,
+      "durationMs": 18268,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.dropzone.spec.ts",
+      "tests": 5,
+      "durationMs": 16572,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/calendar.spec.ts",
+      "tests": 5,
+      "durationMs": 13549,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.turbo-nav.spec.ts",
+      "tests": 4,
+      "durationMs": 12597,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.data-table-live.spec.ts",
+      "tests": 2,
+      "durationMs": 11078,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/markdown-editor.spec.ts",
+      "tests": 4,
+      "durationMs": 11002,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.calendar.spec.ts",
+      "tests": 2,
+      "durationMs": 9309,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/editor.spec.ts",
+      "tests": 3,
+      "durationMs": 9172,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.editor.spec.ts",
+      "tests": 2,
+      "durationMs": 8973,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.side-nav.spec.ts",
+      "tests": 3,
+      "durationMs": 8922,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "tests": 4,
+      "durationMs": 8905,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/smoke.spec.ts",
+      "tests": 4,
+      "durationMs": 8440,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "modal/tests/modal.spec.ts",
+      "tests": 4,
+      "durationMs": 8074,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.mobile-nav.spec.ts",
+      "tests": 3,
+      "durationMs": 7807,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.turbo-stream-toast.spec.ts",
+      "tests": 2,
+      "durationMs": 7667,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/dropdown.spec.ts",
+      "tests": 4,
+      "durationMs": 7472,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.chart.spec.ts",
+      "tests": 2,
+      "durationMs": 6865,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.date-picker.spec.ts",
+      "tests": 2,
+      "durationMs": 6828,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/dropzone.spec.ts",
+      "tests": 2,
+      "durationMs": 6621,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.markdown-editor.spec.ts",
+      "tests": 1,
+      "durationMs": 6147,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.popover.spec.ts",
+      "tests": 3,
+      "durationMs": 5660,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.data-table-back.spec.ts",
+      "tests": 2,
+      "durationMs": 5365,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.live-modal.spec.ts",
+      "tests": 1,
+      "durationMs": 5025,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/chart.spec.ts",
+      "tests": 2,
+      "durationMs": 4867,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.nav-menu.spec.ts",
+      "tests": 2,
+      "durationMs": 4828,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.tooltip.spec.ts",
+      "tests": 2,
+      "durationMs": 4817,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.form-back.spec.ts",
+      "tests": 2,
+      "durationMs": 4760,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/popover.spec.ts",
+      "tests": 3,
+      "durationMs": 4720,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/button-focus.spec.ts",
+      "tests": 1,
+      "durationMs": 3937,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "drawer/tests/drawer.spec.ts",
+      "tests": 2,
+      "durationMs": 3756,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.permanent-plus-live.spec.ts",
+      "tests": 1,
+      "durationMs": 3741,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/date-picker.spec.ts",
+      "tests": 1,
+      "durationMs": 3640,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/avatar.spec.ts",
+      "tests": 1,
+      "durationMs": 3622,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.data-table-frame.spec.ts",
+      "tests": 1,
+      "durationMs": 1883,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "alert/tests/alert.spec.ts",
+      "tests": 1,
+      "durationMs": 1546,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tabs/tests/tabs.spec.ts",
+      "tests": 1,
+      "durationMs": 1504,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/hostile-props.spec.ts",
+      "tests": 2,
+      "durationMs": 1196,
+      "untimedAttempts": 0
+    }
+  ],
+  "tests": [
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/avatar.spec.ts",
+      "line": 28,
+      "title": "shows an image that loaded before the controller connected",
+      "outcome": "passed",
+      "durationMs": 3622,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3622
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/button-focus.spec.ts",
+      "line": 11,
+      "title": "every button of the default example shows its keyboard focus at 3:1, light theme",
+      "outcome": "passed",
+      "durationMs": 3937,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3937
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/calendar.spec.ts",
+      "line": 8,
+      "title": "arrow, Home, End and Page keys move the focus; right to left swaps the arrows",
+      "outcome": "passed",
+      "durationMs": 2394,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2394
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/calendar.spec.ts",
+      "line": 31,
+      "title": "the month and year dropdowns move the calendar",
+      "outcome": "passed",
+      "durationMs": 2267,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2267
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/calendar.spec.ts",
+      "line": 74,
+      "title": "each mode submits its inputs; day buttons never submit the form",
+      "outcome": "passed",
+      "durationMs": 3563,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3563
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/calendar.spec.ts",
+      "line": 110,
+      "title": "a range never spans a disabled day: a click past one starts a new range",
+      "outcome": "passed",
+      "durationMs": 2848,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2848
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/calendar.spec.ts",
+      "line": 122,
+      "title": "in multiple mode, the inputs keep their attributes and order as dates come and go",
+      "outcome": "passed",
+      "durationMs": 2477,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2477
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/chart.spec.ts",
+      "line": 46,
+      "title": "under prefers-reduced-motion the chart does not animate",
+      "outcome": "passed",
+      "durationMs": 1891,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1891
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/chart.spec.ts",
+      "line": 52,
+      "title": "a doughnut colors each slice; a table can be always visible",
+      "outcome": "passed",
+      "durationMs": 2976,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2976
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/counts.spec.ts",
+      "line": 50,
+      "title": "data-table in a Turbo Frame: sort, page and filter each make one frame request",
+      "outcome": "passed",
+      "durationMs": 6291,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6291
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/counts.spec.ts",
+      "line": 77,
+      "title": "data-table-live: sort, page and filter each make one Live request",
+      "outcome": "passed",
+      "durationMs": 9705,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        9705
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/counts.spec.ts",
+      "line": 101,
+      "title": "a Live action re-sorting rows makes one request and reconnects each row's dropdown and tooltip once",
+      "outcome": "passed",
+      "durationMs": 3947,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3947
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/counts.spec.ts",
+      "line": 116,
+      "title": "date-picker: opening and picking a date make no request and leave no listener",
+      "outcome": "passed",
+      "durationMs": 3784,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3784
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/counts.spec.ts",
+      "line": 150,
+      "title": "measure: a step's duration runs to the frame presented after its update, an expensive frame included",
+      "outcome": "passed",
+      "durationMs": 1986,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1986
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/ answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1460,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1460
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/demo answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 2497,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2497
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/demo/login answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 2229,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2229
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/lab/live-table answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1563,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1563
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/lab/calendar-turbo answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1550,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1550
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/preview/calendar/default?theme=light answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1459,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1459
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/preview/date-picker/default?theme=light answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1702,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1702
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/preview/editor/default?theme=light answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 2110,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2110
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/preview/markdown-editor/default?theme=light answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1984,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1984
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/preview/side-nav/default?theme=light answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1682,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1682
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/lab/mobile-nav answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1520,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1520
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/lab/modal-turbo answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1515,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1515
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 70,
+      "title": "every response gets its own nonces",
+      "outcome": "passed",
+      "durationMs": 2043,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2043
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 80,
+      "title": "system in dark mode › the layout sets the theme before the first paint",
+      "outcome": "passed",
+      "durationMs": 1492,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1492
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/date-picker.spec.ts",
+      "line": 77,
+      "title": "ArrowDown in the field opens the calendar; a range closes after both ends",
+      "outcome": "passed",
+      "durationMs": 3640,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3640
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 65,
+      "title": "on a desktop the navbar menu marks the current page, opens its submenus and visits their links",
+      "outcome": "passed",
+      "durationMs": 7685,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        7685
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 87,
+      "title": "on a phone the drawer holds the sidebar navigation, then the navbar menu",
+      "outcome": "passed",
+      "durationMs": 3494,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3494
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 109,
+      "title": "the not-found block answers 404 and passes axe",
+      "outcome": "passed",
+      "durationMs": 2415,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2415
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 145,
+      "title": "the dashboard passes axe at phone width, its channel bars are meters",
+      "outcome": "passed",
+      "durationMs": 5750,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5750
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 153,
+      "title": "flash messages show on every layout: the logout notice on the auth layout, not later on the dashboard",
+      "outcome": "passed",
+      "durationMs": 6522,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6522
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 174,
+      "title": "every layout keeps the same toast region: a toast closed on another layout does not come back on Back",
+      "outcome": "passed",
+      "durationMs": 4399,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4399
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 298,
+      "title": "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico",
+      "outcome": "failed",
+      "durationMs": 19601,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        8752,
+        10849
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 319,
+      "title": "the hero's two secondary links share one style",
+      "outcome": "passed",
+      "durationMs": 2084,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2084
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 257,
+      "title": "light theme at phone width › /r/data-table does not scroll sideways",
+      "outcome": "passed",
+      "durationMs": 1833,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1833
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 257,
+      "title": "light theme at phone width › /demo/login does not scroll sideways",
+      "outcome": "passed",
+      "durationMs": 1637,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1637
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 257,
+      "title": "dark theme at phone width › / does not scroll sideways",
+      "outcome": "passed",
+      "durationMs": 1668,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1668
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 257,
+      "title": "dark theme at phone width › /demo/settings/profile does not scroll sideways",
+      "outcome": "passed",
+      "durationMs": 1634,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1634
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/alert does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1690,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1690
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/badge does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1775,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1775
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/button-group does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1598,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1598
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/chart does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1789,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1789
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/data-table does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1628,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1628
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/drawer does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1760,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1760
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/editor does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1668,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1668
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/forgot-password does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1670,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1670
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/indicator does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1655,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1655
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/label does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1681,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1681
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/markdown-editor does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1720,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1720
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/nav-menu does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1768,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1768
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/not-found does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1640,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1640
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/popover does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1787,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1787
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/section-nav does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1667,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1667
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/side-nav does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1695,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1695
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/skeleton does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1685,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1685
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/table does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1724,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1724
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/theme does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1608,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1608
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/toggle does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1703,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1703
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /demo does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 2335,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2335
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /demo/login does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1332,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1332
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /demo/settings/notifications does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1408,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1408
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/dropdown.spec.ts",
+      "line": 23,
+      "title": "Home and End move to the first and last item, the arrows wrap, ArrowUp on the trigger opens on the last item",
+      "outcome": "passed",
+      "durationMs": 2250,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2250
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/dropdown.spec.ts",
+      "line": 42,
+      "title": "Tab and Shift+Tab from an item close the menu and move on from its trigger",
+      "outcome": "passed",
+      "durationMs": 2016,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2016
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/dropdown.spec.ts",
+      "line": 130,
+      "title": "the menu flips above its trigger when it does not fit below",
+      "outcome": "passed",
+      "durationMs": 1558,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1558
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/dropdown.spec.ts",
+      "line": 169,
+      "title": "a menu wider than the room beside its trigger is shifted back into the viewport, along the trigger",
+      "outcome": "passed",
+      "durationMs": 1648,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1648
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/dropzone.spec.ts",
+      "line": 78,
+      "title": "several files add up across picks, once each; Remove focuses the next file, then the input",
+      "outcome": "passed",
+      "durationMs": 4517,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4517
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/dropzone.spec.ts",
+      "line": 145,
+      "title": "an invalid zone is red and described by its error",
+      "outcome": "passed",
+      "durationMs": 2104,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2104
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/editor.spec.ts",
+      "line": 46,
+      "title": "the toolbar is one tab stop with arrow keys, and its buttons say what applies to the selection",
+      "outcome": "passed",
+      "durationMs": 3392,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3392
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/editor.spec.ts",
+      "line": 147,
+      "title": "the counter turns red past maxChars; an empty editor stores nothing",
+      "outcome": "passed",
+      "durationMs": 2153,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2153
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/editor.spec.ts",
+      "line": 162,
+      "title": "a read-only editor has no toolbar and cannot be changed; the label focuses an editable one",
+      "outcome": "passed",
+      "durationMs": 3627,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3627
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 176,
+      "title": "a valid submit with a photo and two attachments redirects with the success message",
+      "outcome": "passed",
+      "durationMs": 4063,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4063
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 188,
+      "title": "a file over upload_max_filesize gives its field the size error",
+      "outcome": "passed",
+      "durationMs": 4843,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4843
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 205,
+      "title": "every Input pads its text the same, with or without a type",
+      "outcome": "passed",
+      "durationMs": 13903,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        13903
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/hostile-props.spec.ts",
+      "line": 154,
+      "title": "FormField label and help attribute names cannot add attributes",
+      "outcome": "passed",
+      "durationMs": 742,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        742
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/hostile-props.spec.ts",
+      "line": 380,
+      "title": "the MarkdownEditor prints a hostile value as text in its textarea",
+      "outcome": "passed",
+      "durationMs": 454,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        454
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "line": 33,
+      "title": "form fields: one choice, several choices and a remote search are submitted",
+      "outcome": "passed",
+      "durationMs": 7645,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        7645
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "line": 72,
+      "title": "Turbo visits away and Back leave one working Tom Select per field",
+      "outcome": "passed",
+      "durationMs": 4159,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4159
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "line": 189,
+      "title": "with the layouts' form-reset controller, a reset cancelled in a capture listener changes nothing; the next one, from form.reset(), puts back the values",
+      "outcome": "passed",
+      "durationMs": 6464,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6464
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.calendar.spec.ts",
+      "line": 98,
+      "title": "inside a Turbo Frame reloaded three times, the calendar works",
+      "outcome": "passed",
+      "durationMs": 2576,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2576
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.calendar.spec.ts",
+      "line": 107,
+      "title": "Live properties follow the picks, and bounds, locale and a clear from the server update the grid",
+      "outcome": "passed",
+      "durationMs": 6733,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6733
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.chart.spec.ts",
+      "line": 29,
+      "title": "repeated visits leave one chart per canvas; a theme switch redraws each chart once",
+      "outcome": "passed",
+      "durationMs": 3270,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3270
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.chart.spec.ts",
+      "line": 119,
+      "title": "in a Live Component, new data updates the same chart, which keeps the theme",
+      "outcome": "passed",
+      "durationMs": 3595,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3595
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-back.spec.ts",
+      "line": 105,
+      "title": "Back after applying Status shows the earlier URL's value in every control, and Forward the applied one",
+      "outcome": "passed",
+      "durationMs": 3000,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3000
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-back.spec.ts",
+      "line": 195,
+      "title": "data-table-live: Back to the table shows the URL's state in every control, not a search typed before leaving",
+      "outcome": "passed",
+      "durationMs": 2365,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2365
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-frame.spec.ts",
+      "line": 87,
+      "title": "rows have stable ids and render the page cell blocks",
+      "outcome": "passed",
+      "durationMs": 1883,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1883
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-interrupt.spec.ts",
+      "line": 325,
+      "title": "page size: Back after history changed, before the frame rendered, leaves a consistent table",
+      "outcome": "passed",
+      "durationMs": 6579,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6579
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-interrupt.spec.ts",
+      "line": 353,
+      "title": "filter: Back after the frame rendered, before the promotion's turbo:load, leaves a consistent table",
+      "outcome": "passed",
+      "durationMs": 6258,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6258
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-interrupt.spec.ts",
+      "line": 279,
+      "title": "page link: Back before the response arrives leaves the table, the URL and the controls of the entry Back went to",
+      "outcome": "passed",
+      "durationMs": 5225,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5225
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-interrupt.spec.ts",
+      "line": 376,
+      "title": "control, page link: left to finish, then Back and Forward, each show a consistent table",
+      "outcome": "passed",
+      "durationMs": 4017,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4017
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-interrupt.spec.ts",
+      "line": 391,
+      "title": "Back after a form change restores the table not marked busy",
+      "outcome": "passed",
+      "durationMs": 3819,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3819
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-live.spec.ts",
+      "line": 21,
+      "title": "search, filter and page size update the rows and go back to the first page",
+      "outcome": "passed",
+      "durationMs": 5341,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5341
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.data-table-live.spec.ts",
+      "line": 40,
+      "title": "rows stay selected across pages; \"Select this page\" adds the page’s rows only",
+      "outcome": "passed",
+      "durationMs": 5737,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5737
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.date-picker.spec.ts",
+      "line": 37,
+      "title": "inside a data-turbo-permanent element and a Turbo Frame reloaded three times, the pickers work",
+      "outcome": "passed",
+      "durationMs": 3099,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3099
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.date-picker.spec.ts",
+      "line": 125,
+      "title": "a date picker open while the page code steps a frame promoted to history stays open on its day; Back shows it closed with the date of the URL",
+      "outcome": "passed",
+      "durationMs": 3729,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3729
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.dropzone.spec.ts",
+      "line": 28,
+      "title": "after a Turbo visit and Back, the zones are empty, have one controller each, and take a new pick",
+      "outcome": "passed",
+      "durationMs": 2495,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2495
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.dropzone.spec.ts",
+      "line": 73,
+      "title": "beside a frame visit promoted to history, Back and Forward keep the files of a POST form's zones and the permanent one; the others start empty",
+      "outcome": "passed",
+      "durationMs": 4207,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4207
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.dropzone.spec.ts",
+      "line": 118,
+      "title": "repeated Turbo visits leave one controller per zone and one change per pick",
+      "outcome": "passed",
+      "durationMs": 4011,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4011
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.dropzone.spec.ts",
+      "line": 176,
+      "title": "a controller passed to the Dropzone gets its actions, values and target",
+      "outcome": "passed",
+      "durationMs": 1740,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1740
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.dropzone.spec.ts",
+      "line": 214,
+      "title": "in a Live Component, files go up through a files action: re-renders keep them, each upload gives a fresh zone",
+      "outcome": "passed",
+      "durationMs": 4119,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4119
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.editor.spec.ts",
+      "line": 84,
+      "title": "a Turbo Frame reloaded three times gives a fresh editor each time",
+      "outcome": "passed",
+      "durationMs": 4677,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4677
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.editor.spec.ts",
+      "line": 127,
+      "title": "in a Live Component, a re-render while the editor has the focus does not lose the typing",
+      "outcome": "passed",
+      "durationMs": 4296,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4296
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.form-back.spec.ts",
+      "line": 49,
+      "title": "a GET form holding the focus when the page's scripts start keeps what was typed",
+      "outcome": "passed",
+      "durationMs": 1620,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1620
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.form-back.spec.ts",
+      "line": 71,
+      "title": "a GET form after Back: the two syncs of Tom Select leave one item and no event; a later reset still syncs it",
+      "outcome": "passed",
+      "durationMs": 3140,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3140
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.live-modal.spec.ts",
+      "line": 4,
+      "title": "a modal whose container a Live re-render replaces is torn down cleanly, and the new one opens and closes",
+      "outcome": "passed",
+      "durationMs": 5025,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5025
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.markdown-editor.spec.ts",
+      "line": 16,
+      "title": "a form posts the Markdown through Turbo, or answers 422 with the field errors; the stored rendering is the preview",
+      "outcome": "passed",
+      "durationMs": 6147,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6147
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.mobile-nav.spec.ts",
+      "line": 63,
+      "title": "on a phone › the menu button opens the drawer as a modal on the current page; Escape, the backdrop and the close button close it and give the focus back",
+      "outcome": "passed",
+      "durationMs": 2070,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2070
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.mobile-nav.spec.ts",
+      "line": 147,
+      "title": "on a phone › a link opening another tab or window, a download or a modifier click leaves the drawer open",
+      "outcome": "passed",
+      "durationMs": 1810,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1810
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.mobile-nav.spec.ts",
+      "line": 290,
+      "title": "light theme › the open drawer passes axe",
+      "outcome": "passed",
+      "durationMs": 3927,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3927
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.nav-menu.spec.ts",
+      "line": 213,
+      "title": "on a desktop › a link inside visits its page and closes the submenus; a link to a fragment closes them too",
+      "outcome": "passed",
+      "durationMs": 2792,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2792
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.nav-menu.spec.ts",
+      "line": 230,
+      "title": "on a desktop › a link opening another tab or window, a download or a modifier click leaves the submenu open",
+      "outcome": "passed",
+      "durationMs": 2036,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2036
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 163,
+      "title": "dropdown › open while the page's code steps a frame promoted to history, it stays open with the focus; Back and Forward show it closed from the first frame",
+      "outcome": "passed",
+      "durationMs": 2875,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2875
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 250,
+      "title": "dropdown › replaced or updated by a Turbo Stream while open, the new one starts closed, works, and no listener is left",
+      "outcome": "passed",
+      "durationMs": 6976,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6976
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 110,
+      "title": "modal › left open by Back, Forward or a visit from the page, every copy Turbo renders shows it closed",
+      "outcome": "passed",
+      "durationMs": 2688,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2688
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 163,
+      "title": "modal › open while a link inside it steps a frame promoted to history, it stays open with the focus; Back and Forward show it closed from the first frame",
+      "outcome": "passed",
+      "durationMs": 2430,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2430
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 163,
+      "title": "modal › open while the page's code steps a frame promoted to history, it stays open with the focus; Back and Forward show it closed from the first frame",
+      "outcome": "passed",
+      "durationMs": 2807,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2807
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 226,
+      "title": "drawer › inside a Turbo Frame reloaded three times from inside the open overlay, the new one starts closed and works",
+      "outcome": "passed",
+      "durationMs": 3615,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3615
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 250,
+      "title": "drawer › replaced or updated by a Turbo Stream while open, the new one starts closed, works, and no listener is left",
+      "outcome": "passed",
+      "durationMs": 6523,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6523
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.permanent-plus-live.spec.ts",
+      "line": 4,
+      "title": "a Live Component inside a data-turbo-permanent element keeps its state and stays live",
+      "outcome": "passed",
+      "durationMs": 3741,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3741
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.popover.spec.ts",
+      "line": 20,
+      "title": "the focus leaving the popover closes it",
+      "outcome": "passed",
+      "durationMs": 1429,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1429
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.popover.spec.ts",
+      "line": 49,
+      "title": "inside a Turbo Frame reloaded three times, the popover works",
+      "outcome": "passed",
+      "durationMs": 2530,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2530
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.popover.spec.ts",
+      "line": 118,
+      "title": "a popover opened by the user and moved in the DOM stays open, with one controller and its listener",
+      "outcome": "passed",
+      "durationMs": 1701,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1701
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 147,
+      "title": "the vertical tabs follow the keyboard of the tabs pattern: Up, Down, Home, End, a roving Tab stop",
+      "outcome": "passed",
+      "durationMs": 3103,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3103
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 52,
+      "title": "desktop › the section nav is a landmark of links, the tabs a vertical tab list, each in its server state",
+      "outcome": "passed",
+      "durationMs": 2154,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2154
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 76,
+      "title": "desktop › Turbo visits, Back, Forward and a reload show the section and the tab of the page shown",
+      "outcome": "passed",
+      "durationMs": 2881,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2881
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 128,
+      "title": "desktop › repeated Turbo visits leave one controller per navigation and tab list",
+      "outcome": "passed",
+      "durationMs": 3266,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3266
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 278,
+      "title": "phone › the section nav is a strip that scrolls sideways, with the current section scrolled into view",
+      "outcome": "passed",
+      "durationMs": 1646,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1646
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 341,
+      "title": "system light, light theme chosen › the section nav and the tabs pass axe, focused, at desktop width",
+      "outcome": "passed",
+      "durationMs": 4290,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4290
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 341,
+      "title": "system dark, light theme chosen › the section nav and the tabs pass axe, focused, at mobile width",
+      "outcome": "passed",
+      "durationMs": 3963,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3963
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.side-nav.spec.ts",
+      "line": 150,
+      "title": "a link to a fragment of the page is never the current page",
+      "outcome": "passed",
+      "durationMs": 2443,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2443
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.side-nav.spec.ts",
+      "line": 159,
+      "title": "repeated Turbo visits leave one controller on the tree",
+      "outcome": "passed",
+      "durationMs": 3173,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3173
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.side-nav.spec.ts",
+      "line": 228,
+      "title": "system light, light theme chosen › the tree passes axe, its current item and focus ring in the theme's colors",
+      "outcome": "passed",
+      "durationMs": 3306,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3306
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.tooltip.spec.ts",
+      "line": 87,
+      "title": "repeated Turbo visits leave one tooltip per trigger and no document or window listener behind",
+      "outcome": "passed",
+      "durationMs": 2964,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2964
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.tooltip.spec.ts",
+      "line": 105,
+      "title": "inside a data-turbo-permanent element, a tooltip shown by the focus stays shown through a visit, and keeps working",
+      "outcome": "passed",
+      "durationMs": 1853,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1853
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.turbo-nav.spec.ts",
+      "line": 11,
+      "title": "a data-turbo-permanent panel is kept across Turbo visits (not its scroll) and the theme persists",
+      "outcome": "passed",
+      "durationMs": 2722,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2722
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.turbo-nav.spec.ts",
+      "line": 32,
+      "title": "the permanent sidebar keeps its scroll, collapsed state and current item across Turbo visits",
+      "outcome": "passed",
+      "durationMs": 3820,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3820
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.turbo-nav.spec.ts",
+      "line": 62,
+      "title": "a flash toast written as a Turbo Stream shows once across Turbo visits",
+      "outcome": "passed",
+      "durationMs": 3714,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3714
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.turbo-nav.spec.ts",
+      "line": 150,
+      "title": "on a small screen, the sidebar open over the page is closed after Back, and after Forward to its page",
+      "outcome": "passed",
+      "durationMs": 2341,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2341
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "line": 75,
+      "title": "a dropdown menu left open by a visit is closed after Back, and opens again, the next page waiting for a stylesheet",
+      "outcome": "passed",
+      "durationMs": 2258,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2258
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "line": 75,
+      "title": "a drawer left open by a visit is closed after Back, and opens again, the next page waiting for a stylesheet",
+      "outcome": "passed",
+      "durationMs": 2181,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2181
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "line": 75,
+      "title": "a tooltip left open by a visit is closed after Back, and opens again, the next page waiting for a stylesheet",
+      "outcome": "passed",
+      "durationMs": 2230,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2230
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "line": 139,
+      "title": "a dropdown menu whose item steps a frame promoted to history stays open, and Back shows it closed",
+      "outcome": "passed",
+      "durationMs": 2236,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2236
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.turbo-stream-toast.spec.ts",
+      "line": 4,
+      "title": "a toast pushed by a Turbo Stream appears, dismisses itself and leaves focus alone",
+      "outcome": "passed",
+      "durationMs": 4167,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4167
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.turbo-stream-toast.spec.ts",
+      "line": 23,
+      "title": "a toast pauses while hovered and closes from its button",
+      "outcome": "passed",
+      "durationMs": 3500,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3500
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a GET form (input) › back: url, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2178,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2178
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a GET form (input) › stream-update: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2341,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2341
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a checkbox in a GET form (checkbox) › frame-inside: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2026,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2026
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a checkbox in a GET form (checkbox) › stream-update: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2283,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2283
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a checkbox in a GET form (checkbox) › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2053,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2053
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an autocomplete in a GET form › forward: url, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 3163,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3163
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an autocomplete in a GET form › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2559,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2559
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a date picker in a GET form › back: url, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 3626,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3626
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a date picker in a GET form › forward: url, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 3618,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3618
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a date picker in a GET form › stream-update: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 3185,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3185
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a date picker in a GET form › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2932,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2932
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a date picker in a GET form › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 3222,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3222
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a calendar in a GET form › forward: url, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 3144,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3144
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a calendar in a GET form › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2634,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2634
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a calendar in a GET form › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2465,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2465
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a calendar in a GET form › live: server, shows it server",
+      "outcome": "passed",
+      "durationMs": 3578,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3578
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a POST form (input) › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2034,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2034
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a POST form (input) › stream-replace: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2117,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2117
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a POST form (input) › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2157,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2157
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a POST form (input) › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2073,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2073
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a toggle in a POST form › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2127,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2127
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a toggle in a POST form › forward: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2236,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2236
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an autocomplete in a POST form › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2863,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2863
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an autocomplete in a POST form › frame-advance: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 3181,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3181
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an autocomplete in a POST form › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2747,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2747
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a date picker in a POST form › forward: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 3703,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3703
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an editor in a POST form › forward: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 5734,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5734
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an editor in a POST form › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 4864,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4864
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a markdown editor in a POST form › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 4935,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4935
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a markdown editor in a POST form › forward: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 5398,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5398
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a markdown editor in a POST form › stream-replace: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2652,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2652
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a markdown editor in a POST form › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 4575,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4575
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a markdown editor in a POST form › live: server, shows it server",
+      "outcome": "passed",
+      "durationMs": 3770,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3770
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropzone in a POST form › frame-inside: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2303,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2303
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropzone in a POST form › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2910,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2910
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropzone in a POST form › live: server, shows it changed",
+      "outcome": "passed",
+      "durationMs": 4119,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4119
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "tabs (the selected tab) › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 3582,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3582
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "tabs (the selected tab) › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 3124,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3124
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "tabs (the selected tab) › stream-replace: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2985,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2985
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "tabs (the selected tab) › live: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 4446,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4446
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "tabs (the selected tab) › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 4227,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4227
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropdown left open › frame-inside: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2199,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2199
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropdown left open › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2512,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2512
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropdown left open › live: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 3527,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3527
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a popover left open › back: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2456,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2456
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a popover left open › forward: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2644,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2644
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a popover left open › frame-inside: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2214,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2214
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a popover left open › live: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 3828,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3828
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a modal left open › back: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2884,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2884
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a modal left open › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2548,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2548
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a modal left open › stream-update: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2642,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2642
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a modal left open › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 3325,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3325
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a drawer left open › frame-inside: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2673,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2673
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a drawer left open › stream-replace: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2612,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2612
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a drawer left open › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2795,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2795
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a drawer left open › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 3660,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3660
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a side-nav branch opened › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 3044,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3044
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a side-nav branch opened › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2527,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2527
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a side-nav branch opened › stream-replace: fresh, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2854,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2854
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "the theme toggle › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2541,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2541
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "the theme toggle › forward: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2483,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2483
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "the theme toggle › frame-inside: fresh, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2296,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2296
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "the theme toggle › frame-advance: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2584,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2584
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "the theme toggle › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2389,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2389
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "the theme toggle › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2528,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2528
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table page (data-table-live, in the URL) › forward: url, shows it changed",
+      "outcome": "passed",
+      "durationMs": 6174,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6174
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table page (data-table-live, in the URL) › frame-inside: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 3943,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3943
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table page (data-table-live, in the URL) › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 5691,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5691
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table page (data-table-live, in the URL) › live: server, shows it server",
+      "outcome": "passed",
+      "durationMs": 3511,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3511
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table selection (data-table-live) › live: server, shows it server",
+      "outcome": "passed",
+      "durationMs": 2549,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2549
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table selection (data-table-live) › leave-return: reset, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 4165,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4165
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/markdown-editor.spec.ts",
+      "line": 13,
+      "title": "the preview tab renders the Markdown on the server, and Write comes back to the textarea",
+      "outcome": "passed",
+      "durationMs": 2859,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2859
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/markdown-editor.spec.ts",
+      "line": 52,
+      "title": "the toolbar writes Markdown around the selection or before the lines, with one tab stop",
+      "outcome": "passed",
+      "durationMs": 3584,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3584
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/markdown-editor.spec.ts",
+      "line": 112,
+      "title": "the counter turns red past maxChars",
+      "outcome": "passed",
+      "durationMs": 1763,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1763
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/markdown-editor.spec.ts",
+      "line": 121,
+      "title": "a read-only editor has no toolbar, and its preview works",
+      "outcome": "passed",
+      "durationMs": 2796,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2796
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 50,
+      "title": "toggle knob: animates only what it names, and nothing under reduced motion",
+      "outcome": "passed",
+      "durationMs": 2104,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2104
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 50,
+      "title": "side nav chevron: animates only what it names, and nothing under reduced motion",
+      "outcome": "passed",
+      "durationMs": 1698,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1698
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 50,
+      "title": "toast fade: animates only what it names, and nothing under reduced motion",
+      "outcome": "passed",
+      "durationMs": 2069,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2069
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 75,
+      "title": "the spinner and the skeleton pulse run three times slower under reduced motion",
+      "outcome": "passed",
+      "durationMs": 4387,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4387
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 90,
+      "title": "every animation in skeleton/default is slowed under reduced motion",
+      "outcome": "passed",
+      "durationMs": 2383,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2383
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 90,
+      "title": "every animation in skeleton/card-placeholder is slowed under reduced motion",
+      "outcome": "passed",
+      "durationMs": 1961,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1961
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 90,
+      "title": "every animation in spinner/buttons is slowed under reduced motion",
+      "outcome": "passed",
+      "durationMs": 1778,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1778
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 107,
+      "title": "an alert dismissed with no-preference motion is hidden",
+      "outcome": "passed",
+      "durationMs": 2150,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2150
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 245,
+      "title": "under reduced motion an alert hides at once, without waiting for a fade",
+      "outcome": "passed",
+      "durationMs": 1638,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1638
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/popover.spec.ts",
+      "line": 26,
+      "title": "a click outside closes the popover",
+      "outcome": "passed",
+      "durationMs": 1494,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1494
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/popover.spec.ts",
+      "line": 32,
+      "title": "popovers of a group close each other",
+      "outcome": "passed",
+      "durationMs": 1644,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1644
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/popover.spec.ts",
+      "line": 67,
+      "title": "the trigger does not submit a surrounding form",
+      "outcome": "passed",
+      "durationMs": 1582,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1582
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/smoke.spec.ts",
+      "line": 26,
+      "title": "unknown recipes are 404",
+      "outcome": "passed",
+      "durationMs": 911,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        911
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/smoke.spec.ts",
+      "line": 113,
+      "title": "the page guard › the same messages outside a full load: reported",
+      "outcome": "passed",
+      "durationMs": 2265,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2265
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/smoke.spec.ts",
+      "line": 153,
+      "title": "the page guard › Turbo's prefetch message outside a full load: reported",
+      "outcome": "passed",
+      "durationMs": 1905,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1905
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/smoke.spec.ts",
+      "line": 201,
+      "title": "the page guard › Turbo's prefetch failing after a full load cancelled another prefetch request: reported",
+      "outcome": "passed",
+      "durationMs": 3359,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3359
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 68,
+      "title": "system dark, no choice saved › the toggle switches the theme, saves it, and the choice holds across a Turbo visit, Back and a reload",
+      "outcome": "passed",
+      "durationMs": 4062,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4062
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 55,
+      "title": "system dark, dark choice saved › shows the expected theme from the first paint",
+      "outcome": "passed",
+      "durationMs": 2541,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2541
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 61,
+      "title": "system dark, dark choice saved › the system switching to light is ignored",
+      "outcome": "passed",
+      "durationMs": 2567,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2567
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 68,
+      "title": "system dark, dark choice saved › the toggle switches the theme, saves it, and the choice holds across a Turbo visit, Back and a reload",
+      "outcome": "passed",
+      "durationMs": 4432,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4432
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 103,
+      "title": "storage blocked › the toggle switches the theme, and the choice holds across a Turbo visit without localStorage",
+      "outcome": "passed",
+      "durationMs": 2648,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2648
+      ]
+    },
+    {
+      "project": "smoke-webkit",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 154,
+      "title": "a switch › leaves a transition already running to finish on its own",
+      "outcome": "passed",
+      "durationMs": 2527,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2527
+      ]
+    },
+    {
+      "project": "examples-webkit",
+      "file": "alert/tests/alert.spec.ts",
+      "line": 18,
+      "title": "flowbite-4/alert › dismisses each alert independently",
+      "outcome": "passed",
+      "durationMs": 1546,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1546
+      ]
+    },
+    {
+      "project": "examples-webkit",
+      "file": "drawer/tests/drawer.spec.ts",
+      "line": 21,
+      "title": "flowbite-4/drawer › is open on page load when asked to, as a modal",
+      "outcome": "passed",
+      "durationMs": 1888,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1888
+      ]
+    },
+    {
+      "project": "examples-webkit",
+      "file": "drawer/tests/drawer.spec.ts",
+      "line": 36,
+      "title": "flowbite-4/drawer › closes on a click on the backdrop, not on a click on its content",
+      "outcome": "passed",
+      "durationMs": 1868,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1868
+      ]
+    },
+    {
+      "project": "examples-webkit",
+      "file": "modal/tests/modal.spec.ts",
+      "line": 76,
+      "title": "flowbite-4/modal › closes on Escape and gives focus back to the trigger",
+      "outcome": "passed",
+      "durationMs": 1828,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1828
+      ]
+    },
+    {
+      "project": "examples-webkit",
+      "file": "modal/tests/modal.spec.ts",
+      "line": 89,
+      "title": "flowbite-4/modal › closes with the close button and the Decline button",
+      "outcome": "passed",
+      "durationMs": 2305,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2305
+      ]
+    },
+    {
+      "project": "examples-webkit",
+      "file": "modal/tests/modal.spec.ts",
+      "line": 121,
+      "title": "flowbite-4/modal › keeps its state in sync over several openings",
+      "outcome": "passed",
+      "durationMs": 2129,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2129
+      ]
+    },
+    {
+      "project": "examples-webkit",
+      "file": "modal/tests/modal.spec.ts",
+      "line": 145,
+      "title": "flowbite-4/modal › does not close on a click on the backdrop with a static backdrop",
+      "outcome": "passed",
+      "durationMs": 1812,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1812
+      ]
+    },
+    {
+      "project": "examples-webkit",
+      "file": "tabs/tests/tabs.spec.ts",
+      "line": 69,
+      "title": "flowbite-4/tabs › selects a tab with Enter and Space",
+      "outcome": "passed",
+      "durationMs": 1504,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1504
+      ]
+    }
+  ]
+}

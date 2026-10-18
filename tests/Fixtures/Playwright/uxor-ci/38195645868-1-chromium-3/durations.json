@@ -1,0 +1,5561 @@
+{
+  "schema": 1,
+  "status": "valid",
+  "sha": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+  "ref": "main",
+  "runUrl": "https://github.com/xormania/uxor/actions/runs/38195645868",
+  "runAttempt": 1,
+  "shard": "chromium 3/4",
+  "projects": [
+    "smoke",
+    "examples"
+  ],
+  "runtime": {
+    "Node": "v22.23.3",
+    "PHP": "8.5.11",
+    "Symfony": "8.1.8",
+    "Turbo": "8.0.23",
+    "Playwright": "1.58.2"
+  },
+  "wallMs": 375396,
+  "summedTestMs": 725566,
+  "attempts": 428,
+  "untimedAttempts": 0,
+  "workers": {
+    "configured": 2,
+    "actual": 2
+  },
+  "slowest": [
+    {
+      "project": "smoke",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 205,
+      "title": "every Input pads its text the same, with or without a type",
+      "outcome": "passed",
+      "durationMs": 8582,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        8582
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/hostile-props.spec.ts",
+      "line": 244,
+      "title": "components drop attributes named on…, check URL attributes in any case, and render the others",
+      "outcome": "passed",
+      "durationMs": 7797,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        7797
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "line": 189,
+      "title": "without the layouts' form-reset controller, a reset cancelled in a capture listener changes nothing; the next one, from form.reset(), puts back the values",
+      "outcome": "passed",
+      "durationMs": 6305,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6305
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "line": 189,
+      "title": "with the layouts' form-reset controller, a reset cancelled in a capture listener changes nothing; the next one, from form.reset(), puts back the values",
+      "outcome": "passed",
+      "durationMs": 5637,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5637
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/editor",
+      "outcome": "passed",
+      "durationMs": 5435,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5435
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/spinner",
+      "outcome": "passed",
+      "durationMs": 5258,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5258
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/avatar",
+      "outcome": "passed",
+      "durationMs": 5049,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5049
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/live-values",
+      "outcome": "passed",
+      "durationMs": 4644,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4644
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 298,
+      "title": "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico",
+      "outcome": "passed",
+      "durationMs": 4604,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4604
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/sidebar",
+      "outcome": "passed",
+      "durationMs": 4244,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4244
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "tests/e2e/a11y.spec.ts",
+      "tests": 114,
+      "durationMs": 237910,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "tests": 74,
+      "durationMs": 91279,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "tests": 53,
+      "durationMs": 84822,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/demo-app.spec.ts",
+      "tests": 24,
+      "durationMs": 52689,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "tests": 41,
+      "durationMs": 45688,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/forms.spec.ts",
+      "tests": 6,
+      "durationMs": 18690,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "tests": 4,
+      "durationMs": 15463,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "tests": 6,
+      "durationMs": 12072,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/csp.spec.ts",
+      "tests": 10,
+      "durationMs": 10862,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "tests": 5,
+      "durationMs": 10626,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/motion.spec.ts",
+      "tests": 8,
+      "durationMs": 9916,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/examples/fixtures.ts",
+      "tests": 7,
+      "durationMs": 8464,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "tests": 5,
+      "durationMs": 8167,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.data-table-interrupt.spec.ts",
+      "tests": 2,
+      "durationMs": 7929,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/hostile-props.spec.ts",
+      "tests": 2,
+      "durationMs": 7917,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.nav-menu.spec.ts",
+      "tests": 4,
+      "durationMs": 7268,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "tests": 5,
+      "durationMs": 7194,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.editor.spec.ts",
+      "tests": 3,
+      "durationMs": 6873,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.side-nav.spec.ts",
+      "tests": 3,
+      "durationMs": 6531,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/editor.spec.ts",
+      "tests": 2,
+      "durationMs": 5475,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/smoke.spec.ts",
+      "tests": 4,
+      "durationMs": 4998,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.mobile-nav.spec.ts",
+      "tests": 3,
+      "durationMs": 4920,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.turbo-stream-toast.spec.ts",
+      "tests": 2,
+      "durationMs": 4451,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/calendar.spec.ts",
+      "tests": 3,
+      "durationMs": 3764,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.tooltip.spec.ts",
+      "tests": 2,
+      "durationMs": 3754,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.dropzone.spec.ts",
+      "tests": 2,
+      "durationMs": 3725,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.date-picker.spec.ts",
+      "tests": 2,
+      "durationMs": 3422,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "modal/tests/modal.spec.ts",
+      "tests": 3,
+      "durationMs": 3355,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/examples/pages.spec.ts",
+      "tests": 3,
+      "durationMs": 3320,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/counts.spec.ts",
+      "tests": 2,
+      "durationMs": 3241,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.data-table-back.spec.ts",
+      "tests": 2,
+      "durationMs": 2975,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.chart.spec.ts",
+      "tests": 2,
+      "durationMs": 2664,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/dropdown.spec.ts",
+      "tests": 2,
+      "durationMs": 2533,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/contrast.spec.ts",
+      "tests": 2,
+      "durationMs": 2417,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tabs/tests/tabs.spec.ts",
+      "tests": 2,
+      "durationMs": 2194,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.form-back.spec.ts",
+      "tests": 2,
+      "durationMs": 2154,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.data-table-frame.spec.ts",
+      "tests": 1,
+      "durationMs": 1867,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.data-table-live.spec.ts",
+      "tests": 1,
+      "durationMs": 1781,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.permanent-plus-live.spec.ts",
+      "tests": 1,
+      "durationMs": 1735,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.calendar.spec.ts",
+      "tests": 1,
+      "durationMs": 1688,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.live-form.spec.ts",
+      "tests": 1,
+      "durationMs": 1526,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/date-picker.spec.ts",
+      "tests": 1,
+      "durationMs": 1380,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/markdown-editor.spec.ts",
+      "tests": 1,
+      "durationMs": 1336,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "drawer/tests/drawer.spec.ts",
+      "tests": 1,
+      "durationMs": 1194,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/lab.popover.spec.ts",
+      "tests": 1,
+      "durationMs": 1157,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/popover.spec.ts",
+      "tests": 1,
+      "durationMs": 1108,
+      "untimedAttempts": 0
+    },
+    {
+      "file": "tests/e2e/dropzone.spec.ts",
+      "tests": 1,
+      "durationMs": 1072,
+      "untimedAttempts": 0
+    }
+  ],
+  "tests": [
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /",
+      "outcome": "passed",
+      "durationMs": 3481,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3481
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /forms/parity",
+      "outcome": "passed",
+      "durationMs": 3273,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3273
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /demo/forgot-password",
+      "outcome": "passed",
+      "durationMs": 1970,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1970
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /demo/settings/billing",
+      "outcome": "passed",
+      "durationMs": 2037,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2037
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/live-table",
+      "outcome": "passed",
+      "durationMs": 1976,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1976
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/turbo-frame-detail",
+      "outcome": "passed",
+      "durationMs": 1776,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1776
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/autocomplete",
+      "outcome": "passed",
+      "durationMs": 2009,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2009
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/autocomplete-stream",
+      "outcome": "passed",
+      "durationMs": 1803,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1803
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/calendar-turbo",
+      "outcome": "passed",
+      "durationMs": 3879,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3879
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/calendar-stream",
+      "outcome": "passed",
+      "durationMs": 2251,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2251
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/live-date-picker",
+      "outcome": "passed",
+      "durationMs": 1903,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1903
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/chart-turbo",
+      "outcome": "passed",
+      "durationMs": 1867,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1867
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/dropzone-turbo",
+      "outcome": "passed",
+      "durationMs": 1714,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1714
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/dropzone-events",
+      "outcome": "passed",
+      "durationMs": 1603,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1603
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/dropzone-form",
+      "outcome": "passed",
+      "durationMs": 1592,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1592
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/editor-turbo/two",
+      "outcome": "passed",
+      "durationMs": 3066,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3066
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/editor-stream",
+      "outcome": "passed",
+      "durationMs": 2496,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2496
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/markdown-turbo/two",
+      "outcome": "passed",
+      "durationMs": 2041,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2041
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/side-nav/three",
+      "outcome": "passed",
+      "durationMs": 1952,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1952
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/nav-menu",
+      "outcome": "passed",
+      "durationMs": 1696,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1696
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/dropdown-stream",
+      "outcome": "passed",
+      "durationMs": 1610,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1610
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/modal-stream",
+      "outcome": "passed",
+      "durationMs": 1772,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1772
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/section-nav",
+      "outcome": "passed",
+      "durationMs": 1881,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1881
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /lab/live-values",
+      "outcome": "passed",
+      "durationMs": 4644,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4644
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/avatar",
+      "outcome": "passed",
+      "durationMs": 5049,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5049
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/button-group",
+      "outcome": "passed",
+      "durationMs": 4010,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4010
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/editor",
+      "outcome": "passed",
+      "durationMs": 5435,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5435
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/kbd",
+      "outcome": "passed",
+      "durationMs": 3032,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3032
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/modal",
+      "outcome": "passed",
+      "durationMs": 3966,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3966
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/page-header",
+      "outcome": "passed",
+      "durationMs": 2928,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2928
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/popover",
+      "outcome": "passed",
+      "durationMs": 3929,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3929
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/select",
+      "outcome": "passed",
+      "durationMs": 3935,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3935
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/settings-profile",
+      "outcome": "passed",
+      "durationMs": 2875,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2875
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/side-nav",
+      "outcome": "passed",
+      "durationMs": 2758,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2758
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/sidebar",
+      "outcome": "passed",
+      "durationMs": 4244,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4244
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/spinner",
+      "outcome": "passed",
+      "durationMs": 5258,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5258
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /r/toast",
+      "outcome": "passed",
+      "durationMs": 2626,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2626
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/alert/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1828,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1828
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/alert/dismissing?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1901,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1901
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/alert/border-accent?theme=light",
+      "outcome": "passed",
+      "durationMs": 1902,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1902
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/autocomplete/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1748,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1748
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/avatar/placeholder?theme=light",
+      "outcome": "passed",
+      "durationMs": 1632,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1632
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/avatar/dot-indicator?theme=light",
+      "outcome": "passed",
+      "durationMs": 1528,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1528
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/avatar/avatar-with-text?theme=light",
+      "outcome": "passed",
+      "durationMs": 1494,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1494
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/avatar/user-dropdown?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1566,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1566
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/badge/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1701,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1701
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/badge/bordered-badges?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1804,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1804
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/badge/large-badges?theme=light",
+      "outcome": "passed",
+      "durationMs": 1817,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1817
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/breadcrumb/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1793,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1793
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/button/button-pills?theme=light",
+      "outcome": "passed",
+      "durationMs": 1802,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1802
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/button/outline-buttons?theme=light",
+      "outcome": "passed",
+      "durationMs": 1741,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1741
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/button/button-sizes?theme=light",
+      "outcome": "passed",
+      "durationMs": 1794,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1794
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/button-group/size?theme=light",
+      "outcome": "passed",
+      "durationMs": 1552,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1552
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/calendar/default?theme=dark",
+      "outcome": "passed",
+      "durationMs": 2013,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2013
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/calendar/several-dates?theme=dark",
+      "outcome": "passed",
+      "durationMs": 2132,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2132
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/calendar/locale-and-right-to-left?theme=dark",
+      "outcome": "passed",
+      "durationMs": 2073,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2073
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/card/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1718,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1718
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/card/card-with-button?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1623,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1623
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/card/card-with-form-inputs?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1869,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1869
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/chart/a-color-of-your-own?theme=light",
+      "outcome": "passed",
+      "durationMs": 1735,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1735
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/chart/doughnut?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1913,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1913
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/chart/in-a-card-with-its-table-shown?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1814,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1814
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/checkbox/bordered?theme=light",
+      "outcome": "passed",
+      "durationMs": 1795,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1795
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/data-table/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1857,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1857
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/date-picker/typing-a-date?theme=light",
+      "outcome": "passed",
+      "durationMs": 1894,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1894
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/date-picker/range?theme=light",
+      "outcome": "passed",
+      "durationMs": 2115,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2115
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/dropdown/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1780,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1780
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/dropdown/dropdown-hover?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1710,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1710
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/dropdown/with-header?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1935,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1935
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/dropdown/multi-level-dropdown?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1717,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1717
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/dropzone/multiple-files?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1833,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1833
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/dropzone/disabled?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1752,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1752
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/dropzone/custom-content?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1774,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1774
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/editor/invalid?theme=dark",
+      "outcome": "passed",
+      "durationMs": 2035,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2035
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/editor/read-only?theme=light",
+      "outcome": "passed",
+      "durationMs": 1864,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1864
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/forgot-password/default?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1637,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1637
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/form-field/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1696,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1696
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/indicator/count-indicator?theme=light",
+      "outcome": "passed",
+      "durationMs": 1697,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1697
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/input/disabled?theme=light",
+      "outcome": "passed",
+      "durationMs": 1796,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1796
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/input/invalid?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1689,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1689
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/kbd/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1586,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1586
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/label/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1561,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1561
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/login/default?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1850,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1850
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/markdown-editor/invalid?theme=light",
+      "outcome": "passed",
+      "durationMs": 1990,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1990
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/markdown-editor/read-only?theme=light",
+      "outcome": "passed",
+      "durationMs": 1819,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1819
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/mobile-nav/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1838,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1838
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/modal/pop-up-modal?theme=light",
+      "outcome": "passed",
+      "durationMs": 1509,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1509
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/nav-menu/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1618,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1618
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/not-found/default?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1723,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1723
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/pagination/as-icon?theme=light",
+      "outcome": "passed",
+      "durationMs": 1676,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1676
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/pagination/as-icon?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1497,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1497
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/popover/default?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1440,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1440
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/radio/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1656,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1656
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/radio/bordered?theme=light",
+      "outcome": "passed",
+      "durationMs": 1675,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1675
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/section-nav/always-a-row?theme=light",
+      "outcome": "passed",
+      "durationMs": 1644,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1644
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/select/multiple?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1492,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1492
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/select/disabled-state?theme=light",
+      "outcome": "passed",
+      "durationMs": 1499,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1499
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/side-nav/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1463,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1463
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/side-nav/default?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1623,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1623
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/spinner/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1453,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1453
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/spinner/alignment?theme=light",
+      "outcome": "passed",
+      "durationMs": 1693,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1693
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/spinner/spinner-with-card?theme=light",
+      "outcome": "passed",
+      "durationMs": 1731,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1731
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/spinner/progress-spinner?theme=light",
+      "outcome": "passed",
+      "durationMs": 1647,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1647
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/spinner/buttons?theme=light",
+      "outcome": "passed",
+      "durationMs": 1559,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1559
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/table/default?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1766,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1766
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/table/highlight-striped?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1718,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1718
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/tabs/pills-tabs?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1769,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1769
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/tabs/vertical?theme=light",
+      "outcome": "passed",
+      "durationMs": 1759,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1759
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/tabs/vertical?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1756,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1756
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/textarea/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1679,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1679
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/textarea/default?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1698,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1698
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/textarea/wysiwyg-editor?theme=dark",
+      "outcome": "passed",
+      "durationMs": 1750,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1750
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/toast/default?theme=light",
+      "outcome": "passed",
+      "durationMs": 1690,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1690
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/a11y.spec.ts",
+      "line": 30,
+      "title": "a11y /preview/toggle/disabled?theme=light",
+      "outcome": "passed",
+      "durationMs": 1677,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1677
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/calendar.spec.ts",
+      "line": 8,
+      "title": "arrow, Home, End and Page keys move the focus; right to left swaps the arrows",
+      "outcome": "passed",
+      "durationMs": 1303,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1303
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/calendar.spec.ts",
+      "line": 54,
+      "title": "a modifier gone from a re-render leaves no attribute on the days",
+      "outcome": "passed",
+      "durationMs": 1202,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1202
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/calendar.spec.ts",
+      "line": 94,
+      "title": "a pick dispatches one input and one change event on the hidden input",
+      "outcome": "passed",
+      "durationMs": 1259,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1259
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/contrast.spec.ts",
+      "line": 19,
+      "title": "the current page of pagination/as-icon reads at 4.5:1 or more in dark",
+      "outcome": "passed",
+      "durationMs": 1144,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1144
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/contrast.spec.ts",
+      "line": 19,
+      "title": "the current page of data-table-live/default reads at 4.5:1 or more in dark",
+      "outcome": "passed",
+      "durationMs": 1273,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1273
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/counts.spec.ts",
+      "line": 31,
+      "title": "modal: opening and closing make no request and leave no listener",
+      "outcome": "passed",
+      "durationMs": 1752,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1752
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/counts.spec.ts",
+      "line": 150,
+      "title": "measure: a step's duration runs to the frame presented after its update, an expensive frame included",
+      "outcome": "passed",
+      "durationMs": 1489,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1489
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/demo/login answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1019,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1019
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/lab/chart-turbo answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1127,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1127
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/lab/dropzone-form answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1074,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1074
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/lab/live-dropzone answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1059,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1059
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/preview/editor/default?theme=light answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1099,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1099
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/lab/side-nav answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1054,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1054
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/preview/nav-menu/default?theme=light answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1025,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1025
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 54,
+      "title": "/lab/dropdown-turbo answers with the hardening headers and a nonce-based policy its scripts carry",
+      "outcome": "passed",
+      "durationMs": 1098,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1098
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 70,
+      "title": "every response gets its own nonces",
+      "outcome": "passed",
+      "durationMs": 1367,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1367
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/csp.spec.ts",
+      "line": 80,
+      "title": "system in dark mode › the layout sets the theme before the first paint",
+      "outcome": "passed",
+      "durationMs": 940,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        940
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/date-picker.spec.ts",
+      "line": 4,
+      "title": "the trigger opens the calendar on the selected day; a pick closes it and shows the date",
+      "outcome": "passed",
+      "durationMs": 1380,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1380
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 65,
+      "title": "on a desktop the navbar menu marks the current page, opens its submenus and visits their links",
+      "outcome": "passed",
+      "durationMs": 2688,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2688
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 109,
+      "title": "the not-found block answers 404 and passes axe",
+      "outcome": "passed",
+      "durationMs": 1849,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1849
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 298,
+      "title": "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico",
+      "outcome": "passed",
+      "durationMs": 4604,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4604
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 309,
+      "title": "the gallery's header keeps one row on a phone, its GitHub link named",
+      "outcome": "passed",
+      "durationMs": 1066,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1066
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 257,
+      "title": "light theme at phone width › /demo/settings/profile does not scroll sideways",
+      "outcome": "passed",
+      "durationMs": 1154,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1154
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 257,
+      "title": "dark theme at phone width › /demo/login does not scroll sideways",
+      "outcome": "passed",
+      "durationMs": 1103,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1103
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/avatar does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 3498,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3498
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/button-group does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 3047,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3047
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/checkbox does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 2639,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2639
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/date-picker does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 3515,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3515
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/editor does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 3496,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3496
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/form-field does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 2127,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2127
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/kbd does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 2478,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2478
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/markdown-editor does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 2838,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2838
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/navbar does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 2035,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2035
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/pagination does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 2111,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2111
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/section-nav does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 2050,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2050
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/sidebar does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1842,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1842
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/stat-card does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1686,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1686
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/theme does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1317,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1317
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /r/tooltip does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1673,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1673
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /demo does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1599,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1599
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /demo/login does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1094,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1094
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 273,
+      "title": "at 320px › /demo/settings/profile does not scroll sideways and shows no Markdown source",
+      "outcome": "passed",
+      "durationMs": 1180,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1180
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/dropdown.spec.ts",
+      "line": 23,
+      "title": "Home and End move to the first and last item, the arrows wrap, ArrowUp on the trigger opens on the last item",
+      "outcome": "passed",
+      "durationMs": 1216,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1216
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/dropdown.spec.ts",
+      "line": 66,
+      "title": "a submenu opens with ArrowRight on its item, keeps the arrows to its own items, and closes with ArrowLeft and Escape",
+      "outcome": "passed",
+      "durationMs": 1317,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1317
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/dropzone.spec.ts",
+      "line": 24,
+      "title": "the keyboard reaches the input, opens the chooser, moves to Remove after a pick and back after Remove",
+      "outcome": "passed",
+      "durationMs": 1072,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1072
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/editor.spec.ts",
+      "line": 46,
+      "title": "the toolbar is one tab stop with arrow keys, and its buttons say what applies to the selection",
+      "outcome": "passed",
+      "durationMs": 1823,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1823
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/editor.spec.ts",
+      "line": 105,
+      "title": "the link dialog sets allowed links, refuses other schemes, and removes links",
+      "outcome": "flaky",
+      "durationMs": 3652,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1842,
+        1810
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 43,
+      "title": "rows rendered by the form theme look like the hand-written components (light)",
+      "outcome": "passed",
+      "durationMs": 2821,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2821
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 43,
+      "title": "rows rendered by the form theme look like the hand-written components (dark)",
+      "outcome": "passed",
+      "durationMs": 2573,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2573
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 98,
+      "title": "the date picker opt-in submits the pick; a date the server refuses comes back as typed, with its error",
+      "outcome": "passed",
+      "durationMs": 1358,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1358
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 146,
+      "title": "a file the server refuses comes back with its error on the file input",
+      "outcome": "passed",
+      "durationMs": 2301,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2301
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 205,
+      "title": "every Input pads its text the same, with or without a type",
+      "outcome": "passed",
+      "durationMs": 8582,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        8582
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/forms.spec.ts",
+      "line": 229,
+      "title": "a Select's text stops before its chevron (ltr)",
+      "outcome": "passed",
+      "durationMs": 1055,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1055
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/hostile-props.spec.ts",
+      "line": 244,
+      "title": "components drop attributes named on…, check URL attributes in any case, and render the others",
+      "outcome": "passed",
+      "durationMs": 7797,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        7797
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/hostile-props.spec.ts",
+      "line": 390,
+      "title": "the Editor prints a hostile value sanitized, in the editable area and the textarea",
+      "outcome": "passed",
+      "durationMs": 120,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        120
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "line": 72,
+      "title": "Turbo visits away and Back leave one working Tom Select per field",
+      "outcome": "passed",
+      "durationMs": 1960,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1960
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "line": 189,
+      "title": "with the layouts' form-reset controller, a reset cancelled in a capture listener changes nothing; the next one, from form.reset(), puts back the values",
+      "outcome": "passed",
+      "durationMs": 5637,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5637
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "line": 189,
+      "title": "without the layouts' form-reset controller, a reset cancelled in a capture listener changes nothing; the next one, from form.reset(), puts back the values",
+      "outcome": "passed",
+      "durationMs": 6305,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        6305
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.autocomplete.spec.ts",
+      "line": 277,
+      "title": "in a Live form, a reset shows the values rendered in Tom Select and sends no Live request",
+      "outcome": "passed",
+      "durationMs": 1561,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1561
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.calendar.spec.ts",
+      "line": 11,
+      "title": "a Turbo visit and Back show the month and selection of the URL, and the calendar still works",
+      "outcome": "passed",
+      "durationMs": 1688,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1688
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.chart.spec.ts",
+      "line": 54,
+      "title": "a server color is kept through theme switches, and its swatch shows it",
+      "outcome": "passed",
+      "durationMs": 1163,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1163
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.chart.spec.ts",
+      "line": 110,
+      "title": "replaced or updated by a Turbo Stream, the new chart is drawn and the old one destroyed",
+      "outcome": "passed",
+      "durationMs": 1501,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1501
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.data-table-back.spec.ts",
+      "line": 105,
+      "title": "Back after applying Status shows the earlier URL's value in every control, and Forward the applied one",
+      "outcome": "passed",
+      "durationMs": 1568,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1568
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.data-table-back.spec.ts",
+      "line": 169,
+      "title": "a URL parameter named reset, kept as a hidden field, does not stop the form showing the URL's state on Back",
+      "outcome": "passed",
+      "durationMs": 1407,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1407
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.data-table-frame.spec.ts",
+      "line": 96,
+      "title": "Turbo visits away and back keep a single working table",
+      "outcome": "passed",
+      "durationMs": 1867,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1867
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.data-table-interrupt.spec.ts",
+      "line": 325,
+      "title": "page link: Back after history changed, before the frame rendered, leaves a consistent table",
+      "outcome": "passed",
+      "durationMs": 4033,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4033
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.data-table-interrupt.spec.ts",
+      "line": 353,
+      "title": "page link: Back after the frame rendered, before the promotion's turbo:load, leaves a consistent table",
+      "outcome": "passed",
+      "durationMs": 3896,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3896
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.data-table-live.spec.ts",
+      "line": 5,
+      "title": "repeated Turbo visits away and back keep one working table",
+      "outcome": "passed",
+      "durationMs": 1781,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1781
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.date-picker.spec.ts",
+      "line": 37,
+      "title": "inside a data-turbo-permanent element and a Turbo Frame reloaded three times, the pickers work",
+      "outcome": "passed",
+      "durationMs": 1959,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1959
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.date-picker.spec.ts",
+      "line": 48,
+      "title": "in a Live form, a pick reaches the server and the end date follows the start",
+      "outcome": "passed",
+      "durationMs": 1463,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1463
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.dropzone.spec.ts",
+      "line": 118,
+      "title": "repeated Turbo visits leave one controller per zone and one change per pick",
+      "outcome": "passed",
+      "durationMs": 1888,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1888
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.dropzone.spec.ts",
+      "line": 214,
+      "title": "in a Live Component, files go up through a files action: re-renders keep them, each upload gives a fresh zone",
+      "outcome": "passed",
+      "durationMs": 1837,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1837
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.editor.spec.ts",
+      "line": 71,
+      "title": "repeated visits leave one editor per field",
+      "outcome": "passed",
+      "durationMs": 2341,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2341
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.editor.spec.ts",
+      "line": 84,
+      "title": "a Turbo Frame reloaded three times gives a fresh editor each time",
+      "outcome": "passed",
+      "durationMs": 2118,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2118
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.editor.spec.ts",
+      "line": 100,
+      "title": "in a Live Component, re-renders leave the typing alone, a save reads it and a reset replaces it",
+      "outcome": "passed",
+      "durationMs": 2414,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2414
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.form-back.spec.ts",
+      "line": 49,
+      "title": "a GET form holding the focus when the page's scripts start keeps what was typed",
+      "outcome": "passed",
+      "durationMs": 1066,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1066
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.form-back.spec.ts",
+      "line": 49,
+      "title": "a GET form not holding the focus when the page's scripts start loses what was typed",
+      "outcome": "passed",
+      "durationMs": 1088,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1088
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.live-form.spec.ts",
+      "line": 3,
+      "title": "a Live form validates changed fields and keeps focus and values across re-renders",
+      "outcome": "passed",
+      "durationMs": 1526,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1526
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.mobile-nav.spec.ts",
+      "line": 100,
+      "title": "on a phone › without a current page in the drawer, the focus goes to the tree's first item",
+      "outcome": "passed",
+      "durationMs": 1143,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1143
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.mobile-nav.spec.ts",
+      "line": 107,
+      "title": "on a phone › a link inside closes the drawer and visits the page; Back, Forward and a reload show it closed, its tree on the current page",
+      "outcome": "passed",
+      "durationMs": 2278,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2278
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.mobile-nav.spec.ts",
+      "line": 176,
+      "title": "on a phone › Back and Forward while the drawer is open: the copy Turbo cached shows it closed",
+      "outcome": "passed",
+      "durationMs": 1499,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1499
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.nav-menu.spec.ts",
+      "line": 72,
+      "title": "on a desktop › a click opens a submenu and closes the others; a nested one opens inside its parent; a click outside closes them all",
+      "outcome": "passed",
+      "durationMs": 1625,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1625
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.nav-menu.spec.ts",
+      "line": 260,
+      "title": "on a desktop › a controller disconnected from a menu that stays gives the links back their rendered current state",
+      "outcome": "passed",
+      "durationMs": 1124,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1124
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.nav-menu.spec.ts",
+      "line": 369,
+      "title": "on a phone › the bar hides the menu; the drawer holds it, its submenus opening in place, and Escape closes a submenu before the drawer",
+      "outcome": "passed",
+      "durationMs": 1354,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1354
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.nav-menu.spec.ts",
+      "line": 431,
+      "title": "dark theme › the menu passes axe, closed and open, on a desktop and in the drawer",
+      "outcome": "passed",
+      "durationMs": 3165,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3165
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 110,
+      "title": "dropdown › left open by Back, Forward or a visit from the page, every copy Turbo renders shows it closed",
+      "outcome": "passed",
+      "durationMs": 1712,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1712
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 200,
+      "title": "dropdown › repeated Turbo visits from inside the open overlay leave one controller per element and no document or window listener behind",
+      "outcome": "passed",
+      "durationMs": 2188,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2188
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 110,
+      "title": "modal › left open by Back, Forward or a visit from the page, every copy Turbo renders shows it closed",
+      "outcome": "passed",
+      "durationMs": 2077,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2077
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 226,
+      "title": "modal › inside a Turbo Frame reloaded three times from inside the open overlay, the new one starts closed and works",
+      "outcome": "passed",
+      "durationMs": 2196,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2196
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 110,
+      "title": "drawer › left open by Back, Forward or a visit from the page, every copy Turbo renders shows it closed",
+      "outcome": "passed",
+      "durationMs": 1769,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1769
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.overlays.spec.ts",
+      "line": 200,
+      "title": "drawer › repeated Turbo visits from inside the open overlay leave one controller per element and no document or window listener behind",
+      "outcome": "passed",
+      "durationMs": 2130,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2130
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.permanent-plus-live.spec.ts",
+      "line": 4,
+      "title": "a Live Component inside a data-turbo-permanent element keeps its state and stays live",
+      "outcome": "passed",
+      "durationMs": 1735,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1735
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.popover.spec.ts",
+      "line": 20,
+      "title": "the focus leaving the popover closes it",
+      "outcome": "passed",
+      "durationMs": 1157,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1157
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 191,
+      "title": "a selected tab already disabled when the controller connects hands the selection on",
+      "outcome": "passed",
+      "durationMs": 1220,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1220
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 119,
+      "title": "mobile › a link to a fragment of the page is never the current section",
+      "outcome": "passed",
+      "durationMs": 1469,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1469
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 341,
+      "title": "system light, light theme chosen › the section nav and the tabs pass axe, focused, at desktop width",
+      "outcome": "passed",
+      "durationMs": 2712,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2712
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 341,
+      "title": "system light, dark theme chosen › the section nav and the tabs pass axe, focused, at mobile width",
+      "outcome": "passed",
+      "durationMs": 2587,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2587
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.section-nav.spec.ts",
+      "line": 341,
+      "title": "system dark, light theme chosen › the section nav and the tabs pass axe, focused, at mobile width",
+      "outcome": "passed",
+      "durationMs": 2638,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2638
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.side-nav.spec.ts",
+      "line": 175,
+      "title": "in the demo's data-turbo-permanent sidebar, the tree follows the current page across visits",
+      "outcome": "passed",
+      "durationMs": 2101,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2101
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.side-nav.spec.ts",
+      "line": 228,
+      "title": "system dark, light theme chosen › the tree passes axe, its current item and focus ring in the theme's colors",
+      "outcome": "passed",
+      "durationMs": 2231,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2231
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.side-nav.spec.ts",
+      "line": 228,
+      "title": "system dark, dark theme chosen › the tree passes axe, its current item and focus ring in the theme's colors",
+      "outcome": "passed",
+      "durationMs": 2199,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2199
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.tooltip.spec.ts",
+      "line": 33,
+      "title": "a tooltip shown on the link that visits is hidden after Back, Forward and a reload, and still works",
+      "outcome": "passed",
+      "durationMs": 2025,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2025
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.tooltip.spec.ts",
+      "line": 120,
+      "title": "inside a Turbo Frame reloaded three times from a link with a tooltip, the tooltips work",
+      "outcome": "passed",
+      "durationMs": 1729,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1729
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "line": 75,
+      "title": "a dropdown menu left open by a visit is closed after Back, and opens again",
+      "outcome": "passed",
+      "durationMs": 1390,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1390
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "line": 75,
+      "title": "a drawer left open by a visit is closed after Back, and opens again",
+      "outcome": "passed",
+      "durationMs": 1359,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1359
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "line": 75,
+      "title": "a tooltip left open by a visit is closed after Back, and opens again",
+      "outcome": "passed",
+      "durationMs": 1549,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1549
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "line": 75,
+      "title": "a tooltip left open by a visit is closed after Back, and opens again, the next page waiting for a stylesheet",
+      "outcome": "passed",
+      "durationMs": 1492,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1492
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.turbo-restore.spec.ts",
+      "line": 119,
+      "title": "a toast outside the permanent region stays shown while a frame visit is promoted to history, and Back does not show it again",
+      "outcome": "passed",
+      "durationMs": 1404,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1404
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.turbo-stream-toast.spec.ts",
+      "line": 4,
+      "title": "a toast pushed by a Turbo Stream appears, dismisses itself and leaves focus alone",
+      "outcome": "passed",
+      "durationMs": 3091,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3091
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.turbo-stream-toast.spec.ts",
+      "line": 45,
+      "title": "a toast stays paused while it is still hovered or focused",
+      "outcome": "passed",
+      "durationMs": 1360,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1360
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a GET form (input) › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1233,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1233
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a GET form (input) › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1159,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1159
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a checkbox in a GET form (checkbox) › back: url, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1444,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1444
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a checkbox in a GET form (checkbox) › frame-inside: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1259,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1259
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a checkbox in a GET form (checkbox) › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1396,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1396
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an autocomplete in a GET form › back: url, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1689,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1689
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an autocomplete in a GET form › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1443,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1443
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a calendar in a GET form › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1403,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1403
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a calendar in a GET form › frame-advance: url, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2058,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2058
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a calendar in a GET form › stream-update: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1598,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1598
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a calendar in a GET form › live: server, shows it server",
+      "outcome": "passed",
+      "durationMs": 2043,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2043
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a POST form (input) › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1407,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1407
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a POST form (input) › forward: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1236,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1236
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a text field in a POST form (input) › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1142,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1142
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a toggle in a POST form › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1393,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1393
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a toggle in a POST form › stream-replace: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1408,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1408
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a toggle in a POST form › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1441,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1441
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an autocomplete in a POST form › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1477,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1477
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an autocomplete in a POST form › stream-update: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1641,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1641
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an autocomplete in a POST form › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1519,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1519
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an editor in a POST form › frame-inside: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 2066,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2066
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an editor in a POST form › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2176,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2176
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "an editor in a POST form › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2731,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2731
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a markdown editor in a POST form › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1974,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1974
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a markdown editor in a POST form › stream-replace: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1305,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1305
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a markdown editor in a POST form › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1592,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1592
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropzone in a POST form › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1608,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1608
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropzone in a POST form › frame-advance: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1667,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1667
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropzone in a POST form › stream-rest: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1359,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1359
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "tabs (the selected tab) › back: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1533,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1533
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "tabs (the selected tab) › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1514,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1514
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropdown left open › forward: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1421,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1421
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropdown left open › stream-update: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1191,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1191
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a dropdown left open › live: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1933,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1933
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a popover left open › back: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1341,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1341
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a modal left open › forward: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1602,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1602
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a modal left open › stream-update: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1424,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1424
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a modal left open › live: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2470,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2470
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a drawer left open › frame-advance: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1744,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1744
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a drawer left open › stream-replace: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1219,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1219
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a drawer left open › stream-update: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1199,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1199
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a drawer left open › live: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1833,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1833
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a side-nav branch opened › forward: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1551,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1551
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a side-nav branch opened › stream-update: fresh, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1625,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1625
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "the theme toggle › frame-inside: fresh, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1400,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1400
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "the theme toggle › stream-replace: fresh, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1457,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1457
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "the theme toggle › live: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1921,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1921
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a data table form edited and not applied (data-table) › back: url, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1336,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1336
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table page (data-table-live, in the URL) › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1794,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1794
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table selection (data-table-live) › forward: reset, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1744,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1744
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table selection (data-table-live) › frame-outside: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 1804,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1804
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table selection (data-table-live) › stream-replace: fresh, shows it rendered",
+      "outcome": "passed",
+      "durationMs": 1507,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1507
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/lab.value-matrix.spec.ts",
+      "line": 915,
+      "title": "a Live data table selection (data-table-live) › permanent: kept, shows it changed",
+      "outcome": "passed",
+      "durationMs": 2392,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2392
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/markdown-editor.spec.ts",
+      "line": 13,
+      "title": "the preview tab renders the Markdown on the server, and Write comes back to the textarea",
+      "outcome": "passed",
+      "durationMs": 1336,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1336
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 50,
+      "title": "toggle knob: animates only what it names, and nothing under reduced motion",
+      "outcome": "passed",
+      "durationMs": 1579,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1579
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 50,
+      "title": "toast fade: animates only what it names, and nothing under reduced motion",
+      "outcome": "passed",
+      "durationMs": 1351,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1351
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 90,
+      "title": "every animation in spinner/spinner-with-card is slowed under reduced motion",
+      "outcome": "passed",
+      "durationMs": 995,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        995
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 90,
+      "title": "every animation in spinner/buttons is slowed under reduced motion",
+      "outcome": "passed",
+      "durationMs": 977,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        977
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 114,
+      "title": "a toast closed with no-preference motion leaves the DOM",
+      "outcome": "passed",
+      "durationMs": 1358,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1358
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 122,
+      "title": "a modal opened and closed with no-preference motion updates its trigger and hides",
+      "outcome": "passed",
+      "durationMs": 1453,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1453
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 224,
+      "title": "a modal whose backdrop runs an endless animation of its own still closes",
+      "outcome": "passed",
+      "durationMs": 1192,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1192
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/motion.spec.ts",
+      "line": 254,
+      "title": "under reduced motion a closed toast leaves the DOM at once, without waiting for a fade",
+      "outcome": "passed",
+      "durationMs": 1011,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1011
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/popover.spec.ts",
+      "line": 67,
+      "title": "the trigger does not submit a surrounding form",
+      "outcome": "passed",
+      "durationMs": 1108,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1108
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/smoke.spec.ts",
+      "line": 26,
+      "title": "unknown recipes are 404",
+      "outcome": "passed",
+      "durationMs": 760,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        760
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/smoke.spec.ts",
+      "line": 124,
+      "title": "the page guard › the same messages after a navigation that left the document in place: reported",
+      "outcome": "passed",
+      "durationMs": 1153,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1153
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/smoke.spec.ts",
+      "line": 201,
+      "title": "the page guard › Turbo's prefetch failing after a full load cancelled another prefetch request: reported",
+      "outcome": "passed",
+      "durationMs": 1868,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1868
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/smoke.spec.ts",
+      "line": 265,
+      "title": "the page guard › Turbo's prefetch cancelled by window.stop(), no navigation: reported",
+      "outcome": "passed",
+      "durationMs": 1217,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1217
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 61,
+      "title": "system light, dark choice saved › the system switching to dark is ignored",
+      "outcome": "passed",
+      "durationMs": 1604,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1604
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 68,
+      "title": "system light, dark choice saved › the toggle switches the theme, saves it, and the choice holds across a Turbo visit, Back and a reload",
+      "outcome": "passed",
+      "durationMs": 2365,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2365
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 55,
+      "title": "system dark, dark choice saved › shows the expected theme from the first paint",
+      "outcome": "passed",
+      "durationMs": 1569,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1569
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 126,
+      "title": "a switch › by the system runs no color transition",
+      "outcome": "passed",
+      "durationMs": 1313,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1313
+      ]
+    },
+    {
+      "project": "smoke",
+      "file": "tests/e2e/theme-toggle.spec.ts",
+      "line": 154,
+      "title": "a switch › leaves a transition already running to finish on its own",
+      "outcome": "passed",
+      "durationMs": 1316,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1316
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "alert/borders light",
+      "outcome": "passed",
+      "durationMs": 1400,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1400
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "alert/border-accent dark",
+      "outcome": "passed",
+      "durationMs": 1328,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1328
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "avatar/placeholder light",
+      "outcome": "passed",
+      "durationMs": 1157,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1157
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "avatar/avatar-with-text light",
+      "outcome": "passed",
+      "durationMs": 1145,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1145
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "avatar/user-dropdown light",
+      "outcome": "passed",
+      "durationMs": 1236,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1236
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "avatar/sizes dark",
+      "outcome": "passed",
+      "durationMs": 1235,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1235
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "badge/default light",
+      "outcome": "passed",
+      "durationMs": 1215,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1215
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "badge/badges-as-link light",
+      "outcome": "passed",
+      "durationMs": 1304,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1304
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "badge/badges-with-icon light",
+      "outcome": "passed",
+      "durationMs": 1445,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1445
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "button/default dark",
+      "outcome": "passed",
+      "durationMs": 1309,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1309
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "button/button-pills light",
+      "outcome": "passed",
+      "durationMs": 1386,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1386
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "button/button-with-icon dark",
+      "outcome": "passed",
+      "durationMs": 1309,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1309
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "button/loader-button dark",
+      "outcome": "passed",
+      "durationMs": 1520,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1520
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "button-group/default dark",
+      "outcome": "passed",
+      "durationMs": 1341,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1341
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "button-group/size dark",
+      "outcome": "passed",
+      "durationMs": 1232,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1232
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "calendar/locale-and-right-to-left light",
+      "outcome": "passed",
+      "durationMs": 1205,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1205
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "card/card-with-form-inputs light",
+      "outcome": "passed",
+      "durationMs": 1165,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1165
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "card/card-with-form-inputs dark",
+      "outcome": "passed",
+      "durationMs": 1200,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1200
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "chart/default dark",
+      "outcome": "passed",
+      "durationMs": 1443,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1443
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "chart/in-a-card-with-its-table-shown dark",
+      "outcome": "passed",
+      "durationMs": 1317,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1317
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "checkbox/default dark",
+      "outcome": "passed",
+      "durationMs": 1162,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1162
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "checkbox/bordered light",
+      "outcome": "passed",
+      "durationMs": 1256,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1256
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "checkbox/bordered dark",
+      "outcome": "passed",
+      "durationMs": 1179,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1179
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "data-table/default light",
+      "outcome": "passed",
+      "durationMs": 1186,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1186
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "data-table/default dark",
+      "outcome": "passed",
+      "durationMs": 1302,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1302
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "data-table-live/default light",
+      "outcome": "passed",
+      "durationMs": 1200,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1200
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "date-picker/range light",
+      "outcome": "passed",
+      "durationMs": 1355,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1355
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "drawer/default dark",
+      "outcome": "passed",
+      "durationMs": 1353,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1353
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "dropdown/dropdown-hover light",
+      "outcome": "passed",
+      "durationMs": 1440,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1440
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "dropdown/delay-duration dark",
+      "outcome": "passed",
+      "durationMs": 1346,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1346
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "dropdown/placement light",
+      "outcome": "passed",
+      "durationMs": 1439,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1439
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "dropzone/default dark",
+      "outcome": "passed",
+      "durationMs": 1356,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1356
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "dropzone/hint-and-accepted-types light",
+      "outcome": "passed",
+      "durationMs": 1457,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1457
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "dropzone/custom-content light",
+      "outcome": "passed",
+      "durationMs": 1367,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1367
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "editor/default dark",
+      "outcome": "passed",
+      "durationMs": 1624,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1624
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "editor/invalid light",
+      "outcome": "passed",
+      "durationMs": 1649,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1649
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "editor/read-only dark",
+      "outcome": "passed",
+      "durationMs": 1909,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1909
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "empty-state/default light",
+      "outcome": "passed",
+      "durationMs": 1255,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1255
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "forgot-password/default light",
+      "outcome": "passed",
+      "durationMs": 1135,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1135
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "input/default dark",
+      "outcome": "passed",
+      "durationMs": 1064,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1064
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "input/disabled dark",
+      "outcome": "passed",
+      "durationMs": 1038,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1038
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "input/invalid light",
+      "outcome": "passed",
+      "durationMs": 1042,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1042
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "input/with-button dark",
+      "outcome": "passed",
+      "durationMs": 1100,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1100
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "kbd/default dark",
+      "outcome": "passed",
+      "durationMs": 1048,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1048
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "label/default light",
+      "outcome": "passed",
+      "durationMs": 1028,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1028
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "markdown-editor/default light",
+      "outcome": "passed",
+      "durationMs": 1046,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1046
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "markdown-editor/invalid dark",
+      "outcome": "passed",
+      "durationMs": 1049,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1049
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "modal/pop-up-modal dark",
+      "outcome": "passed",
+      "durationMs": 1022,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1022
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "modal/opened-by-default dark",
+      "outcome": "passed",
+      "durationMs": 1010,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1010
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "nav-menu/default dark",
+      "outcome": "passed",
+      "durationMs": 1020,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1020
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "nav-menu/in-a-mobile-nav light",
+      "outcome": "passed",
+      "durationMs": 1288,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1288
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "navbar/default dark",
+      "outcome": "passed",
+      "durationMs": 1136,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1136
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "pagination/default light",
+      "outcome": "passed",
+      "durationMs": 1230,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1230
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "popover/placements light",
+      "outcome": "passed",
+      "durationMs": 1127,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1127
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "popover/a-group light",
+      "outcome": "passed",
+      "durationMs": 1110,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1110
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "radio/default light",
+      "outcome": "passed",
+      "durationMs": 1119,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1119
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "section-nav/default dark",
+      "outcome": "passed",
+      "durationMs": 1062,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1062
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "select/multiple dark",
+      "outcome": "passed",
+      "durationMs": 1082,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1082
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "select/disabled-state light",
+      "outcome": "passed",
+      "durationMs": 1108,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1108
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "settings-profile/default dark",
+      "outcome": "passed",
+      "durationMs": 1188,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1188
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "side-nav/default light",
+      "outcome": "passed",
+      "durationMs": 1137,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1137
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "signup/default light",
+      "outcome": "passed",
+      "durationMs": 1286,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1286
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "skeleton/card-placeholder light",
+      "outcome": "passed",
+      "durationMs": 1380,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1380
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "spinner/progress-spinner dark",
+      "outcome": "passed",
+      "durationMs": 1274,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1274
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "spinner/buttons light",
+      "outcome": "passed",
+      "durationMs": 1173,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1173
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "table/default dark",
+      "outcome": "passed",
+      "durationMs": 1155,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1155
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "table/without-border light",
+      "outcome": "passed",
+      "durationMs": 1213,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1213
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "tabs/default light",
+      "outcome": "passed",
+      "durationMs": 1321,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1321
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "tabs/pills-tabs dark",
+      "outcome": "passed",
+      "durationMs": 1063,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1063
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "tabs/vertical dark",
+      "outcome": "passed",
+      "durationMs": 1023,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1023
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "textarea/wysiwyg-editor dark",
+      "outcome": "passed",
+      "durationMs": 1052,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1052
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "textarea/chatroom-input light",
+      "outcome": "passed",
+      "durationMs": 1259,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1259
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "toggle/disabled dark",
+      "outcome": "passed",
+      "durationMs": 1108,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1108
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/examples.spec.ts",
+      "line": 13,
+      "title": "tooltip/default dark",
+      "outcome": "passed",
+      "durationMs": 1056,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1056
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example alert/alerts-with-icon fits",
+      "outcome": "passed",
+      "durationMs": 1154,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1154
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example alert/dismissing fits",
+      "outcome": "passed",
+      "durationMs": 1096,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1096
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example avatar/bordered fits",
+      "outcome": "passed",
+      "durationMs": 977,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        977
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example avatar/sizes fits",
+      "outcome": "passed",
+      "durationMs": 977,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        977
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example badge/pill-badges fits",
+      "outcome": "passed",
+      "durationMs": 1200,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1200
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example badge/badges-with-icon fits",
+      "outcome": "passed",
+      "durationMs": 1072,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1072
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example button/default fits",
+      "outcome": "passed",
+      "durationMs": 988,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        988
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example button-group/size fits",
+      "outcome": "passed",
+      "durationMs": 974,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        974
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example calendar/default fits",
+      "outcome": "passed",
+      "durationMs": 1077,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1077
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example calendar/several-dates fits",
+      "outcome": "passed",
+      "durationMs": 1050,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1050
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example card/default fits",
+      "outcome": "passed",
+      "durationMs": 1020,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1020
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example chart/horizontal-bars fits",
+      "outcome": "passed",
+      "durationMs": 1235,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1235
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example checkbox/disabled fits",
+      "outcome": "passed",
+      "durationMs": 1035,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1035
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example date-picker/date-of-birth fits",
+      "outcome": "passed",
+      "durationMs": 998,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        998
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example drawer/default fits",
+      "outcome": "passed",
+      "durationMs": 999,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        999
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example dropdown/dropdown-hover fits",
+      "outcome": "passed",
+      "durationMs": 949,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        949
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example dropdown/with-icon fits",
+      "outcome": "passed",
+      "durationMs": 1127,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1127
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example dropzone/hint-and-accepted-types fits",
+      "outcome": "passed",
+      "durationMs": 1099,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1099
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example editor/invalid fits",
+      "outcome": "passed",
+      "durationMs": 1377,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1377
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example forgot-password/default fits",
+      "outcome": "passed",
+      "durationMs": 1039,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1039
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example input/default fits",
+      "outcome": "passed",
+      "durationMs": 1098,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1098
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example input/with-button fits",
+      "outcome": "passed",
+      "durationMs": 1097,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1097
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example login/default fits",
+      "outcome": "passed",
+      "durationMs": 1049,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1049
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example markdown-editor/read-only fits",
+      "outcome": "passed",
+      "durationMs": 1086,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1086
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example modal/pop-up-modal fits",
+      "outcome": "passed",
+      "durationMs": 1044,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1044
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example navbar/default fits",
+      "outcome": "passed",
+      "durationMs": 1061,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1061
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example pagination/default fits",
+      "outcome": "passed",
+      "durationMs": 1227,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1227
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example progress/default fits",
+      "outcome": "passed",
+      "durationMs": 1216,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1216
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example section-nav/always-a-row fits",
+      "outcome": "passed",
+      "durationMs": 1109,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1109
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example select/multiple fits",
+      "outcome": "passed",
+      "durationMs": 1111,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1111
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example signup/default fits",
+      "outcome": "passed",
+      "durationMs": 1081,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1081
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example spinner/size fits",
+      "outcome": "passed",
+      "durationMs": 1073,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1073
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example spinner/buttons fits",
+      "outcome": "passed",
+      "durationMs": 1091,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1091
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example table/highlight-striped fits",
+      "outcome": "passed",
+      "durationMs": 1109,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1109
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example tabs/tabs-with-icons fits",
+      "outcome": "passed",
+      "durationMs": 1300,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1300
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example textarea/comment-box fits",
+      "outcome": "passed",
+      "durationMs": 1226,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1226
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 43,
+      "title": "a phone, 390px wide › the README example toast/default fits",
+      "outcome": "passed",
+      "durationMs": 1142,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1142
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 54,
+      "title": "a small phone, 320px wide › the navbar keeps its brand, search and actions inside the bar",
+      "outcome": "passed",
+      "durationMs": 1302,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1302
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 83,
+      "title": "768px wide › the stat cards of the dashboard hold their values",
+      "outcome": "passed",
+      "durationMs": 1381,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1381
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 83,
+      "title": "1024px wide › the stat cards of the dashboard hold their values",
+      "outcome": "passed",
+      "durationMs": 1321,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1321
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fit.spec.ts",
+      "line": 83,
+      "title": "1024px wide › the stat cards of the stat card example hold their values",
+      "outcome": "passed",
+      "durationMs": 1121,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1121
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/pages.spec.ts",
+      "line": 16,
+      "title": "desktop › settings-billing › settings-billing desktop",
+      "outcome": "passed",
+      "durationMs": 1169,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1169
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/pages.spec.ts",
+      "line": 16,
+      "title": "mobile › settings-profile › settings-profile mobile",
+      "outcome": "passed",
+      "durationMs": 1113,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1113
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/pages.spec.ts",
+      "line": 16,
+      "title": "mobile › not-found › not-found mobile",
+      "outcome": "passed",
+      "durationMs": 1038,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1038
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fixtures.ts",
+      "line": 129,
+      "title": "flowbite-4/alert › hides an alert when its close button is clicked (dark)",
+      "outcome": "passed",
+      "durationMs": 1245,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1245
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "drawer/tests/drawer.spec.ts",
+      "line": 84,
+      "title": "flowbite-4/drawer › stays closed after being moved in the DOM once closed, though rendered open",
+      "outcome": "passed",
+      "durationMs": 1194,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1194
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fixtures.ts",
+      "line": 129,
+      "title": "flowbite-4/dropdown › opens on hover (dark)",
+      "outcome": "passed",
+      "durationMs": 1508,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1508
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fixtures.ts",
+      "line": 129,
+      "title": "uxor/dropzone › shows a picked image (dark)",
+      "outcome": "passed",
+      "durationMs": 1164,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1164
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fixtures.ts",
+      "line": 129,
+      "title": "flowbite-4/modal › opens on click (dark)",
+      "outcome": "passed",
+      "durationMs": 1073,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1073
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fixtures.ts",
+      "line": 129,
+      "title": "flowbite-4/modal › stays modal after being moved in the DOM (light)",
+      "outcome": "passed",
+      "durationMs": 1174,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1174
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "modal/tests/modal.spec.ts",
+      "line": 76,
+      "title": "flowbite-4/modal › closes on Escape and gives focus back to the trigger",
+      "outcome": "passed",
+      "durationMs": 1117,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1117
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "modal/tests/modal.spec.ts",
+      "line": 109,
+      "title": "flowbite-4/modal › closes on a click on the backdrop",
+      "outcome": "passed",
+      "durationMs": 1036,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1036
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "modal/tests/modal.spec.ts",
+      "line": 121,
+      "title": "flowbite-4/modal › keeps its state in sync over several openings",
+      "outcome": "passed",
+      "durationMs": 1202,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1202
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fixtures.ts",
+      "line": 129,
+      "title": "flowbite-4/tabs › selects a pill on click (light)",
+      "outcome": "passed",
+      "durationMs": 1130,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1130
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tests/e2e/examples/fixtures.ts",
+      "line": 129,
+      "title": "flowbite-4/tabs › shows the panel of a clicked tab in a vertical list (light)",
+      "outcome": "passed",
+      "durationMs": 1170,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1170
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tabs/tests/tabs.spec.ts",
+      "line": 69,
+      "title": "flowbite-4/tabs › selects a tab with Enter and Space",
+      "outcome": "passed",
+      "durationMs": 1073,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1073
+      ]
+    },
+    {
+      "project": "examples",
+      "file": "tabs/tests/tabs.spec.ts",
+      "line": 82,
+      "title": "flowbite-4/tabs › keeps the disabled tab out of reach",
+      "outcome": "passed",
+      "durationMs": 1121,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        1121
+      ]
+    }
+  ]
+}

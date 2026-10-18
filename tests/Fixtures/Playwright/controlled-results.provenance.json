@@ -187,7 +187,7 @@
   },
   "limitations": [
     "Controlled local producer run with deliberately induced outcomes; not a UXor CI run artifact and not evidence about UXor, Xorgate or any managed project.",
-    "Genuine UXor retry-recovered and red CI run artifacts are still required for acceptance item 1 of issue #4; GitHub API access to xormania/uxor artifacts was not granted in this session.",
+    "This is a controlled local producer run. Genuine UXor CI artifacts for a retry-recovered run, a red run and a setup failure are retained separately under tests/Fixtures/Playwright/uxor-ci/ with their own provenance.",
     "No provider, run, attempt or job metadata exists for a local run; these stay null.",
     "The browser binary was the preinstalled Chromium build, not the one bundled with Playwright 1.58.2; only one test drives the page.",
     "Shard 2/2 (the companion project) was not run; the report covers shard 1/2 only and holds no expectation of what shard 2 contains.",

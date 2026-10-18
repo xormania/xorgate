@@ -1,43 +1,128 @@
 # Playwright producer fixtures
 
-These fixtures preserve output from controlled local Playwright runs and from
-UXor's real CI tools run locally on that output. Each fixture has a neighboring
-`<stem>.provenance.json` that records the exact command, environment, versions,
-exit status, timestamps, original and retained SHA-256 and byte counts, and any
-redaction. Missing provider, run, attempt, job or commit metadata stays null.
+This directory holds two kinds of fixture, kept apart:
 
-**These are controlled local producer runs, not UXor CI run artifacts.** The
-outcomes are deliberately induced by the specs in `producer/`; they say nothing
-about UXor, Xorgate or any managed project. Fixture reports are not application
-seed data and make no coverage claim.
+- `uxor-ci/`: genuine UXor GitHub Actions artifacts, retained byte for byte
+  (described below). Each shard directory has one `provenance.json`.
+- The `controlled-*`, `global-error-*` and `not-reached-*` files: output from
+  controlled local Playwright runs and from UXor's real CI tools run locally on
+  that output. Each has a neighboring `<stem>.provenance.json` that records the
+  exact command, environment, versions, exit status, timestamps, original and
+  retained SHA-256 and byte counts, and any redaction. Missing provider, run,
+  attempt, job or commit metadata stays null.
 
-## Still required: genuine UXor CI artifacts
+**The controlled files are controlled local producer runs, not UXor CI run
+artifacts.** Their outcomes are deliberately induced by the specs in
+`producer/`; they say nothing about UXor, Xorgate or any managed project.
+No fixture here is application seed data, and none makes a coverage claim.
 
-Acceptance item 1 of issue #4 (WO-003) needs imports of a genuine UXor
-retry-recovered (green, with a failed first attempt) run and a genuine red run.
-Those artifacts could not be downloaded in this session: GitHub API access to
-`xormania/uxor` artifacts was not granted. Nothing here stands in for them.
+## Genuine UXor CI artifacts: `uxor-ci/`
 
-To obtain them later, from the `demo` job (`Demo + Playwright (<browser>
-<shard>/<shards>)`) of UXor's `.github/workflows/ci.yml`:
+Three demo shards of UXor's `.github/workflows/ci.yml` (job `demo`, named
+`Demo + Playwright (<browser> <shard>/<shards>)`), retrieved on 2026-10-18
+through the GitHub REST API for `xormania/uxor`:
 
-- `playwright-results-<browser>-<shard>`: the shard's `playwright-results/`
-  directory, uploaded green or red, retained 30 days. It holds `results.json`,
-  `failed-attempts.json`, `durations.json`, `job-metrics.json`,
-  `shard-plan.json` and `summary.md`.
-- `jev-<browser>-<shard>-<run_id>-<run_attempt>`: uploaded when the shard had a
-  failed or flaky test, retained 30 days. It holds
-  `attempts/<NN>-<slug>/assessment.json` per failed attempt and `summary.md`.
-- `playwright-report-<browser>-<shard>` (HTML report and traces, 7 days) is
-  optional context, not an input of these adapters.
+| Directory | Run / attempt | Branch, head SHA | Job | Run and job conclusion |
+| --- | --- | --- | --- | --- |
+| `38195645868-1-chromium-3` (retry-recovered) | [38195645868](https://github.com/xormania/uxor/actions/runs/38195645868) / 1 | `main`, `9b2fa7309786cee435503de87cf0cd5f0a9d9782` | `114637652679` `Demo + Playwright (chromium 3/4)` | success, success |
+| `38135099353-1-webkit-3` (red) | [38135099353](https://github.com/xormania/uxor/actions/runs/38135099353) / 1 | `dev`, `71f7dffe771b932e3158026146db093f7bc9bb50` | `114457320257` `Demo + Playwright (webkit 3/3)` | failure, failure (step `Playwright (smoke + every README example + upstream recipe specs)`) |
+| `38122728519-1-chromium-3` (setup failure) | [38122728519](https://github.com/xormania/uxor/actions/runs/38122728519) / 1 | `claude/release-security`, `f932602c4bde5c02c2295826c1fb121d2d67dbd8` | `114420959828` `Demo + Playwright (chromium 3/4)` | failure, failure (step `Plan the shard's tests`; the Playwright step was skipped) |
 
-Pick one run whose shard was green with `flaky > 0` and one red run. Record, per
-artifact: repository, run id, run attempt, job id and name, head SHA and branch,
-workflow path at that SHA, the artifact id, name, `archive_download_url` and
-the ZIP SHA-256 verified against GitHub's artifact `digest`, `created_at` and
-`expires_at`, each extracted file's bytes and SHA-256, and any redaction (as
-the JUnit fixtures do). Keep `config.rootDir` and other runner paths only in a
-symbolic form, and check that no credential or token is present.
+Artifacts, each ZIP's SHA-256 computed after download and equal to the
+artifact `digest` GitHub reports:
+
+| Directory | Artifact id, name | ZIP bytes | ZIP SHA-256 | Expires |
+| --- | --- | --- | --- | --- |
+| `38195645868-1-chromium-3` | `11723661692` `playwright-results-chromium-3` | 74,272 | `5d8bf8d1dccefc50606fdac474e61154d82e0ea3f87b604efe3d3b27da1909be` | 2026-11-11 |
+| `38195645868-1-chromium-3/jev` | `11723223196` `jev-chromium-3-38195645868-1` | 3,400 | `fa8471c710bd247d821fc345c6801aa88db9e95324c8611ad9a89039af1ea1a6` | 2026-11-11 |
+| `38135099353-1-webkit-3` | `11700763009` `playwright-results-webkit-3` | 52,733 | `89280abc29024210276d96929d853fbe669cba4f4f85120d3b13bce3b8ebe477` | 2026-11-10 |
+| `38135099353-1-webkit-3/jev` | `11700967630` `jev-webkit-3-38135099353-1` | 6,559 | `9a7fa8047c98aa5c74cadda61c51264127ad59146c7dda4968bfb1531099bd49` | 2026-11-10 |
+| `38122728519-1-chromium-3` | `11696026781` `playwright-results-chromium-3` | 1,805 | `1cf29d079272600efbceeb0800b4f88d98887d75e37a5d522eed27995d58c5a4` | 2026-11-10 |
+
+From each `playwright-results-*` artifact, `results.json`,
+`failed-attempts.json`, `durations.json` and `summary.md` are retained; from
+each `jev-*` artifact, every `attempts/<NN>-<slug>/assessment.json` and its
+`summary.md` (under `jev/`, same relative paths). The setup-failure artifact
+has no `results.json` and no Jev artifact exists for it. Retained bytes equal the
+extracted files: no redaction, no reformatting, runner paths such as
+`/home/runner/work/uxor/uxor` included. `job-metrics.json` and
+`shard-plan.json` (where present) were not retained; their bytes and SHA-256 are recorded in
+`provenance.json` with every other file's. A case-insensitive search for
+`TYPESAFE`, `token`, `ghp_`, `Bearer`, `password`, `secret`, `api_key`,
+`authorization` and `credential` found no credential: the assessments'
+`policy.connection.credential` reads `[REDACTED]` as UXor's tool writes it,
+`input_tokens`/`output_tokens` are usage counts, and the other matches are
+test titles (`forgot-password`) and rendered documentation text.
+
+**Retry-recovered shard, chromium 3/4.** Playwright `1.58.2`, workers 2. The
+report lists six configured projects; this shard ran tests of `smoke` (296)
+and `examples` (131). 427 tests and 428 results; `stats` expected 426, flaky 1,
+unexpected 0, skipped 0; no global errors. The flaky test is
+`[smoke] tests/e2e/editor.spec.ts:105 › the link dialog sets allowed links,
+refuses other schemes, and removes links`: retry 0 `failed` (an
+`expect(...).toBe` mismatch, two attachments), retry 1 `passed`.
+`failed-attempts.json` (schema 1, status `valid`, shard `chromium 3/4`) has
+counts passed 426, failed 0, flaky 1, skipped 0 and lists that one retry-0
+attempt. Its Jev assessment (model `jev-1.13.0`, status `assessed`) answers
+`product_defect` with confidence 0.60, below the 0.65 threshold, so
+`likely_cause` is `unknown`. The retry is Playwright's in-job retry: the
+workflow run has one attempt and concluded success.
+
+**Red shard, webkit 3/3.** Playwright `1.58.2`, workers 2. Projects
+`smoke-webkit` (243) and `examples-webkit` (8); 251 tests, 252 results;
+`stats` expected 250, unexpected 1, flaky 0, skipped 0; no global errors. The
+unexpected test is `[smoke-webkit] tests/e2e/demo-app.spec.ts:298 › every page
+of the gallery and of the demo names an icon, so a browser asks for no
+/favicon.ico`: retries 0 and 1 both `failed` (failed requests reported by the
+page). `failed-attempts.json` (status `valid`, shard `webkit 3/3`) has counts
+passed 250, failed 1, flaky 0, skipped 0 and lists both attempts; there is
+one Jev assessment per attempt, both `assessed` with `likely_cause` `unknown`.
+No not-reached reason applies: this is a test failure, not a setup failure.
+
+**Setup failure, chromium 3/4.** Every demo shard of run `38122728519`
+failed at `Plan the shard's tests`, so Playwright never ran and wrote no
+`results.json`. `failed-attempts.json` and `durations.json` (schema 1) have
+status `not-reached`; the former's reason is `tests not reached: setup failed
+at Plan the shard's tests`, `counts` null, no tests or attempts; the latter
+names `unavailable` `no report`. No Jev step ran (nothing failed in a test).
+This is a feature-branch merge commit, not `dev` or `main`.
+
+Neither retained `results.json` has `config.shard`: UXor ran each shard from its own
+timing plan (`shard-plan.json` mode `timings`, Playwright `--test-list`), so
+only the UXor summaries name the shard label.
+
+How they were found: completed `ci.yml` runs were listed newest first and
+every non-cancelled run's artifacts listed (226 runs). Retry-recovered
+candidates were runs that uploaded a `jev-*` or `playwright-report-*` artifact
+and concluded success; their `failed-attempts.json` counts were read. Run
+`38195645868` was chosen because it is on `main`, at the UXor revision the
+controlled tool outputs used, and carries its Jev assessment. Two other
+genuine flaky-only shards were inspected and not retained: run `38208156925`
+(dev) chromium 4/4, and run `39115566914` (dev) attempt 2 webkit 3/3, whose
+`jev-input-ci-*` artifact holds only Jev input (no assessment: the
+`jev.yml` consumer is not on UXor's default branch). Both attempts of
+`39115566914` concluded success; it is a re-run, not a red first attempt.
+Within the 30-day window no demo shard with status `not-reached`, `missing`
+or `invalid` was found on `dev` or `main`. Of the failed runs, `39125095760`,
+`38667295346` and `38666790905` failed outside the demo job and
+`39116712390` and `38343316481` only in `CI result`; `38633205140` and
+`38121815655`, `38097472226` and `38135099353` (above) failed in the
+Playwright step; `38122728519` (above) was the only failed run whose demo
+shards failed before the tests (failing steps read from the jobs API).
+
+What these files support: a genuine green run whose first attempt of a test
+failed keeps both attempts and the `flaky` verdict; a genuine red run keeps
+its unexpected failure distinct from expected results; UXor's genuine
+`failed-attempts.json` and Jev assessments link to exact native attempts
+without adding attempts; a genuine Jev assessment is readable without calling
+Jev; no shard number or completeness is claimed when the native report names
+none; a genuine setup failure is visible as a `not-reached` producer status
+with no counts and no attempts. What they do not support: a genuine missing
+or invalid report status, a missing shard, global errors, the HTML report, traces or
+server logs (not retained), the other shards of either run (only one shard
+of ten is retained per run; each retained run uploaded all ten
+`playwright-results-*` artifacts), or any claim about UXor's overall test coverage.
+Those remain covered only by the controlled fixtures, or not at all.
 
 ## Controlled run: `controlled-results.json`
 

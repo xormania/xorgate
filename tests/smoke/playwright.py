@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Verify Playwright attempts, derived annotations and bounded log windows through the running UI, MCP and CLI.
 
-The fixtures are controlled producer output and UXor tool-derived files (tests/Fixtures/Playwright). They are
-not genuine UXor CI artifacts; that acceptance item remains open.
+The controlled fixtures are local producer output and UXor tool-derived files (tests/Fixtures/Playwright). The
+genuine step imports exact UXor GitHub Actions artifacts of one retry-recovered shard (tests/Fixtures/Playwright/uxor-ci,
+with its provenance.json) into a separate execution.
 """
 
 import argparse
 import base64
+import hashlib
 import json
 import os
 import subprocess
@@ -31,6 +33,16 @@ IMPORTS = [
     ("durations", "controlled-durations.json", "playwright-durations", "application/json"),
     ("not_reached", "not-reached-failed-attempts.json", "playwright-failed-attempts", "application/json"),
     ("log", "controlled-server.log", "text-log", "text/plain"),
+]
+# Genuine UXor CI run 38195645868 attempt 1 (main, green), shard chromium 3/4: one test failed on retry 0 and passed on
+# retry 1. Three imports, each waited for, keep within the one-pending limit and the per-minute admission budget.
+GENUINE = FIXTURES / "uxor-ci" / "38195645868-1-chromium-3"
+GENUINE_SHA = "9b2fa7309786cee435503de87cf0cd5f0a9d9782"
+GENUINE_FLAKY = "the link dialog sets allowed links, refuses other schemes, and removes links"
+GENUINE_IMPORTS = [
+    ("native", "results.json", "playwright-json"),
+    ("failed", "failed-attempts.json", "playwright-failed-attempts"),
+    ("jev", "jev/attempts/01-smoke-editor-retry0/assessment.json", "jev-assessment"),
 ]
 
 
@@ -102,6 +114,73 @@ def paged(client, tool, arguments, limit):
     raise RuntimeError(f"{tool} exceeded the smoke's bounded page count")
 
 
+def submit_genuine(client, project):
+    execution = client.tool("xorgate_execution_record", {"projectId": project["project_id"], "input": {
+        "request_id": str(uuid.uuid4()), "source": {"tested_revision": GENUINE_SHA},
+        "environment": {"name": "UXor CI Demo + Playwright (chromium 3/4)", "runtimes": ["Node.js"]},
+        "producer": {"name": "Playwright (genuine UXor GitHub Actions artifact, run 38195645868 attempt 1)"}}})
+    state = {"project": project, "execution": execution, "operations": {}}
+    ids = scope(state)
+    for slot, name, format_name in GENUINE_IMPORTS:
+        path = GENUINE / name
+        require(path.is_file(), f"Genuine UXor CI artifact is absent: {path}")
+        metadata = {"request_id": str(uuid.uuid4()), "report_role": "genuine-" + slot, "format": format_name,
+                    "filename": path.name, "media_type": "application/json", "source": execution["source"]}
+        size = path.stat().st_size
+        if size <= INLINE_LIMIT:
+            operation_id = client.tool("xorgate_report_submit", ids | {"input": metadata, "contentBase64": base64.b64encode(path.read_bytes()).decode()})["operation_id"]
+        else:
+            # Over the inline limit: the CLI streams the file from the checkout mounted in the php container.
+            operation_id = cli("xorgate:report:submit", ids["projectId"], ids["executionId"], "--input=-", f"--file=/app/{path}", input_value=metadata)["operation_id"]
+        completed = wait(client, ids, operation_id)
+        require(completed["format"] == format_name and completed["parser"]["name"] == format_name, "Genuine import did not record its installed adapter")
+        require(completed["artifact"]["bytes"] == size and completed["artifact"]["sha256"] == hashlib.sha256(path.read_bytes()).hexdigest(),
+                "Genuine import did not retain the exact artifact bytes")
+        state["operations"][slot] = completed
+    for slot, current in list(state["operations"].items()):
+        state["operations"][slot] = client.tool("xorgate_operation_get", ids | {"operationId": current["operation_id"]})
+    return state
+
+
+def verify_genuine(client, state, persisted=None):
+    ids = scope(state)
+    operations = state["operations"]
+    for slot, stored in operations.items():
+        current = client.tool("xorgate_operation_get", ids | {"operationId": stored["operation_id"]})
+        require(current == stored, f"Durable genuine {slot} operation changed")
+        require(cli("xorgate:operation:get", ids["projectId"], ids["executionId"], stored["operation_id"]) == current, f"MCP and CLI genuine {slot} operation disagree")
+    native = operations["native"]
+    require(native["parser_outcome"] in ("parsed", "partial") and native["summary"]["cases"] == 427 and native["attempt_count"] == 428,
+            "Genuine native report did not record 427 tests and 428 attempts")
+    require(native["summary"]["shard"] is None and native["summary"]["shard_completeness"]["status"] == "unknown",
+            "Genuine shard context was invented or completeness was claimed")
+    native_args = ids | {"operationId": native["operation_id"]}
+    attempts = paged(client, "xorgate_attempts_list", native_args, 100)
+    require(len(attempts) == 428 == len({a["attempt_key"] for a in attempts}), "Genuine attempts were duplicated or lost")
+    first = client.tool("xorgate_attempts_list", native_args | {"limit": 100})
+    require(cli("xorgate:attempts:list", ids["projectId"], ids["executionId"], native["operation_id"], "--limit=100") == first, "MCP and CLI genuine attempts disagree")
+    flaky = [a for a in attempts if a["case"]["native_outcome"] == "flaky"]
+    require([(a["case"]["name"], a["retry"], a["status"]) for a in flaky] == [(GENUINE_FLAKY, 0, "failed"), (GENUINE_FLAKY, 1, "passed")],
+            "The genuine failed first attempt did not survive beside its passing retry")
+    failed = operations["failed"]
+    require(failed["links"]["linked"] == 1 and failed["links"]["unmatched"] == 0 and failed["links"]["ambiguous"] == 0 and failed["attempt_count"] == 0,
+            "Genuine failed-attempt record was not linked exactly once")
+    annotations = client.tool("xorgate_annotations_list", ids | {"operationId": failed["operation_id"], "limit": 100})
+    require(cli("xorgate:annotations:list", ids["projectId"], ids["executionId"], failed["operation_id"], "--limit=100") == annotations, "MCP and CLI genuine annotations disagree")
+    records = [a for a in annotations["items"] if a["kind"] == "failed_attempt"]
+    require(len(records) == 1 and records[0]["match"]["status"] == "linked" and records[0]["match"]["target_attempt_key"] == flaky[0]["attempt_key"],
+            "Genuine failed-attempt record is not linked to the failed retry-0 attempt")
+    jev = [a for a in client.tool("xorgate_annotations_list", ids | {"operationId": operations["jev"]["operation_id"]})["items"] if a["kind"] == "jev_assessment"]
+    require(len(jev) == 1 and jev[0]["match"]["target_attempt_key"] == flaky[0]["attempt_key"] and jev[0]["data"]["status"] == "assessed",
+            "Genuine Jev assessment is not readable and linked to its attempt")
+    target = next(a for a in attempts if a["attempt_key"] == flaky[0]["attempt_key"])
+    require(target["annotation_count"] == 2, "Genuine attempt does not list its failed record and assessment once each")
+    observed = {"attempts": len(attempts), "flaky": [[a["retry"], a["status"]] for a in flaky], "annotations": annotations["items"]}
+    if persisted is not None:
+        require(observed == persisted, "Container restart changed genuine attempts or annotations")
+    return observed
+
+
 def submit(client, browser):
     listing = client.request("tools/list", {})
     names = {tool["name"] for tool in listing.get("tools", [])}
@@ -147,6 +226,7 @@ def submit(client, browser):
     # Linking may have changed earlier annotation imports; keep their final state.
     for slot, current in list(state["operations"].items()):
         state["operations"][slot] = client.tool("xorgate_operation_get", ids | {"operationId": current["operation_id"]})
+    state["genuine"] = submit_genuine(client, project)
     return state
 
 
@@ -239,9 +319,10 @@ def verify(client, browser, state, persisted=None):
             and page.state.get("data-xorgate-log-ends-mid-line") == ("true" if window["ends_mid_line"] else "false"), "UI log window offsets disagree with MCP")
     require("\x1b" not in html, "Log page passed raw terminal escapes to the browser")
 
+    genuine = verify_genuine(client, state["genuine"], persisted.get("genuine") if persisted is not None else None)
     if persisted is not None:
         require(attempts == persisted["attempts"] and annotations == persisted["annotations"], "Container restart changed attempts or annotations")
-    return {"attempts": attempts, "annotations": annotations}
+    return {"attempts": attempts, "annotations": annotations, "genuine": genuine}
 
 
 def main():
