@@ -44,14 +44,14 @@ final class PlaywrightFailedAttemptsAdapter implements ReportAdapterInterface
         if ('valid' !== $status) {
             $document->annotate('producer_status', [], ['status' => $status, 'reason' => $reason, 'shard_label' => $shardLabel]);
         }
-        foreach (JsonDocument::listOf($file['attempts'] ?? null) as $attempt) {
+        foreach ($document->entries($file['attempts'] ?? null) as $attempt) {
             if (!JsonDocument::isObject($attempt)) {
                 $document->limitation('native_structure_not_normalized', true);
                 continue;
             }
             $document->annotate('failed_attempt', self::target($document, $attempt), self::attemptData($document, $attempt));
         }
-        foreach (JsonDocument::listOf($file['globalErrors'] ?? null) as $error) {
+        foreach ($document->entries($file['globalErrors'] ?? null) as $error) {
             $errorTruncated = false;
             $document->annotate('global_error', [], ['message' => $document->message(is_string($error) ? $error : null, $errorTruncated), 'shard_label' => $shardLabel, 'truncated' => $errorTruncated]);
         }

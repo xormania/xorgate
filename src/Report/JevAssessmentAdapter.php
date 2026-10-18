@@ -135,6 +135,9 @@ final class JevAssessmentAdapter implements ReportAdapterInterface
         }
         $answers = [];
         $truncated = false;
+        if (count($response['answers']) > self::MAX_ANSWERS) {
+            $document->limitation('native_fields_truncated', true);
+        }
         foreach (array_slice($response['answers'], 0, self::MAX_ANSWERS, true) as $name => $answer) {
             $answer = JsonDocument::isObject($answer) ? $answer : [];
             $answers[] = [

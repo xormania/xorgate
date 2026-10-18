@@ -80,10 +80,10 @@ final class PlaywrightJsonState
         ];
         // A file suite's title is the file itself, not part of a test's title path (as UXor's summary names it).
         $childPath = 'file' === $kind ? $titlePath : [...$titlePath, $name ?? ''];
-        foreach (JsonDocument::listOf($suite['specs'] ?? null) as $spec) {
+        foreach ($this->document->entries($suite['specs'] ?? null) as $spec) {
             $this->spec($spec, $key, $childPath);
         }
-        foreach (JsonDocument::listOf($suite['suites'] ?? null) as $child) {
+        foreach ($this->document->entries($suite['suites'] ?? null) as $child) {
             $this->suite($child, $key, $childPath, 'describe');
         }
     }
@@ -98,7 +98,7 @@ final class PlaywrightJsonState
         if ([] !== JsonDocument::listOf($spec['tags'] ?? null)) {
             $this->document->limitation('native_metadata_not_normalized', false);
         }
-        foreach (JsonDocument::listOf($spec['tests'] ?? null) as $test) {
+        foreach ($this->document->entries($spec['tests'] ?? null) as $test) {
             if (!JsonDocument::isObject($test)) {
                 $this->document->limitation('native_structure_not_normalized', true);
                 continue;
@@ -136,7 +136,7 @@ final class PlaywrightJsonState
             $this->document->limitation('native_metadata_not_normalized', false);
         }
 
-        $results = JsonDocument::listOf($test['results'] ?? null);
+        $results = $this->document->entries($test['results'] ?? null);
         $duration = null;
         $attemptTruncated = false;
         foreach ($results as $index => $result) {
@@ -280,7 +280,7 @@ final class PlaywrightJsonState
         $joined = '';
         $bytes = 0;
         $binary = false;
-        foreach (JsonDocument::listOf($entries) as $entry) {
+        foreach ($this->document->entries($entries) as $entry) {
             if (is_string($entry)) {
                 $entry = ['text' => $entry];
             }

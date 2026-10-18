@@ -1,6 +1,6 @@
 # Xorgate implementation plan
 
-Updated: 2026-10-14 (UTC)
+Updated: 2026-10-18 (UTC)
 
 Owner: xor
 
@@ -12,18 +12,18 @@ This is a delivery plan. Domain names, status enums, schema fields and adapter b
 
 ## Current position
 
-The foundation and project registry are merged. [PR #8](https://github.com/xormania/xorgate/pull/8) delivered WO-001, and [PR #9](https://github.com/xormania/xorgate/pull/9) delivered the native Symfony AI Mate, profiler/logging and Serena development setup. The current baseline is `1b72935bc3a2ff439931337ac34dfd54abc7e717`. PR #9 passed [Docker CI](https://github.com/xormania/xorgate/actions/runs/38527736959) and received one code review plus one security review after green, with no major findings.
+The foundation, project registry and durable report intake are merged. [PR #8](https://github.com/xormania/xorgate/pull/8) delivered WO-001, [PR #9](https://github.com/xormania/xorgate/pull/9) the native Symfony AI Mate, profiler/logging and Serena development setup, and [PR #10](https://github.com/xormania/xorgate/pull/10), merged on 2026-10-14, delivered WO-002: retained report bytes, durable intake operations, Messenger normalization, shared operator/agent interfaces and the intake portion of WO-005. The current baseline is `cccc8d6`.
 
-WO-002 is implemented in [PR #10](https://github.com/xormania/xorgate/pull/10): retained report bytes, durable intake operations, Messenger normalization, shared operator/agent interfaces and the intake portion of WO-005. Its check evidence and the fixes from the single code/security review round are tracked in that PR. The merged baseline remains PR #9 until the owner merges PR #10.
+[WO-003](https://github.com/xormania/xorgate/issues/4) is in progress in the current PR: Playwright JSON attempts with retry history, UXor failed-attempts/durations and Jev assessment annotations linked to exact attempts, setup-failure and global-error visibility, bounded log windows and import timings through the shared intake services, UI, MCP and CLI. Its fixtures are controlled Playwright runs and UXor's real summary/diagnosis tools applied to them. Acceptance with genuine UXor CI artifacts from a retry-recovered and a red run remains open; those artifacts could not be retrieved in the implementing session. Docker CI and browser interaction for this PR have not yet been observed.
 
 | Capability | Observed baseline | Active/next extension |
 | --- | --- | --- |
 | Development installation | Symfony Docker/PHP 8.5, installed UXor recipes, native Mate CLI and pinned Serena | Installable application/worker artifacts and consumer integration |
-| Persistence | PostgreSQL registry, immutable execution context and durable Messenger transport | Intake operations, artifact catalogue and normalized observations |
-| Asynchronous work | Transactional probe dispatch, actual consumer and redelivery handling | Durable report parsing and recovery |
-| Artifacts | Atomic probe JSON writes with integrity/availability checks | Generic report intake, bounded retrieval, byte budgets and retention |
-| Human/agent access | Registry UI/MCP/CLI and foundation diagnostics | Report upload, status and evidence through shared services |
-| Operational signal | Correlated logs, opt-in Symfony profiler and Mate diagnostics | Intake timings/capacity and subsequent distributed telemetry |
+| Persistence | PostgreSQL registry, immutable execution context, intake operations, artifact catalogue and normalized JUnit observations | Playwright attempts and linked derived annotations (WO-003) |
+| Asynchronous work | Transactional probe/report dispatch, actual consumer, redelivery and lease recovery | Annotation linking in the completing transaction |
+| Artifacts | Generic report intake, bounded retrieval, byte budgets and retention | Bounded text log windows |
+| Human/agent access | Registry and report intake UI/MCP/CLI | Attempt, annotation and log-window pages, tools and commands |
+| Operational signal | Correlated logs, intake capacity, opt-in Symfony profiler and Mate diagnostics | Queue/processing timings per import; later distributed telemetry |
 
 The green workflow exercises Docker setup, configuration/platform checks, PostgreSQL integration, actual HTTP/MCP exchanges, worker processing, independently checked artifact bytes and persistence across container restart. Its source is [foundation.yml](../.github/workflows/foundation.yml). It does not establish browser interaction coverage, remote-worker readiness, backup/restore or the managed-project workflow.
 
@@ -156,4 +156,4 @@ Measure CI time, setup/cache cost and test scope before adding more shards, matr
 
 ## Immediate next action
 
-Finish the review fixes and Docker acceptance evidence for [PR #10](https://github.com/xormania/xorgate/pull/10), then leave merge to the owner. The single code/security review round has completed; repeat review only for a practical P1. Start [WO-003](https://github.com/xormania/xorgate/issues/4) in a separate PR using retained native Playwright retry-recovered, red and setup-failure evidence plus existing Jev assessments. Preserve individual attempts, native outcomes and bounded logs through the same Symfony intake services.
+Run the WO-003 PR through Docker CI and fix what it finds. Then import genuine UXor CI `results.json`, `failed-attempts.json`, `durations.json`, step logs and Jev assessments from one retry-recovered green run and one red run, verify attempts, links and log windows against them, and record that evidence in the PR before closing the acceptance items. After CI is green, request one code review and one security review; repeat review only for a practical P1. Leave merge to the owner, then start [WO-004](https://github.com/xormania/xorgate/issues/5).

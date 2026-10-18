@@ -163,6 +163,32 @@ final class PlaywrightJsonAdapterTest extends TestCase
         self::assertFalse($empty->summary['root_dir_known']);
     }
 
+    public function testSyntheticNulCharactersAreReplacedBeforeStorage(): void
+    {
+        // PostgreSQL JSONB rejects U+0000, which a JSON string may carry as an escape.
+        $json = self::document([self::nativeTest('unexpected', [['retry' => 0, 'status' => 'failed', 'error' => ['message' => "boom\u{0}"], 'stdout' => [['text' => "out\u{0}put"]]]])]);
+        $report = $this->parse(str_replace('"test 0"', '"test\\u0000 0"', $json));
+        self::assertSame('parsed', $report->outcome);
+        self::assertSame("test\u{FFFD} 0", $report->cases[0]['name']);
+        self::assertSame("boom\u{FFFD}", $report->attempts[0]['error']['message']);
+        self::assertSame("out\u{FFFD}put", $report->attempts[0]['stdout']['text']);
+        self::assertStringNotContainsString('\u0000', json_encode([$report->cases, $report->attempts], JSON_THROW_ON_ERROR));
+    }
+
+    public function testSyntheticNonListNativeEntriesAreNotAnHonestEmptyList(): void
+    {
+        $report = $this->parse(self::document([self::nativeTest('expected', ['0' => ['retry' => 0, 'status' => 'passed'], 'x' => []])]));
+        self::assertSame('partial', $report->outcome);
+        self::assertContains('native_structure_not_normalized', $report->limitations);
+        self::assertSame(0, $report->cases[0]['attempt_count']);
+    }
+
+    public function testSyntheticSiblingOfProducerRootIsNotRewritten(): void
+    {
+        $report = $this->parse(self::document([self::nativeTest('unexpected', [['retry' => 0, 'status' => 'failed', 'error' => ['message' => 'at /r/root/a.spec.ts:1 near /r/root2/b.ts in /r/root']]])], ['rootDir' => '/r/root']));
+        self::assertSame('at a.spec.ts:1 near /r/root2/b.ts in .', $report->attempts[0]['error']['message']);
+    }
+
     public function testSyntheticKeysAreStructuralAndDeterministic(): void
     {
         $json = self::document([self::nativeTest('expected', [['retry' => 0, 'status' => 'passed']]), self::nativeTest('expected', [['retry' => 0, 'status' => 'passed']])]);

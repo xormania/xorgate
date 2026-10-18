@@ -42,7 +42,7 @@ final class PlaywrightDurationsAdapter implements ReportAdapterInterface
         if ('valid' !== $status || null !== $unavailable) {
             $document->annotate('producer_status', [], ['status' => $status, 'reason' => $unavailable, 'shard_label' => $shardLabel]);
         }
-        foreach (JsonDocument::listOf($file['tests'] ?? null) as $test) {
+        foreach ($document->entries($file['tests'] ?? null) as $test) {
             if (!JsonDocument::isObject($test)) {
                 $document->limitation('native_structure_not_normalized', true);
                 continue;

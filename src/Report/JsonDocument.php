@@ -129,11 +129,30 @@ final class JsonDocument
         return is_array($value) && array_is_list($value) ? $value : [];
     }
 
-    /** A bounded native string; other JSON types are not coerced. */
+    /**
+     * The entries of a native list that evidence depends on; a present value of another type is recorded as
+     * unnormalized structure instead of reading as an honest empty list.
+     */
+    public function entries(mixed $value): array
+    {
+        if (null !== $value && (!is_array($value) || !array_is_list($value))) {
+            $this->limitation('native_structure_not_normalized', true);
+        }
+
+        return self::listOf($value);
+    }
+
+    /**
+     * A bounded native string; other JSON types are not coerced. A decoded U+0000 is replaced by U+FFFD because
+     * PostgreSQL JSONB cannot store it.
+     */
     public function text(mixed $value, bool &$truncated, ?int $maximum = null, string $limitation = 'native_fields_truncated'): ?string
     {
         if (!is_string($value)) {
             return null;
+        }
+        if (str_contains($value, "\0")) {
+            $value = str_replace("\0", "\u{FFFD}", $value);
         }
         $maximum = min($maximum ?? $this->limits->maxFieldBytes, $this->limits->maxFieldBytes);
         $result = mb_strcut($value, 0, $maximum, 'UTF-8');
@@ -387,7 +406,14 @@ final class JsonDocument
     {
         $root = $this->root();
 
-        return null === $root ? $text : str_replace([$root.'/', $root.'\\', $root], ['', '', '.'], $text);
+        if (null === $root) {
+            return $text;
+        }
+        // The root followed by a separator becomes relative; the bare root becomes "."; a sibling such as
+        // "<root>2/x" or "<root>-cache" is not part of the root and stays as written.
+        $quoted = preg_quote($root, '/');
+
+        return preg_replace(['/'.$quoted.'[\/\\\\]/', '/'.$quoted.'(?![A-Za-z0-9._~-])/'], ['', '.'], $text) ?? $text;
     }
 
     private static function isAbsolute(string $path): bool

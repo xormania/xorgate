@@ -165,6 +165,29 @@ final class PlaywrightAnnotationAdaptersTest extends TestCase
         self::assertContains('native_status_unrecognized', $unknown->limitations);
     }
 
+    public function testSyntheticNonListAttemptsAreNotReportedAsAllGreen(): void
+    {
+        $report = $this->parse(new PlaywrightFailedAttemptsAdapter(), '{"schema":1,"status":"valid","attempts":{"a":{"testId":"s@p","retry":0}}}');
+        self::assertSame('partial', $report->outcome);
+        self::assertContains('native_structure_not_normalized', $report->limitations);
+
+        $durations = $this->parse(new PlaywrightDurationsAdapter(), '{"schema":1,"status":"valid","tests":{"a":{}}}');
+        self::assertSame('partial', $durations->outcome);
+        self::assertContains('native_structure_not_normalized', $durations->limitations);
+    }
+
+    public function testSyntheticJevAnswersBeyondBoundAreMarkedTruncated(): void
+    {
+        $answers = [];
+        foreach (range(1, 9) as $index) {
+            $answers['q'.$index] = ['choice' => 'c', 'confidence' => 0.5];
+        }
+        $report = $this->parse(new JevAssessmentAdapter(), json_encode(['version' => 1, 'status' => 'assessed', 'attempt' => ['testId' => 's@p', 'project' => 'p', 'retry' => 0], 'response' => ['answers' => $answers]], JSON_THROW_ON_ERROR));
+        self::assertCount(8, $report->annotations[0]['data']['answers']);
+        self::assertSame('partial', $report->outcome);
+        self::assertContains('native_fields_truncated', $report->limitations);
+    }
+
     public function testSyntheticLongErrorIsTruncatedWithinFieldBound(): void
     {
         $report = $this->parse(new PlaywrightFailedAttemptsAdapter(), json_encode(['schema' => 1, 'status' => 'valid', 'attempts' => [['testId' => 's@p', 'specId' => 's', 'project' => 'p', 'retry' => 0, 'status' => 'failed', 'error' => str_repeat('x', 100)]]], JSON_THROW_ON_ERROR), new ReportParseLimits(maxFieldBytes: 16));

@@ -497,7 +497,7 @@ PHP;
     private function service(IntakeLimits $limits, ?MessageBusInterface $bus = null): ReportIntake
     {
         return new ReportIntake($this->connection, self::getContainer()->get(ProjectRegistry::class), $this->store,
-            $bus ?? self::getContainer()->get(MessageBusInterface::class), $limits, [self::getContainer()->get(JUnitAdapter::class)], new NullLogger());
+            $bus ?? self::getContainer()->get(MessageBusInterface::class), $limits, [new JUnitAdapter()], new NullLogger());
     }
 
     private function metadata(): array { return ['request_id' => self::id(), 'source' => ['tested_revision' => 'fixture-source-revision']]; }

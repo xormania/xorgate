@@ -2,7 +2,7 @@
 
 Xorgate imports existing report bytes for a registered project and immutable execution. Each submission requires at least one known, non-null source assertion matching that execution. Intake preserves the original bytes and returns a durable operation handle. Messenger parses the report after the client disconnects. Submitting a report does not run tests or change an execution's source context.
 
-The web upload, MCP tools and Console commands use `ReportIntake`. Managed projects need no PHP runtime, Docker image or report producer installed inside Xorgate. The first adapter supports the documented JUnit subset below; original bytes retain native extensions that the adapter cannot normalize.
+The web upload, MCP tools and Console commands use `ReportIntake`. Managed projects need no PHP runtime, Docker image or report producer installed inside Xorgate. Installed adapters read the documented JUnit subset, Playwright JSON reports, UXor's derived Playwright files, existing Jev assessments and plain text logs; original bytes retain native extensions that an adapter cannot normalize.
 
 ## Request identity and source context
 
@@ -34,6 +34,8 @@ Operation progress and parser outcome are separate fields. A parser can observe 
 
 An operation contains `schema_version`, `operation_id`, `correlation_id`, `project_id`, `execution_id`, `request_id`, `report_role`, `format`, `status`, `parser_outcome`, `valid_document`, `artifact`, `parser`, `source_context`, `created_at`, `started_at`, `completed_at`, `summary`, `limitations` and `error`. `correlation_id` equals the operation ID. `source_context` is the immutable execution record, including its source, environment, producer and native identity. Timestamps are explicit, with null before a stage occurs.
 
+The operation also contains `timings`, `attempt_count`, `annotation_count` and `links`. `timings` holds `queued_seconds` (created to the latest claim), `processing_seconds` (latest claim to completion) and `parse_ms` (worker wall time from claim to the completing statement, covering parsing and observation writes, stored as `processing_ms`). Each value is null until its stage has happened or when it was not measured; redelivery after an expired lease restarts the processing clock and adds the earlier attempt to the queued time. `attempt_count` and `annotation_count` are null before parsing. `links` is null unless the import produced annotations, and otherwise counts them as `{linked, unmatched, ambiguous, not_applicable}`.
+
 `status` is `queued`, `running`, `completed` or `failed`. `parser_outcome` is null before parsing, or `parsed`, `empty`, `partial`, `malformed`, `truncated`, `unsupported`, `oversized`, `missing` or `corrupt`. `valid_document` distinguishes a valid empty suite from an input containing no XML document. `summary` contains cases, suites, observed counts and native declared counts. `error` is null or a bounded `{code, message}` diagnostic, never a filesystem path or raw XML parser exception.
 
 Original artifact availability is checked independently of stored observations. Missing bytes, digest mismatch and deliberate retention expiry stay visible after parsing; none becomes a passing or empty test result. Source provenance and normalized observations remain inspectable through their durable identifiers after a client disconnect or container restart.
@@ -53,6 +55,8 @@ Lists use UUID keyset cursors and explicit record limits. Operation status does 
 | CLI metadata | Fixed 65,536 bytes, JSON object, nesting depth 16 |
 | MCP report content | Fixed 65,536 decoded bytes; at most 87,384 base64 characters |
 | Artifact read | Fixed maximum 32,768 bytes per chunk; byte offset 0 through 2,147,483,647 |
+| Log window | Fixed maximum 32,768 bytes per window; same offset range |
+| Attempt annotation references | At most 20 per attempt or case, with the total count |
 | Query page | Default 25 records, minimum 1, maximum 100 |
 | Stream/upload | Configurable, default 8,388,608 bytes |
 | Retained artifact storage | Configurable, default 536,870,912 bytes |
@@ -83,8 +87,11 @@ Messenger's report redelivery timeout is 300 seconds. The worker refreshes live 
 | `xorgate_operation_get` | `projectId`, `executionId`, `operationId`; returns current operation and artifact state |
 | `xorgate_evidence_list` | `projectId`, `executionId`, optional `limit` and `cursor`; returns operation summaries, including queued and failed imports |
 | `xorgate_observations_list` | `projectId`, `executionId`, `operationId`, optional `limit` and `cursor`; returns normalized case observations |
+| `xorgate_attempts_list` | `projectId`, `executionId`, `operationId`, optional `limit` and `cursor`; returns native attempts in report order with linked annotation references |
+| `xorgate_annotations_list` | Same arguments; returns annotations produced by that import or linked to it as native evidence, with match status |
 | `xorgate_artifact_get` | `projectId`, `executionId`, `artifactId`; returns artifact metadata |
 | `xorgate_artifact_read` | Same scope and artifact ID, optional `offset` and `limit`; returns a verified base64 chunk |
+| `xorgate_log_read` | Same scope and artifact ID, optional `offset` and `limit`; returns a verified bounded UTF-8 text window |
 | `xorgate_intake_capacity` | No arguments; returns installation-wide limits and usage |
 
 MCP tool discovery supplies current argument schemas. No intake tool accepts a filesystem path or fetches a remote URL. Larger source bytes enter through a CLI stream or manual upload; the returned artifact handle can then be used by an agent. A handle cannot be moved between executions.
@@ -97,6 +104,9 @@ docker compose exec -T php php bin/console xorgate:report:submit PROJECT_UUID EX
 docker compose exec -T php php bin/console xorgate:operation:get PROJECT_UUID EXECUTION_UUID OPERATION_UUID
 docker compose exec -T php php bin/console xorgate:evidence:list PROJECT_UUID EXECUTION_UUID --limit=25
 docker compose exec -T php php bin/console xorgate:observations:list PROJECT_UUID EXECUTION_UUID OPERATION_UUID --limit=25
+docker compose exec -T php php bin/console xorgate:attempts:list PROJECT_UUID EXECUTION_UUID OPERATION_UUID --limit=25
+docker compose exec -T php php bin/console xorgate:annotations:list PROJECT_UUID EXECUTION_UUID OPERATION_UUID --limit=25
+docker compose exec -T php php bin/console xorgate:log:read PROJECT_UUID EXECUTION_UUID ARTIFACT_UUID --offset=0 --limit=32768
 docker compose exec -T php php bin/console xorgate:artifact:get PROJECT_UUID EXECUTION_UUID ARTIFACT_UUID
 docker compose exec -T php php bin/console xorgate:artifact:read PROJECT_UUID EXECUTION_UUID ARTIFACT_UUID --offset=0 --limit=32768
 docker compose exec -T php php bin/console xorgate:intake:capacity
@@ -120,3 +130,50 @@ Parsing disables external entities, DTD loading and network access. Parser defau
 Libxml can report the same document-end code for truncation and extra content. The adapter compares EOF coordinates for UTF-8 and UTF-16 inputs, reading at most 8 MiB for that diagnostic. Unknown encodings or unavailable coordinates produce invalid `malformed` evidence with `report_xml_end_ambiguous`, explicitly leaving the narrower classification unresolved. Invalid documents commit no case observations.
 
 Fixture producer versions and source provenance are recorded in [the JUnit fixture guide](../tests/Fixtures/JUnit/README.md) and neighboring provenance JSON. The retained UXor JavaScript report comes from an actual execution with Node's built-in JUnit reporter; it is not seed data. The live acceptance also imports PHPUnit's report generated by the application's real check run. Synthetic malformed, truncated, empty and hostile XML edge fixtures are labelled as synthetic.
+
+## Formats
+
+| `format` | Reads | Produces |
+| --- | --- | --- |
+| `junit` | JUnit XML subset described above | Cases and suites |
+| `playwright-json` | Playwright JSON reporter output (`results.json`) | One case per spec and project, one attempt per native result, suites, global errors |
+| `playwright-failed-attempts` | UXor `tools/ci/playwright-summary.mjs` `failed-attempts.json`, schema 1 | `failed_attempt`, `global_error` and `producer_status` annotations |
+| `playwright-durations` | UXor `durations.json`, schema 1 | `test_duration` annotations |
+| `jev-assessment` | One UXor `tools/ci/jev-diagnosis.mjs` `assessment.json`, version 1 | One `jev_assessment` annotation |
+| `text-log` | Any text log | No cases; byte, line, line-ending and UTF-8 measurements for bounded reading |
+
+Every adapter is version `1`. The format and installed parser version are recorded at admission; a format with no installed adapter is admitted and finishes as `unsupported`. JSON inputs share the outcome vocabulary: whitespace-only input is `empty`, invalid JSON is `malformed`, valid JSON of another shape or schema/version is `unsupported`, input over limits is `oversized`. A valid document with nothing to record, such as an all-green failed-attempts file, an empty log or a Playwright report holding only global errors, is `empty` and is still committed with its summary.
+
+The upload form offers the installed formats. The web form, MCP and CLI use the same adapters.
+
+## Playwright attempts
+
+A Playwright case keeps `spec_id`, `test_id` (`<spec_id>@<project>`), `project`, `file`, `line`, `title_path`, `full_title`, `expected_status`, Playwright's own `native_outcome` (`expected`, `unexpected`, `flaky`, `skipped` or `unknown`), `expected_failure` and `attempt_count`. Each native result becomes an attempt with `index`, `retry`, `status`, `matches_expected`, timing, worker indexes, a bounded ANSI-stripped error excerpt with its location, bounded stdout/stderr excerpts with their original byte totals, and attachment metadata without bodies. A failed first attempt and its passing retry are both retained. An expected failure (`test.fail()`) is distinguishable from an unexpected one by `expected_status` and `matches_expected`. Neither changes an execution verdict.
+
+The summary keeps declared and observed counts, attempt counts, `retry_history: native`, Playwright version, projects, `shard` (`{current, total}` or null), worker counts and `global_errors` (errors outside tests, at most 16 bounded items with the total). `shard_completeness` is `{status: unknown, reason: no_execution_expectation}`: Xorgate does not claim that every shard was imported without an authoritative expectation. The producer `rootDir` is never stored. Attempt lists use UUID keyset pages in report order; each attempt carries its case context and at most 20 linked annotation references (`annotation_id`, `operation_id`, `kind`, `match_status`) plus `annotation_count`.
+
+## Derived annotations and linking
+
+UXor's failed-attempts, durations and Jev assessment files are derived from native evidence. Their imports create annotations, never attempts or cases, so the same failure is not counted twice. Each annotation has `kind`, the `target` the file names (`spec_id`, `test_id`, `project`, `retry`, `file`, `line`, `title`), bounded `data` and a `match` object: `status`, `reason`, `target_operation_id`, `target_case_key`, `target_attempt_key` and `linked_at`.
+
+| Kind | Links to | Rule |
+| --- | --- | --- |
+| `failed_attempt`, `jev_assessment` | One native attempt | Case `spec_id` (or `test_id`), `project` and attempt `retry` |
+| `test_duration` | One native case | `project`, `file`, `line` and the full title path |
+| `global_error`, `producer_status` | Nothing | Always `not_applicable` |
+
+Candidates are completed `playwright-json` imports with parsed or partial evidence in the same project and execution. Exactly one match is `linked`. No completed native import is `unmatched` with reason `native_report_not_imported`; no matching attempt or case is `unmatched` with `attempt_not_found` or `case_not_found`; a target missing its identifying fields is `unmatched` with `target_incomplete`. Matches in several native imports are `ambiguous` with `multiple_native_imports`; several matches inside one import are `ambiguous` with `multiple_attempts` or `multiple_cases`. When native evidence is pruned by retention its annotations become `unmatched` with `native_report_pruned`.
+
+Linking runs in the transaction that completes an import, under an execution-scoped lock. Completing an annotation import links its own annotations. Completing a native import re-evaluates the execution's attempt- and case-scoped annotations, so an annotation imported first becomes linked, and a second matching native import turns a link into an explicit ambiguity. Completed operations are final, so redelivery cannot insert attempts or annotations again; keys are unique per import.
+
+Annotation lists for an import return the annotations it produced (`relation: produced`) and, for a native import, the annotations linked to it (`relation: linked_to_native`). Annotation import summaries contain `producer {status, reason}` (`valid`, `missing`, `invalid` or `not-reached` for UXor summary files), the file's own counts, run context, `shard_label`, runtime, `retry_history: derived` and annotation counts. A not-reached or missing producer status yields one visible `producer_status` annotation, so a setup failure that prevented tests is not an empty pass.
+
+A Jev assessment is read from its retained file: Jev is never called and no credential is needed. Its annotation keeps version, status (`assessed`, `unavailable`, `disabled` or `not_assessed`), reason (for example `missing_credential`), method, likely cause, answer confidences, the selected bounded excerpt, run context and input digest, without request or response bodies. An assessment is advisory and never rewrites native attempt or case outcomes. A missing or malformed diagnosis file finishes with its own parser outcome and leaves native evidence unchanged.
+
+## Bounded log windows
+
+`xorgate_log_read`, `xorgate:log:read` and the log page read a verified window of any retained artifact, typically a `text-log` import. The result contains `schema_version`, `artifact`, `offset`, `returned_bytes`, `next_offset` (null at the end), `previous_offset` (null at offset 0), `eof`, `starts_mid_line`, `ends_mid_line`, `utf8_lossy` and `content_text`. Offsets are byte offsets into the original. A window does not end inside a UTF-8 sequence; it may be shorter than requested so the next window starts at a character boundary. Invalid UTF-8 is replaced with U+FFFD and flagged by `utf8_lossy`; terminal escapes are returned unchanged. The web page escapes the text and shows control characters as Unicode control pictures. Use `xorgate_artifact_read` for exact bytes. Routine operation, evidence and attempt results carry only bounded excerpts and counts, never a whole log.
+
+Web pages: `/projects/{project}/executions/{execution}/intake/{operation}/attempts`, `…/intake/{operation}/annotations` and `…/artifacts/{artifact}/log?offset=N&limit=M`. The operation page shows timings, attempt and annotation counts, shard, shard completeness, producer status, link counts and errors outside tests, with links to these pages.
+
+The Playwright fixtures in [tests/Fixtures/Playwright](../tests/Fixtures/Playwright/README.md) are controlled producer output and outputs of UXor's real tools on that output. Genuine UXor CI artifacts from a retry-recovered and a red run have not yet been imported; that acceptance remains open.

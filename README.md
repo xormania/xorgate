@@ -98,7 +98,20 @@ Artifact storage is mounted at `/var/lib/xorgate/artifacts`. Keep the database a
 
 The [project registry contract](docs/project-registry.md) describes registration, versioned metadata edits, immutable execution context, idempotent commands, bounded queries and admission limits. The [artifact intake contract](docs/artifact-intake.md) describes report submission, parser boundaries, original-byte retrieval and installation-wide capacity/retention. A completed parser can observe failing tests; parsing never establishes an execution verdict. Missing, corrupt and expired original bytes remain visible independently of normalized observations.
 
-Open an execution's report page to upload and inspect evidence manually. Agents can submit small reports through `xorgate_report_submit`, inspect `xorgate_operation_get`, and query `xorgate_observations_list` or bounded original bytes through `xorgate_artifact_read`. Use CLI streams for larger files. The application does not yet provide remote test execution, CI-provider synchronization, log search, coverage calculations or assessment workflows.
+Open an execution's report page to upload and inspect evidence manually. Agents can submit small reports through `xorgate_report_submit`, inspect `xorgate_operation_get`, and query `xorgate_observations_list` or bounded original bytes through `xorgate_artifact_read`. Use CLI streams for larger files.
+
+| MCP tool | Report intake capability |
+| --- | --- |
+| `xorgate_report_submit`, `xorgate_report_submit_artifact` | Retain report bytes (inline base64 up to 64 KiB, or an existing artifact handle) and queue durable parsing |
+| `xorgate_operation_get`, `xorgate_evidence_list` | Operation progress, parser outcome, timings, attempt/annotation counts and link counts |
+| `xorgate_observations_list` | Normalized native cases of one import |
+| `xorgate_attempts_list` | Native Playwright attempts, including failed first attempts and their retries |
+| `xorgate_annotations_list` | Derived annotations and their explicit link to an exact attempt or case |
+| `xorgate_artifact_get`, `xorgate_artifact_read` | Original artifact metadata and verified base64 chunks |
+| `xorgate_log_read` | Verified bounded text window with byte offsets and mid-line/UTF-8 indicators |
+| `xorgate_intake_capacity` | Installation-wide admission and retention limits |
+
+Playwright JSON reports keep every native attempt with its retry index, native status and whether it matched the expected status, so a green run with a failed first attempt stays inspectable and expected failures stay distinct from unexpected ones. UXor's derived `failed-attempts.json`, `durations.json` and Jev `assessment.json` files are imported as annotations that link to the exact native attempt or case, or stay visibly unmatched or ambiguous with a reason; they never add attempts. Jev assessments are read from the retained file; Jev is never called and no Jev credential is needed. Text logs are read in bounded windows with honest byte offsets. The fixtures behind these checks are controlled runs and UXor tool output, not genuine UXor CI artifacts. The application does not yet provide remote test execution, CI-provider synchronization, log search, coverage calculations or new assessment workflows.
 
 ## Development and design
 
