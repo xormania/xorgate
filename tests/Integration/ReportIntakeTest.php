@@ -215,8 +215,11 @@ final class ReportIntakeTest extends KernelTestCase
         // redeliver when the five-minute processing lease expires, without ACKing
         // a fresh competing claim or waiting its former one-hour default.
         self::assertCount(1, iterator_to_array(self::getContainer()->get('messenger.transport.async')->get()));
-        $this->connection->executeStatement("UPDATE report_import SET started_at = CURRENT_TIMESTAMP - INTERVAL '301 seconds' WHERE id = ?", [$queued['operation_id']]);
-        $this->connection->executeStatement("UPDATE messenger_messages SET delivered_at = CURRENT_TIMESTAMP - INTERVAL '301 seconds' WHERE queue_name = 'async'");
+        // delivered_at has whole-second precision and PostgreSQL rounds it, while the consumer truncates its
+        // redelivery limit, so a one-second margin lets a consumer booting within the same second miss the row
+        // and then wait on NOTIFY for its 60-second delayed-message interval. Use a margin well beyond a second.
+        $this->connection->executeStatement("UPDATE report_import SET started_at = CURRENT_TIMESTAMP - INTERVAL '330 seconds' WHERE id = ?", [$queued['operation_id']]);
+        $this->connection->executeStatement("UPDATE messenger_messages SET delivered_at = CURRENT_TIMESTAMP - INTERVAL '330 seconds' WHERE queue_name = 'async'");
         // Recovery belongs to a fresh worker process. Reusing the abandoned
         // PostgreSQL receiver also reuses its LISTEN/NOTIFY and idle polling state.
         // The shared doctrine://default transport runs on this connection; an open transaction here would
