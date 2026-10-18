@@ -219,11 +219,14 @@ final class ReportIntakeTest extends KernelTestCase
         $this->connection->executeStatement("UPDATE messenger_messages SET delivered_at = CURRENT_TIMESTAMP - INTERVAL '301 seconds' WHERE queue_name = 'async'");
         // Recovery belongs to a fresh worker process. Reusing the abandoned
         // PostgreSQL receiver also reuses its LISTEN/NOTIFY and idle polling state.
-        $worker = $this->cliProcess(['messenger:consume', 'async', '--limit=1', '--time-limit=5', '--sleep=0.01', '--no-interaction']);
+        // The consumer log is kept in the failure message so an unconsumed redelivery explains itself.
+        $worker = $this->cliProcess(['messenger:consume', 'async', '--limit=1', '--time-limit=20', '--sleep=0.01', '--no-interaction', '-vv']);
+        $worker->setTimeout(30);
         $worker->run();
-        self::assertSame(0, $worker->getExitCode(), substr($worker->getOutput().$worker->getErrorOutput(), 0, 2000));
+        $workerLog = substr($worker->getOutput().$worker->getErrorOutput(), 0, 4000);
+        self::assertSame(0, $worker->getExitCode(), $workerLog);
         $completed = $this->operation($queued);
-        self::assertSame('completed', $completed['status']);
+        self::assertSame('completed', $completed['status'], 'The restarted worker did not recover the expired lease. Queue rows: '.json_encode($this->connection->fetchAllAssociative('SELECT id, queue_name, delivered_at, available_at FROM messenger_messages')).'; consumer log: '.$workerLog);
         self::assertSame(2, $completed['summary']['cases']);
         self::assertSame(0, $this->countRows('messenger_messages'), 'The restarted worker must ACK the recovered original message.');
         $this->intake->process($queued['operation_id']);
