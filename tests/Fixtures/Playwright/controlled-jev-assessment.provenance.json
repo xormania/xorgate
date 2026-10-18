@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "fixture": "controlled-jev-assessment.json",
+  "classification": "uxor-tool-derived-report",
+  "tool": {
+    "sourceRepo": "xormania/uxor",
+    "sourceSHA": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+    "checkoutPath": "/workspace/uxor",
+    "workspace": {
+      "trackedStateBefore": "clean",
+      "trackedStateAfter": "clean",
+      "untrackedBefore": 0,
+      "untrackedAfter": 0
+    },
+    "sourceFile": "tools/ci/jev-diagnosis.mjs",
+    "sourceFileURL": "https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/tools/ci/jev-diagnosis.mjs",
+    "policyFile": "tools/ci/jev-ci.json",
+    "policyFileURL": "https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/tools/ci/jev-ci.json"
+  },
+  "workflow": null,
+  "runId": null,
+  "runAttempt": null,
+  "jobId": null,
+  "jobName": null,
+  "shard": "chromium 1/2",
+  "origin": {
+    "kind": "local-execution-of-uxor-tool",
+    "workingDirectory": "/workspace/controlled-playwright",
+    "command": [
+      "node",
+      "/workspace/uxor/tools/ci/jev-diagnosis.mjs",
+      "--attempts",
+      "playwright-results/failed-attempts.json",
+      "--output",
+      "jev",
+      "--job",
+      "Controlled producer"
+    ],
+    "environment": {
+      "clearedWith": "env -i",
+      "PATH": "(host PATH)",
+      "HOME": "(host HOME)",
+      "SHARD": "chromium 1/2",
+      "TYPESAFE_API_KEY": null,
+      "GITHUB_*": null
+    },
+    "input": {
+      "filename": "controlled-failed-attempts.json",
+      "sha256": "950935b1ae079d328512c6a13943903cce749a0454e569f9401891ce793ad97a"
+    },
+    "serverLog": null,
+    "networkRequests": "none expected: the tool returns missing_credential before building a request",
+    "exitStatus": 0,
+    "startedAt": "2026-10-18T03:27:30.151618+00:00",
+    "writtenAt": "2026-10-18T03:27:30.184263+00:00",
+    "endedAt": "2026-10-18T03:27:30.207026+00:00",
+    "otherOutputs": {
+      "jev/summary.md": "1d8fad347c2cb340a2b1ad7f9e710f09f85da7b7837d92584396403d48f79846",
+      "jev/attempts/02-controlled-dark-controlled.spec.js-retry0/assessment.json": "15bf24b30664b19b59d48371f512bd2e013816578340f917c2b79e5cb3947132",
+      "jev/attempts/03-controlled-controlled.spec.js-retry0/assessment.json": "48364afde6284e381ccf733a25e7556a4c428eabfd4e0e5e7fe89d2aeac8f1e3",
+      "jev/attempts/04-controlled-dark-controlled.spec.js-retry0/assessment.json": "efe6c5835bf10e479a40fdee63907cc8dc729cfa5aaea2830c10b3c0f5851cd7",
+      "jev/attempts/05-controlled-controlled.spec.js-retry1/assessment.json": "3765dc14923140185fbb633f8e0a067c7c17cfe047fc82e75b802f9d913f7fdf",
+      "jev/attempts/06-controlled-dark-controlled.spec.js-retry1/assessment.json": "6541a694a1e30160dfae71c5aed08e4bb4e3623c2337f1db8d570995906a54d7"
+    }
+  },
+  "producer": {
+    "name": "UXor tools/ci/jev-diagnosis.mjs",
+    "version": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+    "language": "JavaScript",
+    "node": "v22.22.0",
+    "sourceURL": "https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/tools/ci/jev-diagnosis.mjs"
+  },
+  "originalReport": {
+    "filename": "jev/attempts/01-controlled-controlled.spec.js-retry0/assessment.json",
+    "bytes": 4019,
+    "sha256": "4f519f38047f693c9915dddcab3e117a0e1a8e708689446a17f20b714065b1eb"
+  },
+  "retainedReport": {
+    "filename": "controlled-jev-assessment.json",
+    "bytes": 4019,
+    "sha256": "4f519f38047f693c9915dddcab3e117a0e1a8e708689446a17f20b714065b1eb"
+  },
+  "minimization": {
+    "kind": "selection",
+    "description": "One of six assessment.json files written by the run: the first, for the flaky test's failed retry-0 attempt in project controlled. The file itself is unchanged."
+  },
+  "redaction": {
+    "kind": "none",
+    "description": "Retained bytes are identical to the producer output.",
+    "affectedPathOccurrences": 0
+  },
+  "observed": {
+    "version": 1,
+    "status": "unavailable",
+    "reason": "missing_credential",
+    "job": "Controlled producer",
+    "attemptTestId": "9dbaf9aafbe4b60d2403-1b948b5bbbad0134a9e6@controlled",
+    "attemptProject": "controlled",
+    "attemptRetry": 0,
+    "attemptOutcome": "flaky",
+    "policyModel": "jev-1.13.0",
+    "policyMinConfidence": 0.65,
+    "policyCredentialField": "[REDACTED] (written so by the tool's own credential filter; it held only the environment variable reference)",
+    "hasRequest": false,
+    "hasResponse": false,
+    "elapsedSeconds": 0,
+    "assessmentsWritten": 6,
+    "assessmentStatuses": {
+      "unavailable": 6
+    }
+  },
+  "limitations": [
+    "Controlled local producer run with deliberately induced outcomes; not a UXor CI run artifact and not evidence about UXor, Xorgate or any managed project.",
+    "Genuine UXor retry-recovered and red CI run artifacts are still required for acceptance item 1 of issue #4; GitHub API access to xormania/uxor artifacts was not granted in this session.",
+    "No provider, run, attempt or job metadata exists for a local run; these stay null.",
+    "Derived annotation of controlled-results.json, produced by running the real UXor tool locally; it is not native evidence and was not uploaded by UXor CI.",
+    "GITHUB_* were unset, so sha, ref, runUrl and runAttempt are null as the tool writes them.",
+    "No Jev request was made; this proves only the unavailable/missing_credential shape, not an assessed diagnosis."
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "fixture": "controlled-failed-attempts.json",
+  "classification": "uxor-tool-derived-report",
+  "tool": {
+    "sourceRepo": "xormania/uxor",
+    "sourceSHA": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+    "checkoutPath": "/workspace/uxor",
+    "workspace": {
+      "trackedStateBefore": "clean",
+      "trackedStateAfter": "clean",
+      "untrackedBefore": 0,
+      "untrackedAfter": 0
+    },
+    "sourceFile": "tools/ci/playwright-summary.mjs",
+    "sourceFileURL": "https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/tools/ci/playwright-summary.mjs"
+  },
+  "workflow": null,
+  "runId": null,
+  "runAttempt": null,
+  "jobId": null,
+  "jobName": null,
+  "shard": "chromium 1/2",
+  "origin": {
+    "kind": "local-execution-of-uxor-tool",
+    "workingDirectory": "/workspace/controlled-playwright",
+    "command": [
+      "node",
+      "/workspace/uxor/tools/ci/playwright-summary.mjs",
+      "playwright-results/results.json"
+    ],
+    "environment": {
+      "clearedWith": "env -i",
+      "PATH": "(host PATH)",
+      "HOME": "(host HOME)",
+      "SHARD": "1/2",
+      "BROWSER": "chromium",
+      "GITHUB_*": null,
+      "RESULTS_ARTIFACT": null,
+      "REPORT_ARTIFACT": null,
+      "SETUP_STEPS": null,
+      "RUNTIME": null,
+      "TESTS_OUTCOME": null
+    },
+    "input": {
+      "filename": "controlled-results.json (unredacted original, before path-prefix replacement)",
+      "sha256": "06d1bca8045f3fed5937af90caa5272d7aeaf59454bcb458dd29d04b2d617ced"
+    },
+    "exitStatus": 0,
+    "exitStatusMeaning": "the report was read",
+    "startedAt": "2026-10-18T03:27:30.030149+00:00",
+    "writtenAt": "2026-10-18T03:27:30.076263+00:00"
+  },
+  "producer": {
+    "name": "UXor tools/ci/playwright-summary.mjs",
+    "version": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+    "language": "JavaScript",
+    "node": "v22.22.0",
+    "sourceURL": "https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/tools/ci/playwright-summary.mjs"
+  },
+  "originalReport": {
+    "filename": "playwright-results/failed-attempts.json",
+    "bytes": 6375,
+    "sha256": "950935b1ae079d328512c6a13943903cce749a0454e569f9401891ce793ad97a"
+  },
+  "retainedReport": {
+    "filename": "controlled-failed-attempts.json",
+    "bytes": 6375,
+    "sha256": "950935b1ae079d328512c6a13943903cce749a0454e569f9401891ce793ad97a"
+  },
+  "minimization": {
+    "kind": "none",
+    "description": "Complete tool output."
+  },
+  "redaction": {
+    "kind": "none",
+    "description": "Retained bytes are identical to the producer output.",
+    "affectedPathOccurrences": 0
+  },
+  "observed": {
+    "schema": 1,
+    "status": "valid",
+    "reason": null,
+    "shard": "chromium 1/2",
+    "projects": [
+      "controlled",
+      "controlled-dark"
+    ],
+    "counts": {
+      "passed": 8,
+      "failed": 2,
+      "flaky": 2,
+      "skipped": 2
+    },
+    "tests": 4,
+    "attempts": 6,
+    "attemptIdentities": [
+      {
+        "testId": "9dbaf9aafbe4b60d2403-1b948b5bbbad0134a9e6@controlled",
+        "project": "controlled",
+        "title": "flaky: fails on the first attempt, passes on retry",
+        "retry": 0,
+        "status": "failed",
+        "outcome": "flaky"
+      },
+      {
+        "testId": "9dbaf9aafbe4b60d2403-1b948b5bbbad0134a9e6@controlled-dark",
+        "project": "controlled-dark",
+        "title": "flaky: fails on the first attempt, passes on retry",
+        "retry": 0,
+        "status": "failed",
+        "outcome": "flaky"
+      },
+      {
+        "testId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef@controlled",
+        "project": "controlled",
+        "title": "always fails",
+        "retry": 0,
+        "status": "failed",
+        "outcome": "failed"
+      },
+      {
+        "testId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef@controlled",
+        "project": "controlled",
+        "title": "always fails",
+        "retry": 1,
+        "status": "failed",
+        "outcome": "failed"
+      },
+      {
+        "testId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef@controlled-dark",
+        "project": "controlled-dark",
+        "title": "always fails",
+        "retry": 0,
+        "status": "failed",
+        "outcome": "failed"
+      },
+      {
+        "testId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef@controlled-dark",
+        "project": "controlled-dark",
+        "title": "always fails",
+        "retry": 1,
+        "status": "failed",
+        "outcome": "failed"
+      }
+    ],
+    "globalErrors": 0,
+    "expectedFailureListed": false
+  },
+  "limitations": [
+    "Controlled local producer run with deliberately induced outcomes; not a UXor CI run artifact and not evidence about UXor, Xorgate or any managed project.",
+    "Genuine UXor retry-recovered and red CI run artifacts are still required for acceptance item 1 of issue #4; GitHub API access to xormania/uxor artifacts was not granted in this session.",
+    "No provider, run, attempt or job metadata exists for a local run; these stay null.",
+    "Derived annotation of controlled-results.json, produced by running the real UXor tool locally; it is not native evidence and was not uploaded by UXor CI.",
+    "GITHUB_* were unset, so sha, ref, runUrl and runAttempt are null as the tool writes them.",
+    "The test.fail() expected failures are not listed: the tool lists only results whose status differs from expectedStatus."
+  ]
+}

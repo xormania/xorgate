@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "fixture": "controlled-results.json",
+  "classification": "controlled-native-producer-report",
+  "sourceRepo": null,
+  "sourceSHA": null,
+  "producerSources": {
+    "producer/playwright.config.js": "dfde923c1192413abddd142303ed0546a3494e0a9a995526acfd20e637ac3e95",
+    "producer/tests/controlled.spec.js": "664fbb212dcc92c29b93061d910a8e5dd58afe224078be7c0029abe49967907e",
+    "producer/companion/companion.spec.js": "3364b8871022dc5a7a98b013b3979f43ab08622b74d6d6518b7965eda42e1600"
+  },
+  "workflow": null,
+  "runId": null,
+  "runAttempt": null,
+  "jobId": null,
+  "jobName": null,
+  "shard": {
+    "current": 1,
+    "total": 2
+  },
+  "origin": {
+    "kind": "local-execution",
+    "workingDirectory": "/workspace/controlled-playwright",
+    "command": [
+      "npx",
+      "playwright",
+      "test",
+      "--shard=1/2"
+    ],
+    "configFile": "playwright.config.js (retained as producer/playwright.config.js)",
+    "environment": {
+      "PLAYWRIGHT_BROWSERS_PATH": "/opt/pw-browsers",
+      "CI": null,
+      "FORCE_COLOR": null
+    },
+    "stdoutStderr": "redirected together to a file (not a TTY)",
+    "exitStatus": 1,
+    "exitStatusMeaning": "Expected: two deliberately always-failing tests are unexpected failures.",
+    "startedAt": "2026-10-18T03:26:29.291538+00:00",
+    "reportWrittenAt": "2026-10-18T03:26:45.824264+00:00",
+    "endedAt": "2026-10-18T03:26:45.857804+00:00",
+    "producerStatsStartTime": "2026-10-18T03:26:31.108Z"
+  },
+  "install": {
+    "command": [
+      "npm",
+      "install",
+      "--save-exact",
+      "@playwright/test@1.58.2"
+    ],
+    "environment": {
+      "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1"
+    },
+    "registry": "https://registry.npmjs.org (through the session proxy)",
+    "integrity": "sha512-akea+6bHYBBfA9uQqSYmlJXn61cTa+jbO87xVLCWbTqbWadRVmhxlXATaOjOgcBaWU4ePo0wB41KMFv3o35IXA==",
+    "matchesUxorLock": true
+  },
+  "runtime": {
+    "node": "v22.22.0",
+    "npm": "10.9.4",
+    "playwright": "1.58.2",
+    "platform": "linux",
+    "browser": "Chromium from the preinstalled /opt/pw-browsers/chromium-1194 build, selected with launchOptions.executablePath (not the revision bundled with @playwright/test 1.58.2)"
+  },
+  "producer": {
+    "name": "Playwright JSON reporter",
+    "version": "1.58.2",
+    "language": "JavaScript",
+    "sourceURL": "https://github.com/microsoft/playwright/blob/v1.58.2/packages/playwright/src/reporters/json.ts",
+    "reporterOptions": {
+      "outputFile": "playwright-results/results.json"
+    }
+  },
+  "artifact": {
+    "provider": null,
+    "id": null,
+    "filename": "results.json",
+    "archiveSHA256": null,
+    "sha256": "06d1bca8045f3fed5937af90caa5272d7aeaf59454bcb458dd29d04b2d617ced",
+    "bytes": 44880
+  },
+  "originalReport": {
+    "filename": "playwright-results/results.json",
+    "bytes": 44880,
+    "sha256": "06d1bca8045f3fed5937af90caa5272d7aeaf59454bcb458dd29d04b2d617ced"
+  },
+  "retainedReport": {
+    "filename": "controlled-results.json",
+    "bytes": 41408,
+    "sha256": "4d0fce78350f3b5cab4fbff3715edd7cee2ccee78044165c553263d4f0e2367b"
+  },
+  "minimization": {
+    "kind": "none",
+    "description": "Complete reporter output; no suite, spec, test, result or config field removed."
+  },
+  "redaction": {
+    "kind": "path-prefix-replacement",
+    "description": "Replaced only the transient absolute scratch directory prefix with the symbolic prefix /workspace/controlled-playwright. All other bytes are unchanged.",
+    "symbolicPrefix": "/workspace/controlled-playwright",
+    "affectedPathOccurrences": 56
+  },
+  "observed": {
+    "playwrightVersion": "1.58.2",
+    "shard": {
+      "current": 1,
+      "total": 2
+    },
+    "configProjects": [
+      "controlled",
+      "controlled-dark",
+      "companion"
+    ],
+    "projectsWithTestsInShard": [
+      "controlled",
+      "controlled-dark"
+    ],
+    "retries": 1,
+    "workers": {
+      "configured": 1,
+      "actual": 1
+    },
+    "stats": {
+      "expected": 8,
+      "unexpected": 2,
+      "flaky": 2,
+      "skipped": 2,
+      "durationMs": 14713.225
+    },
+    "tests": 14,
+    "testsPerProject": 7,
+    "testsByNativeStatus": {
+      "expected": 8,
+      "unexpected": 2,
+      "flaky": 2,
+      "skipped": 2
+    },
+    "expectedFailures": 2,
+    "expectedStatusFailedTests": [
+      "expected failure"
+    ],
+    "attempts": 18,
+    "attemptsByStatus": {
+      "passed": 8,
+      "failed": 8,
+      "skipped": 2
+    },
+    "flaky": {
+      "title": "flaky: fails on the first attempt, passes on retry",
+      "results": [
+        {
+          "retry": 0,
+          "status": "failed"
+        },
+        {
+          "retry": 1,
+          "status": "passed"
+        }
+      ],
+      "passedOnRetry": 1
+    },
+    "alwaysFailing": {
+      "title": "always fails",
+      "results": [
+        {
+          "retry": 0,
+          "status": "failed"
+        },
+        {
+          "retry": 1,
+          "status": "failed"
+        }
+      ]
+    },
+    "stdoutStderrTest": {
+      "title": "writes stdout and stderr",
+      "stdoutChunks": 2,
+      "stderrChunks": 2
+    },
+    "nestedDescribe": [
+      "outer describe",
+      "inner describe"
+    ],
+    "attachments": 0,
+    "globalErrors": 0,
+    "ansiEscapesInErrorText": true,
+    "trailingNewline": false
+  },
+  "limitations": [
+    "Controlled local producer run with deliberately induced outcomes; not a UXor CI run artifact and not evidence about UXor, Xorgate or any managed project.",
+    "Genuine UXor retry-recovered and red CI run artifacts are still required for acceptance item 1 of issue #4; GitHub API access to xormania/uxor artifacts was not granted in this session.",
+    "No provider, run, attempt or job metadata exists for a local run; these stay null.",
+    "The browser binary was the preinstalled Chromium build, not the one bundled with Playwright 1.58.2; only one test drives the page.",
+    "Shard 2/2 (the companion project) was not run; the report covers shard 1/2 only and holds no expectation of what shard 2 contains.",
+    "config.rootDir, configFile, testDir and outputDir are producer paths, retained only in symbolic form."
+  ]
+}

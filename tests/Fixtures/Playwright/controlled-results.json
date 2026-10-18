@@ -1,0 +1,885 @@
+{
+  "config": {
+    "configFile": "/workspace/controlled-playwright/playwright.config.js",
+    "rootDir": "/workspace/controlled-playwright",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/controlled-playwright/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "controlled",
+        "name": "controlled",
+        "testDir": "/workspace/controlled-playwright/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/workspace/controlled-playwright/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "controlled-dark",
+        "name": "controlled-dark",
+        "testDir": "/workspace/controlled-playwright/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/workspace/controlled-playwright/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "companion",
+        "name": "companion",
+        "testDir": "/workspace/controlled-playwright/companion",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-results/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": {
+      "current": 1,
+      "total": 2
+    },
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "tests/controlled.spec.js",
+      "file": "tests/controlled.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "passes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "controlled",
+              "projectName": "controlled",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 757,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:33.368Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "controlled-dark",
+              "projectName": "controlled-dark",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 344,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:41.071Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9dbaf9aafbe4b60d2403-d39aa0972d0e7cc4d2dc",
+          "file": "tests/controlled.spec.js",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "flaky: fails on the first attempt, passes on retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "controlled",
+              "projectName": "controlled",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4,
+                  "error": {
+                    "message": "Error: controlled first-attempt failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+                    "stack": "Error: controlled first-attempt failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at /workspace/controlled-playwright/tests/controlled.spec.js:10:64",
+                    "location": {
+                      "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                      "column": 64,
+                      "line": 10
+                    },
+                    "snippet": "   8 |\n   9 | test('flaky: fails on the first attempt, passes on retry', async ({}, testInfo) => {\n> 10 |     expect(testInfo.retry, 'controlled first-attempt failure').toBeGreaterThan(0);\n     |                                                                ^\n  11 | });\n  12 |\n  13 | test('always fails', async () => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "column": 64,
+                        "line": 10
+                      },
+                      "message": "Error: controlled first-attempt failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n   8 |\n   9 | test('flaky: fails on the first attempt, passes on retry', async ({}, testInfo) => {\n> 10 |     expect(testInfo.retry, 'controlled first-attempt failure').toBeGreaterThan(0);\n     |                                                                ^\n  11 | });\n  12 |\n  13 | test('always fails', async () => {\n    at /workspace/controlled-playwright/tests/controlled.spec.js:10:64"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:35.606Z",
+                  "annotations": [],
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "column": 64,
+                    "line": 10
+                  }
+                },
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 1,
+                  "startTime": "2026-10-18T03:26:36.990Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "flaky"
+            },
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "controlled-dark",
+              "projectName": "controlled-dark",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 8,
+                  "error": {
+                    "message": "Error: controlled first-attempt failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+                    "stack": "Error: controlled first-attempt failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at /workspace/controlled-playwright/tests/controlled.spec.js:10:64",
+                    "location": {
+                      "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                      "column": 64,
+                      "line": 10
+                    },
+                    "snippet": "   8 |\n   9 | test('flaky: fails on the first attempt, passes on retry', async ({}, testInfo) => {\n> 10 |     expect(testInfo.retry, 'controlled first-attempt failure').toBeGreaterThan(0);\n     |                                                                ^\n  11 | });\n  12 |\n  13 | test('always fails', async () => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "column": 64,
+                        "line": 10
+                      },
+                      "message": "Error: controlled first-attempt failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n   8 |\n   9 | test('flaky: fails on the first attempt, passes on retry', async ({}, testInfo) => {\n> 10 |     expect(testInfo.retry, 'controlled first-attempt failure').toBeGreaterThan(0);\n     |                                                                ^\n  11 | });\n  12 |\n  13 | test('always fails', async () => {\n    at /workspace/controlled-playwright/tests/controlled.spec.js:10:64"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:41.596Z",
+                  "annotations": [],
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "column": 64,
+                    "line": 10
+                  }
+                },
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 1,
+                  "startTime": "2026-10-18T03:26:43.035Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "flaky"
+            }
+          ],
+          "id": "9dbaf9aafbe4b60d2403-1b948b5bbbad0134a9e6",
+          "file": "tests/controlled.spec.js",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "always fails",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "controlled",
+              "projectName": "controlled",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5,
+                  "error": {
+                    "message": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m",
+                    "stack": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m\n    at /workspace/controlled-playwright/tests/controlled.spec.js:14:52",
+                    "location": {
+                      "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                      "column": 52,
+                      "line": 14
+                    },
+                    "snippet": "  12 |\n  13 | test('always fails', async () => {\n> 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);\n     |                                                    ^\n  15 | });\n  16 |\n  17 | test('expected failure', async () => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "column": 52,
+                        "line": 14
+                      },
+                      "message": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m\n\n  12 |\n  13 | test('always fails', async () => {\n> 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);\n     |                                                    ^\n  15 | });\n  16 |\n  17 | test('expected failure', async () => {\n    at /workspace/controlled-playwright/tests/controlled.spec.js:14:52"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:37.021Z",
+                  "annotations": [],
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "column": 52,
+                    "line": 14
+                  }
+                },
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 9,
+                  "error": {
+                    "message": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m",
+                    "stack": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m\n    at /workspace/controlled-playwright/tests/controlled.spec.js:14:52",
+                    "location": {
+                      "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                      "column": 52,
+                      "line": 14
+                    },
+                    "snippet": "  12 |\n  13 | test('always fails', async () => {\n> 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);\n     |                                                    ^\n  15 | });\n  16 |\n  17 | test('expected failure', async () => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "column": 52,
+                        "line": 14
+                      },
+                      "message": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m\n\n  12 |\n  13 | test('always fails', async () => {\n> 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);\n     |                                                    ^\n  15 | });\n  16 |\n  17 | test('expected failure', async () => {\n    at /workspace/controlled-playwright/tests/controlled.spec.js:14:52"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 1,
+                  "startTime": "2026-10-18T03:26:38.248Z",
+                  "annotations": [],
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "column": 52,
+                    "line": 14
+                  }
+                }
+              ],
+              "status": "unexpected"
+            },
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "controlled-dark",
+              "projectName": "controlled-dark",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5,
+                  "error": {
+                    "message": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m",
+                    "stack": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m\n    at /workspace/controlled-playwright/tests/controlled.spec.js:14:52",
+                    "location": {
+                      "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                      "column": 52,
+                      "line": 14
+                    },
+                    "snippet": "  12 |\n  13 | test('always fails', async () => {\n> 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);\n     |                                                    ^\n  15 | });\n  16 |\n  17 | test('expected failure', async () => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "column": 52,
+                        "line": 14
+                      },
+                      "message": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m\n\n  12 |\n  13 | test('always fails', async () => {\n> 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);\n     |                                                    ^\n  15 | });\n  16 |\n  17 | test('expected failure', async () => {\n    at /workspace/controlled-playwright/tests/controlled.spec.js:14:52"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:43.060Z",
+                  "annotations": [],
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "column": 52,
+                    "line": 14
+                  }
+                },
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7,
+                  "error": {
+                    "message": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m",
+                    "stack": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m\n    at /workspace/controlled-playwright/tests/controlled.spec.js:14:52",
+                    "location": {
+                      "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                      "column": 52,
+                      "line": 14
+                    },
+                    "snippet": "  12 |\n  13 | test('always fails', async () => {\n> 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);\n     |                                                    ^\n  15 | });\n  16 |\n  17 | test('expected failure', async () => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "column": 52,
+                        "line": 14
+                      },
+                      "message": "Error: controlled persistent failure\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m3\u001b[39m\nReceived: \u001b[31m2\u001b[39m\n\n  12 |\n  13 | test('always fails', async () => {\n> 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);\n     |                                                    ^\n  15 | });\n  16 |\n  17 | test('expected failure', async () => {\n    at /workspace/controlled-playwright/tests/controlled.spec.js:14:52"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 1,
+                  "startTime": "2026-10-18T03:26:44.409Z",
+                  "annotations": [],
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "column": 52,
+                    "line": 14
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef",
+          "file": "tests/controlled.spec.js",
+          "line": 13,
+          "column": 1
+        },
+        {
+          "title": "expected failure",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "fail",
+                  "description": "controlled expected failure",
+                  "location": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "line": 18,
+                    "column": 10
+                  }
+                }
+              ],
+              "expectedStatus": "failed",
+              "projectId": "controlled",
+              "projectName": "controlled",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 10,
+                  "error": {
+                    "message": "Error: controlled expected-failure assertion\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"expected\"\u001b[39m\nReceived: \u001b[31m\"actual\"\u001b[39m",
+                    "stack": "Error: controlled expected-failure assertion\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"expected\"\u001b[39m\nReceived: \u001b[31m\"actual\"\u001b[39m\n    at /workspace/controlled-playwright/tests/controlled.spec.js:19:63",
+                    "location": {
+                      "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                      "column": 63,
+                      "line": 19
+                    },
+                    "snippet": "  17 | test('expected failure', async () => {\n  18 |     test.fail(true, 'controlled expected failure');\n> 19 |     expect('actual', 'controlled expected-failure assertion').toBe('expected');\n     |                                                               ^\n  20 | });\n  21 |\n  22 | test('skipped', async () => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "column": 63,
+                        "line": 19
+                      },
+                      "message": "Error: controlled expected-failure assertion\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"expected\"\u001b[39m\nReceived: \u001b[31m\"actual\"\u001b[39m\n\n  17 | test('expected failure', async () => {\n  18 |     test.fail(true, 'controlled expected failure');\n> 19 |     expect('actual', 'controlled expected-failure assertion').toBe('expected');\n     |                                                               ^\n  20 | });\n  21 |\n  22 | test('skipped', async () => {\n    at /workspace/controlled-playwright/tests/controlled.spec.js:19:63"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:39.603Z",
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "description": "controlled expected failure",
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "line": 18,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "column": 63,
+                    "line": 19
+                  }
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "fail",
+                  "description": "controlled expected failure",
+                  "location": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "line": 18,
+                    "column": 10
+                  }
+                }
+              ],
+              "expectedStatus": "failed",
+              "projectId": "controlled-dark",
+              "projectName": "controlled-dark",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 9,
+                  "error": {
+                    "message": "Error: controlled expected-failure assertion\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"expected\"\u001b[39m\nReceived: \u001b[31m\"actual\"\u001b[39m",
+                    "stack": "Error: controlled expected-failure assertion\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"expected\"\u001b[39m\nReceived: \u001b[31m\"actual\"\u001b[39m\n    at /workspace/controlled-playwright/tests/controlled.spec.js:19:63",
+                    "location": {
+                      "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                      "column": 63,
+                      "line": 19
+                    },
+                    "snippet": "  17 | test('expected failure', async () => {\n  18 |     test.fail(true, 'controlled expected failure');\n> 19 |     expect('actual', 'controlled expected-failure assertion').toBe('expected');\n     |                                                               ^\n  20 | });\n  21 |\n  22 | test('skipped', async () => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "column": 63,
+                        "line": 19
+                      },
+                      "message": "Error: controlled expected-failure assertion\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"expected\"\u001b[39m\nReceived: \u001b[31m\"actual\"\u001b[39m\n\n  17 | test('expected failure', async () => {\n  18 |     test.fail(true, 'controlled expected failure');\n> 19 |     expect('actual', 'controlled expected-failure assertion').toBe('expected');\n     |                                                               ^\n  20 | });\n  21 |\n  22 | test('skipped', async () => {\n    at /workspace/controlled-playwright/tests/controlled.spec.js:19:63"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:45.708Z",
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "description": "controlled expected failure",
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "line": 18,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "attachments": [],
+                  "errorLocation": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "column": 63,
+                    "line": 19
+                  }
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9dbaf9aafbe4b60d2403-8f2f846f824cdbc36d07",
+          "file": "tests/controlled.spec.js",
+          "line": 17,
+          "column": 1
+        },
+        {
+          "title": "skipped",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "controlled skip",
+                  "location": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "line": 23,
+                    "column": 10
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "controlled",
+              "projectName": "controlled",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 2,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:39.636Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "controlled skip",
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "line": 23,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            },
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "controlled skip",
+                  "location": {
+                    "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                    "line": 23,
+                    "column": 10
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "controlled-dark",
+              "projectName": "controlled-dark",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 2,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:45.737Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "controlled skip",
+                      "location": {
+                        "file": "/workspace/controlled-playwright/tests/controlled.spec.js",
+                        "line": 23,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "9dbaf9aafbe4b60d2403-a3b2cd22101baa79d8f8",
+          "file": "tests/controlled.spec.js",
+          "line": 22,
+          "column": 1
+        },
+        {
+          "title": "writes stdout and stderr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "controlled",
+              "projectName": "controlled",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "controlled stdout line 1\n"
+                    },
+                    {
+                      "text": "controlled stdout line 2\n"
+                    }
+                  ],
+                  "stderr": [
+                    {
+                      "text": "controlled stderr line 1\n"
+                    },
+                    {
+                      "text": "controlled stderr raw write\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:39.656Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "controlled-dark",
+              "projectName": "controlled-dark",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "controlled stdout line 1\n"
+                    },
+                    {
+                      "text": "controlled stdout line 2\n"
+                    }
+                  ],
+                  "stderr": [
+                    {
+                      "text": "controlled stderr line 1\n"
+                    },
+                    {
+                      "text": "controlled stderr raw write\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-18T03:26:45.756Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9dbaf9aafbe4b60d2403-6da127d4de23b6b521df",
+          "file": "tests/controlled.spec.js",
+          "line": 26,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "outer describe",
+          "file": "tests/controlled.spec.js",
+          "line": 33,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "inner describe",
+              "file": "tests/controlled.spec.js",
+              "line": 34,
+              "column": 10,
+              "specs": [
+                {
+                  "title": "nested passes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "controlled",
+                      "projectName": "controlled",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-10-18T03:26:39.677Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    },
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "controlled-dark",
+                      "projectName": "controlled-dark",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-10-18T03:26:45.776Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "9dbaf9aafbe4b60d2403-14c35cf0a8059ca384e5",
+                  "file": "tests/controlled.spec.js",
+                  "line": 35,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-18T03:26:31.108Z",
+    "duration": 14713.225,
+    "expected": 8,
+    "skipped": 2,
+    "unexpected": 2,
+    "flaky": 2
+  }
+}

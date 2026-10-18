@@ -1,0 +1,147 @@
+
+Running 14 tests using 1 worker, shard 1 of 2
+
+  ✓   1 [controlled] › tests/controlled.spec.js:4:1 › passes (757ms)
+  ✘   2 [controlled] › tests/controlled.spec.js:9:1 › flaky: fails on the first attempt, passes on retry (4ms)
+  ✓   3 [controlled] › tests/controlled.spec.js:9:1 › flaky: fails on the first attempt, passes on retry (retry #1) (6ms)
+  ✘   4 [controlled] › tests/controlled.spec.js:13:1 › always fails (5ms)
+  ✘   5 [controlled] › tests/controlled.spec.js:13:1 › always fails (retry #1) (9ms)
+  ✘   6 [controlled] › tests/controlled.spec.js:17:1 › expected failure (10ms)
+  -   7 [controlled] › tests/controlled.spec.js:22:1 › skipped
+controlled stdout line 1
+controlled stdout line 2
+controlled stderr line 1
+controlled stderr raw write
+  ✓   8 [controlled] › tests/controlled.spec.js:26:1 › writes stdout and stderr (3ms)
+  ✓   9 [controlled] › tests/controlled.spec.js:35:9 › outer describe › inner describe › nested passes (2ms)
+  ✓  10 [controlled-dark] › tests/controlled.spec.js:4:1 › passes (344ms)
+  ✘  11 [controlled-dark] › tests/controlled.spec.js:9:1 › flaky: fails on the first attempt, passes on retry (8ms)
+  ✓  12 [controlled-dark] › tests/controlled.spec.js:9:1 › flaky: fails on the first attempt, passes on retry (retry #1) (5ms)
+  ✘  13 [controlled-dark] › tests/controlled.spec.js:13:1 › always fails (5ms)
+  ✘  14 [controlled-dark] › tests/controlled.spec.js:13:1 › always fails (retry #1) (7ms)
+  ✘  15 [controlled-dark] › tests/controlled.spec.js:17:1 › expected failure (9ms)
+  -  16 [controlled-dark] › tests/controlled.spec.js:22:1 › skipped
+controlled stdout line 1
+controlled stdout line 2
+controlled stderr line 1
+controlled stderr raw write
+  ✓  17 [controlled-dark] › tests/controlled.spec.js:26:1 › writes stdout and stderr (2ms)
+  ✓  18 [controlled-dark] › tests/controlled.spec.js:35:9 › outer describe › inner describe › nested passes (2ms)
+
+
+  1) [controlled] › tests/controlled.spec.js:13:1 › always fails ───────────────────────────────────
+
+    Error: controlled persistent failure
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m3[39m
+    Received: [31m2[39m
+
+      12 |
+      13 | test('always fails', async () => {
+    > 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);
+         |                                                    ^
+      15 | });
+      16 |
+      17 | test('expected failure', async () => {
+        at /workspace/controlled-playwright/tests/controlled.spec.js:14:52
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: controlled persistent failure
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m3[39m
+    Received: [31m2[39m
+
+      12 |
+      13 | test('always fails', async () => {
+    > 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);
+         |                                                    ^
+      15 | });
+      16 |
+      17 | test('expected failure', async () => {
+        at /workspace/controlled-playwright/tests/controlled.spec.js:14:52
+
+  2) [controlled-dark] › tests/controlled.spec.js:13:1 › always fails ──────────────────────────────
+
+    Error: controlled persistent failure
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m3[39m
+    Received: [31m2[39m
+
+      12 |
+      13 | test('always fails', async () => {
+    > 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);
+         |                                                    ^
+      15 | });
+      16 |
+      17 | test('expected failure', async () => {
+        at /workspace/controlled-playwright/tests/controlled.spec.js:14:52
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: controlled persistent failure
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m3[39m
+    Received: [31m2[39m
+
+      12 |
+      13 | test('always fails', async () => {
+    > 14 |     expect(1 + 1, 'controlled persistent failure').toBe(3);
+         |                                                    ^
+      15 | });
+      16 |
+      17 | test('expected failure', async () => {
+        at /workspace/controlled-playwright/tests/controlled.spec.js:14:52
+
+  3) [controlled] › tests/controlled.spec.js:9:1 › flaky: fails on the first attempt, passes on retry 
+
+    Error: controlled first-attempt failure
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+       8 |
+       9 | test('flaky: fails on the first attempt, passes on retry', async ({}, testInfo) => {
+    > 10 |     expect(testInfo.retry, 'controlled first-attempt failure').toBeGreaterThan(0);
+         |                                                                ^
+      11 | });
+      12 |
+      13 | test('always fails', async () => {
+        at /workspace/controlled-playwright/tests/controlled.spec.js:10:64
+
+  4) [controlled-dark] › tests/controlled.spec.js:9:1 › flaky: fails on the first attempt, passes on retry 
+
+    Error: controlled first-attempt failure
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+       8 |
+       9 | test('flaky: fails on the first attempt, passes on retry', async ({}, testInfo) => {
+    > 10 |     expect(testInfo.retry, 'controlled first-attempt failure').toBeGreaterThan(0);
+         |                                                                ^
+      11 | });
+      12 |
+      13 | test('always fails', async () => {
+        at /workspace/controlled-playwright/tests/controlled.spec.js:10:64
+
+  2 failed
+    [controlled] › tests/controlled.spec.js:13:1 › always fails ────────────────────────────────────
+    [controlled-dark] › tests/controlled.spec.js:13:1 › always fails ───────────────────────────────
+  2 flaky
+    [controlled] › tests/controlled.spec.js:9:1 › flaky: fails on the first attempt, passes on retry 
+    [controlled-dark] › tests/controlled.spec.js:9:1 › flaky: fails on the first attempt, passes on retry 
+  2 skipped
+  8 passed (14.7s)
