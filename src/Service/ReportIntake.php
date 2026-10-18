@@ -303,16 +303,24 @@ final class ReportIntake
         try {
             // One preceding byte tells whether the window starts at a line boundary.
             $start = max(0, $offset - 1);
-            if (0 !== fseek($stream, $start) || false === ($bytes = fread($stream, $limit + ($offset - $start)))) {
+            // Three spare bytes let a window that starts a multibyte character still return that whole character.
+            if (0 !== fseek($stream, $start) || false === ($bytes = fread($stream, $limit + 3 + ($offset - $start)))) {
                 throw new \RuntimeException('Original log bytes could not be read.');
             }
         } finally { fclose($stream); }
         $previous = $offset > $start ? substr($bytes, 0, 1) : null;
-        $content = $offset > $start ? substr($bytes, 1) : $bytes;
+        $available = $offset > $start ? substr($bytes, 1) : $bytes;
+        $content = substr($available, 0, $limit);
         $end = $offset + strlen($content);
         if ($end < $artifact['bytes']) {
-            // Do not split a UTF-8 sequence at the window end; the next window starts at its lead byte.
-            $content = substr($content, 0, strlen($content) - self::incompleteUtf8Tail($content));
+            // Do not split a UTF-8 sequence at the window end; the next window starts at its lead byte. When the
+            // whole window is the start of one character, return that character (at most 4 bytes) instead of nothing.
+            $tail = self::incompleteUtf8Tail($content);
+            if ($tail === strlen($content)) {
+                $content = substr($available, 0, min(strlen($available), self::utf8SequenceLength($available[0])));
+            } else {
+                $content = substr($content, 0, strlen($content) - $tail);
+            }
             $end = $offset + strlen($content);
         }
         $eof = $end >= $artifact['bytes'];
@@ -332,19 +340,27 @@ final class ReportIntake
             'utf8_lossy' => !$valid, 'content_text' => $text];
     }
 
-    /** Bytes at the end of $content that begin a UTF-8 sequence it does not complete (0 to 3). */
+    /** Bytes at the end of $content that begin a UTF-8 sequence it does not complete (0 to strlen($content)). */
     private static function incompleteUtf8Tail(string $content): int
     {
         $length = strlen($content);
-        for ($back = 1; $back <= min(3, $length - 1); ++$back) {
+        for ($back = 1; $back <= min(3, $length); ++$back) {
             $byte = ord($content[$length - $back]);
             if (0x80 === ($byte & 0xC0)) { continue; }
-            $needed = match (true) { 0xC0 === ($byte & 0xE0) => 2, 0xE0 === ($byte & 0xF0) => 3, 0xF0 === ($byte & 0xF8) => 4, default => 1 };
+            $needed = self::utf8SequenceLength($content[$length - $back]);
 
             return $needed > $back ? $back : 0;
         }
 
         return 0;
+    }
+
+    /** Declared length of the UTF-8 sequence a lead byte starts; continuation and invalid bytes count as 1. */
+    private static function utf8SequenceLength(string $lead): int
+    {
+        $byte = ord($lead);
+
+        return match (true) { 0xC0 === ($byte & 0xE0) => 2, 0xE0 === ($byte & 0xF0) => 3, 0xF0 === ($byte & 0xF8) => 4, default => 1 };
     }
 
     public function getArtifact(string $projectId, string $executionId, string $artifactId): array

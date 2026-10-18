@@ -180,8 +180,9 @@ final class ReportIntakeController extends AbstractController
         }
 
         // Twig escapes markup. C0 controls such as terminal escapes are shown as control pictures; C1 controls and
-        // bidirectional overrides, which could reorder the displayed text, are shown as their code points.
-        $display = preg_replace_callback('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x{80}-\x{9F}\x{200E}\x{200F}\x{202A}-\x{202E}\x{2066}-\x{2069}]/u', static function (array $match): string {
+        // bidirectional controls (ALM, LRM/RLM, embeddings, overrides, isolates), which could reorder the displayed
+        // text, are shown as their code points.
+        $display = preg_replace_callback('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x{80}-\x{9F}\x{061C}\x{200E}\x{200F}\x{202A}-\x{202E}\x{2066}-\x{2069}]/u', static function (array $match): string {
             $code = mb_ord($match[0], 'UTF-8');
 
             return match (true) {

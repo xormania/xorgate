@@ -343,6 +343,10 @@ final class PlaywrightIntakeTest extends KernelTestCase
         $utf8 = $this->complete("ab\u{20AC}cd\n\xFF\n", 'text-log', 'utf8-log');
         $first = $this->intake->readLogWindow($this->projectId(), $this->executionId(), $utf8['artifact']['artifact_id'], 0, 3);
         self::assertSame(['ab', 2, 2, false], [$first['content_text'], $first['returned_bytes'], $first['next_offset'], $first['utf8_lossy']]);
+        foreach ([1, 2] as $tiny) {
+            $euro = $this->intake->readLogWindow($this->projectId(), $this->executionId(), $utf8['artifact']['artifact_id'], 2, $tiny);
+            self::assertSame(["\u{20AC}", 3, 5, false], [$euro['content_text'], $euro['returned_bytes'], $euro['next_offset'], $euro['utf8_lossy']], 'A window smaller than its first character returns that whole character.');
+        }
         $rest = $this->intake->readLogWindow($this->projectId(), $this->executionId(), $utf8['artifact']['artifact_id'], 2, 100);
         self::assertSame(["\u{20AC}cd\n\u{FFFD}\n", true, true], [$rest['content_text'], $rest['utf8_lossy'], $rest['eof']]);
     }
