@@ -19,7 +19,7 @@ final class ArtifactTools
             'schema_version' => ['type' => 'integer', 'enum' => [1]],
             'request_id' => self::UUID + ['description' => 'Caller-supplied UUID; identity is scoped to project, execution and report_role.'],
             'report_role' => ['type' => 'string', 'maxLength' => 80, 'description' => 'Intended report slot within this execution; default junit.'],
-            'format' => ['type' => 'string', 'maxLength' => 80, 'description' => 'Adapter selector; default junit. Unsupported formats remain visible as parser outcomes.'],
+            'format' => ['type' => 'string', 'maxLength' => 80, 'description' => 'Adapter selector; default junit. Installed formats: junit (JUnit XML), playwright-json (Playwright JSON reporter results), playwright-failed-attempts and playwright-durations (UXor playwright-summary schema 1), jev-assessment (one UXor Jev assessment.json, version 1; read only, Jev is never called) and text-log (any text log). Unsupported formats remain visible as parser outcomes.'],
             'filename' => ['type' => ['string', 'null'], 'maxLength' => 255],
             'media_type' => ['type' => ['string', 'null'], 'maxLength' => 120],
             'source' => [
@@ -79,6 +79,27 @@ final class ArtifactTools
     public function observations(#[Schema(definition: self::UUID)] string $projectId, #[Schema(definition: self::UUID)] string $executionId, #[Schema(definition: self::UUID)] string $operationId, #[Schema(minimum: 1, maximum: 100)] int $limit = 25, #[Schema(maxLength: 36)] ?string $cursor = null): array
     {
         return $this->result(fn (): array => $this->intake->listObservations($projectId, $executionId, $operationId, $limit, $cursor));
+    }
+
+    #[McpTool(name: 'xorgate_attempts_list', description: 'List bounded native test attempts (Playwright results, including retries) for one native report operation, in report order. Each attempt keeps its retry index, native status, whether it matched the expected status, bounded error and output excerpts, and references to derived annotations linked to it. Linked annotations never add attempts.', outputSchema: self::OUTPUT)]
+    #[Schema(additionalProperties: false)]
+    public function attempts(#[Schema(definition: self::UUID)] string $projectId, #[Schema(definition: self::UUID)] string $executionId, #[Schema(definition: self::UUID)] string $operationId, #[Schema(minimum: 1, maximum: 100)] int $limit = 25, #[Schema(maxLength: 36)] ?string $cursor = null): array
+    {
+        return $this->result(fn (): array => $this->intake->listAttempts($projectId, $executionId, $operationId, $limit, $cursor));
+    }
+
+    #[McpTool(name: 'xorgate_annotations_list', description: 'List bounded derived annotations (failed-attempt records, durations, existing Jev assessments, producer status and errors outside tests) produced by one import or linked to one native import. Each carries its exact target, bounded data and explicit match status: linked, unmatched, ambiguous or not_applicable with a reason. Advisory assessments never rewrite native outcomes; Jev assessments are read from their retained files and Jev is never called.', outputSchema: self::OUTPUT)]
+    #[Schema(additionalProperties: false)]
+    public function annotations(#[Schema(definition: self::UUID)] string $projectId, #[Schema(definition: self::UUID)] string $executionId, #[Schema(definition: self::UUID)] string $operationId, #[Schema(minimum: 1, maximum: 100)] int $limit = 25, #[Schema(maxLength: 36)] ?string $cursor = null): array
+    {
+        return $this->result(fn (): array => $this->intake->listAnnotations($projectId, $executionId, $operationId, $limit, $cursor));
+    }
+
+    #[McpTool(name: 'xorgate_log_read', description: 'Read a verified bounded text window of an original artifact, such as a retained log. Offset is a byte offset and limit is at most 32768 bytes. The result reports next/previous offsets, eof, whether the window starts or ends mid-line and whether invalid UTF-8 was replaced. Use next_offset to page; whole logs are never returned at once.', outputSchema: self::OUTPUT)]
+    #[Schema(additionalProperties: false)]
+    public function log(#[Schema(definition: self::UUID)] string $projectId, #[Schema(definition: self::UUID)] string $executionId, #[Schema(definition: self::UUID)] string $artifactId, #[Schema(minimum: 0, maximum: 2_147_483_647)] int $offset = 0, #[Schema(minimum: 1, maximum: 32_768)] int $limit = 32_768): array
+    {
+        return $this->result(fn (): array => $this->intake->readLogWindow($projectId, $executionId, $artifactId, $offset, $limit));
     }
 
     #[McpTool(name: 'xorgate_artifact_get', description: 'Inspect immutable original artifact digest, size and availability within its owning project/execution. Missing, corrupt or expired bytes remain distinguishable after normalization. No raw storage path is exposed.', outputSchema: self::OUTPUT)]

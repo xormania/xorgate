@@ -1,0 +1,11 @@
+### Jev diagnosis, shard webkit 3/3
+
+Advisory hypothesis from bounded evidence; the test result is unchanged.
+Each failed attempt's assessment (category, confidence, the selected excerpt, the request sent) is kept 30 days in the shard's `jev-<browser>-<shard>-<run>-<attempt>` artifact.
+
+- **[smoke-webkit] tests/e2e/demo-app.spec.ts:298 › every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico**, attempt 1 (retry 0, failed): likely cause **unknown** (classifier confidence 0.26); selected test error lines 1-11 (excerpt confidence 0.94):
+
+  <pre>Error: console errors, page errors, CSP violations or failed requests&#10;&#10;expect(received).toEqual(expected) // deep equality&#10;&#10;- Expected  - 1&#10;+ Received  + 3&#10;&#10;- Array []&#10;+ Array [&#10;+   "requestfailed: GET https://localhost/assets/vendor/@kurkle/color/color.index-8p4uYqP.js Load request cancelled",&#10;+ ]</pre>
+- **[smoke-webkit] tests/e2e/demo-app.spec.ts:298 › every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico**, attempt 2 (retry 1, failed): likely cause **unknown** (classifier confidence 0.26); selected test error lines 1-16 (excerpt confidence 0.88):
+
+  <pre>Error: console errors, page errors, CSP violations or failed requests&#10;&#10;expect(received).toEqual(expected) // deep equality&#10;&#10;- Expected  - 1&#10;+ Received  + 8&#10;&#10;- Array []&#10;+ Array [&#10;+   "requestfailed: GET https://localhost/assets/vendor/@kurkle/color/color.index-8p4uYqP.js Load request cancelled",&#10;+   "requestfailed: GET https://localhost/assets/vendor/@orchidjs/sifter/sifter.index-dBmLgbU.js Load request cancelled",&#10;+   "requestfailed: GET https://localhost/assets/vendor/@orchidjs/unicode-variants/unicode-variants.index-q9Od8gP.js Load request cancelled",&#10;+   "requestfailed: GET https://localhost/assets/vendor/@orchidjs/sifter/sifter.index-dBmLgbU.js Load request cancelled",&#10;+   "requestfailed: GET https://localhost/assets/vendor/@kurkle/color/color.index-8p4uYqP.js Load request cancelled",&#10;+   "requestfailed: GET https://localhost/assets/vendor/@orchidjs/unicode-variants/unicode-variants.index-q9Od8gP.js Load request cancelled",&#10;+ ]</pre>

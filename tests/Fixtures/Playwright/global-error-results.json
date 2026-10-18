@@ -1,0 +1,78 @@
+{
+  "config": {
+    "configFile": "/workspace/controlled-playwright/global-error/playwright.config.js",
+    "rootDir": "/workspace/controlled-playwright/global-error/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/controlled-playwright/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "controlled",
+        "name": "controlled",
+        "testDir": "/workspace/controlled-playwright/global-error/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-results/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: controlled error while loading the spec file",
+      "stack": "Error: controlled error while loading the spec file\n    at Object.<anonymous> (/workspace/controlled-playwright/global-error/tests/throws-at-load.spec.js:4:7)",
+      "location": {
+        "file": "/workspace/controlled-playwright/global-error/tests/throws-at-load.spec.js",
+        "column": 7,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mthrows-at-load.spec.js:4\n\n  2 | const { test } = require('@playwright/test');\n  3 |\n> 4 | throw new Error('controlled error while loading the spec file');\n    |       ^\n  5 |\n  6 | test('never registered', async () => {});\n  7 |"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-10-18T03:27:04.619Z",
+    "duration": 33.80400000000009,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

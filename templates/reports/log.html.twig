@@ -1,0 +1,35 @@
+{% extends 'layouts/management.html.twig' %}
+
+{% block title %}Xorgate · Log window{% endblock %}
+{% block page_title %}Log window{% endblock %}
+{% block page_description %}{{ project.name }} · {{ window.artifact.filename ?? window.artifact.artifact_id }}{% endblock %}
+{% block page_before %}<a href="{{ path('app_report_artifact', {projectId: project.project_id, executionId: execution.execution_id, artifactId: window.artifact.artifact_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to original artifact</a>{% endblock %}
+
+{% block content %}
+    {% set last = window.offset + window.returned_bytes %}
+    <div class="space-y-6" data-xorgate-artifact-id="{{ window.artifact.artifact_id }}" data-xorgate-log-offset="{{ window.offset }}" data-xorgate-log-returned="{{ window.returned_bytes }}" data-xorgate-log-next-offset="{{ window.next_offset ?? 'none' }}" data-xorgate-log-eof="{{ window.eof ? 'true' : 'false' }}" data-xorgate-log-starts-mid-line="{{ window.starts_mid_line ? 'true' : 'false' }}" data-xorgate-log-ends-mid-line="{{ window.ends_mid_line ? 'true' : 'false' }}" data-xorgate-log-utf8-lossy="{{ window.utf8_lossy ? 'true' : 'false' }}">
+        <p class="text-sm text-body">
+            {% if window.returned_bytes > 0 %}Showing bytes {{ window.offset|number_format }}–{{ (last - 1)|number_format }} of {{ window.artifact.bytes|number_format }}{% else %}No bytes at offset {{ window.offset|number_format }} of {{ window.artifact.bytes|number_format }}{% endif %}
+            (zero-based byte offsets of the verified original; at most {{ limit|number_format }} bytes per window).
+        </p>
+        <ul class="list-inside list-disc space-y-1 text-sm text-body">
+            {% if window.starts_mid_line %}<li>This window starts in the middle of a line.</li>{% endif %}
+            {% if window.ends_mid_line %}<li>This window ends in the middle of a line; the line continues in the next window.</li>{% endif %}
+            {% if window.utf8_lossy %}<li>Invalid UTF-8 bytes in this window are shown as replacement characters. Download the original for exact bytes.</li>{% endif %}
+            <li>Control characters, such as terminal escapes, are shown as control pictures (for example ␛), and C1 or bidirectional control characters as their code points (for example &lt;U+202E&gt;); MCP and CLI return the decoded text unchanged.</li>
+            {% if window.eof %}<li>This window reaches the end of the original.</li>{% else %}<li>More bytes follow this window.</li>{% endif %}
+        </ul>
+        <nav aria-label="Log windows" class="flex flex-wrap items-center gap-3">
+            {% if window.previous_offset is not null %}
+                <twig:Button as="a" variant="outline" href="{{ path('app_report_log', {projectId: project.project_id, executionId: execution.execution_id, artifactId: window.artifact.artifact_id, offset: window.previous_offset, limit: limit}) }}" data-xorgate-log-previous="{{ window.previous_offset }}">Previous window</twig:Button>
+            {% endif %}
+            {% if window.next_offset is not null %}
+                <twig:Button as="a" variant="outline" href="{{ path('app_report_log', {projectId: project.project_id, executionId: execution.execution_id, artifactId: window.artifact.artifact_id, offset: window.next_offset, limit: limit}) }}" data-xorgate-log-next="{{ window.next_offset }}">Next window</twig:Button>
+            {% endif %}
+            {% if window.artifact.availability.available %}
+                <twig:Button as="a" variant="outline" href="{{ path('app_report_download', {projectId: project.project_id, executionId: execution.execution_id, artifactId: window.artifact.artifact_id}) }}" data-turbo="false" data-turbo-prefetch="false">Download original bytes</twig:Button>
+            {% endif %}
+        </nav>
+        <pre id="log-window" tabindex="0" class="max-h-[70vh] overflow-auto whitespace-pre-wrap break-all rounded-base border border-default bg-neutral-primary-soft p-4 font-mono text-xs text-body" data-xorgate-log-content="{{ window.artifact.artifact_id }}">{{ display_text }}</pre>
+    </div>
+{% endblock %}

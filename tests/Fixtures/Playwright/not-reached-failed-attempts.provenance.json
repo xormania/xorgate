@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "fixture": "not-reached-failed-attempts.json",
+  "classification": "uxor-tool-derived-report",
+  "tool": {
+    "sourceRepo": "xormania/uxor",
+    "sourceSHA": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+    "checkoutPath": "/workspace/uxor",
+    "workspace": {
+      "trackedStateBefore": "clean",
+      "trackedStateAfter": "clean",
+      "untrackedBefore": 0,
+      "untrackedAfter": 0
+    },
+    "sourceFile": "tools/ci/playwright-summary.mjs",
+    "sourceFileURL": "https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/tools/ci/playwright-summary.mjs"
+  },
+  "workflow": null,
+  "runId": null,
+  "runAttempt": null,
+  "jobId": null,
+  "jobName": null,
+  "shard": "chromium 1/2",
+  "origin": {
+    "kind": "local-execution-of-uxor-tool",
+    "workingDirectory": "/workspace/controlled-playwright/not-reached",
+    "command": [
+      "node",
+      "/workspace/uxor/tools/ci/playwright-summary.mjs",
+      "playwright-results/results.json"
+    ],
+    "environment": {
+      "clearedWith": "env -i",
+      "PATH": "(host PATH)",
+      "HOME": "(host HOME)",
+      "SHARD": "1/2",
+      "BROWSER": "chromium",
+      "SETUP_STEPS": "Start the demo=failure",
+      "GITHUB_*": null,
+      "TESTS_OUTCOME": null
+    },
+    "input": {
+      "filename": "playwright-results/results.json",
+      "existed": false
+    },
+    "exitStatus": 4,
+    "exitStatusMeaning": "tests not reached (a setup step failed)",
+    "writtenAt": "2026-10-18T03:27:30.136263+00:00"
+  },
+  "producer": {
+    "name": "UXor tools/ci/playwright-summary.mjs",
+    "version": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+    "language": "JavaScript",
+    "node": "v22.22.0",
+    "sourceURL": "https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/tools/ci/playwright-summary.mjs"
+  },
+  "originalReport": {
+    "filename": "not-reached/playwright-results/failed-attempts.json",
+    "bytes": 341,
+    "sha256": "2b1371da1a179f11a60af3c9e43a564582a0261f88f278833fa74b06f6bb8ed7"
+  },
+  "retainedReport": {
+    "filename": "not-reached-failed-attempts.json",
+    "bytes": 341,
+    "sha256": "2b1371da1a179f11a60af3c9e43a564582a0261f88f278833fa74b06f6bb8ed7"
+  },
+  "minimization": {
+    "kind": "none",
+    "description": "Complete tool output. The same run also wrote durations.json and summary.md, not retained."
+  },
+  "redaction": {
+    "kind": "none",
+    "description": "Retained bytes are identical to the producer output.",
+    "affectedPathOccurrences": 0
+  },
+  "observed": {
+    "schema": 1,
+    "status": "not-reached",
+    "reason": "tests not reached: setup failed at Start the demo",
+    "counts": null,
+    "tests": 0,
+    "attempts": 0,
+    "globalErrors": 0,
+    "projects": []
+  },
+  "limitations": [
+    "Controlled local producer run with deliberately induced outcomes; not a UXor CI run artifact and not evidence about UXor, Xorgate or any managed project.",
+    "This is a controlled local producer run. Genuine UXor CI artifacts for a retry-recovered run, a red run and a setup failure are retained separately under tests/Fixtures/Playwright/uxor-ci/ with their own provenance.",
+    "No provider, run, attempt or job metadata exists for a local run; these stay null.",
+    "Derived annotation of controlled-results.json, produced by running the real UXor tool locally; it is not native evidence and was not uploaded by UXor CI.",
+    "GITHUB_* were unset, so sha, ref, runUrl and runAttempt are null as the tool writes them.",
+    "No Playwright run and no setup step actually happened; the setup failure is declared through SETUP_STEPS exactly as UXor CI passes step outcomes."
+  ]
+}

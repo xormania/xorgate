@@ -9,7 +9,11 @@ use Symfony\Component\DependencyInjection\Attribute\Exclude;
 #[Exclude]
 final readonly class ParsedReport
 {
-    /** Cases use structural keys, not names; suite observed counts include descendant cases. */
+    /**
+     * Cases, suites, attempts and annotations use structural keys, not names; suite observed counts include
+     * descendant cases. Attempts are native retry results; annotations are derived references to attempts or cases
+     * that intake links without counting the same execution twice.
+     */
     public function __construct(
         public string $outcome,
         public array $cases,
@@ -17,6 +21,8 @@ final readonly class ParsedReport
         public array $summary,
         public array $limitations,
         public array $parser,
+        public array $attempts = [],
+        public array $annotations = [],
     ) {
     }
 }

@@ -18,6 +18,9 @@
                     <div><dt class="text-sm font-medium text-heading">Report role / format</dt><dd class="mt-1 text-sm text-body">{{ operation.report_role }} / {{ operation.format }}</dd></div>
                     <div><dt class="text-sm font-medium text-heading">Started</dt><dd class="mt-1 text-sm text-body">{% if operation.started_at is null %}Not started{% else %}<time datetime="{{ operation.started_at }}">{{ operation.started_at }}</time>{% endif %}</dd></div>
                     <div><dt class="text-sm font-medium text-heading">Finished</dt><dd class="mt-1 text-sm text-body">{% if operation.completed_at is null %}Not finished{% else %}<time datetime="{{ operation.completed_at }}">{{ operation.completed_at }}</time>{% endif %}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Time queued</dt><dd class="mt-1 text-sm text-body" data-xorgate-timing-queued="{{ operation.timings.queued_seconds ?? 'unknown' }}">{{ operation.timings.queued_seconds is null ? 'Not measured' : operation.timings.queued_seconds ~ ' seconds' }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Processing time</dt><dd class="mt-1 text-sm text-body" data-xorgate-timing-processing="{{ operation.timings.processing_seconds ?? 'unknown' }}">{{ operation.timings.processing_seconds is null ? 'Not measured' : operation.timings.processing_seconds ~ ' seconds' }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Worker parse and commit</dt><dd class="mt-1 text-sm text-body" data-xorgate-timing-parse="{{ operation.timings.parse_ms ?? 'unknown' }}">{{ operation.timings.parse_ms is null ? 'Not measured' : operation.timings.parse_ms ~ ' ms' }}</dd></div>
                 </dl>
                 <p class="mt-5 text-sm text-body">{{ operation.status in ['queued', 'running'] ? 'Intake is asynchronous. Refresh this page to retrieve the worker’s stored progress.' : 'This state records the worker’s processing of the uploaded report. It does not declare that tests passed.' }}</p>
                 {% if operation.error is not null %}<p class="mt-4 text-sm text-fg-danger-strong">{{ operation.error.code }}: {{ operation.error.message }}</p>{% endif %}
@@ -41,6 +44,43 @@
                     <details class="mt-5"><summary class="cursor-pointer text-sm font-medium text-heading">Native declared counts</summary><pre class="mt-2 overflow-x-auto whitespace-pre-wrap break-all text-xs text-body">{{ operation.summary.declared_counts is null ? 'Unknown' : operation.summary.declared_counts|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></details>
                 {% endif %}
                 <p class="mt-5 text-sm text-body">An empty report records no cases. Partial or unsupported evidence does not establish a complete test population. Native observed outcomes and native declared counts retain their separate meaning.</p>
+                {% set summary = operation.summary %}
+                <dl class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div><dt class="text-sm font-medium text-heading">Native attempts</dt><dd class="mt-1 text-sm text-body" data-xorgate-attempt-count="{{ operation.attempt_count ?? 'unknown' }}">{{ operation.attempt_count is null ? 'Not recorded' : operation.attempt_count }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Derived annotations</dt><dd class="mt-1 text-sm text-body" data-xorgate-annotation-count="{{ operation.annotation_count ?? 'unknown' }}">{{ operation.annotation_count is null ? 'Not recorded' : operation.annotation_count }}</dd></div>
+                    <div><dt class="text-sm font-medium text-heading">Retry history</dt><dd class="mt-1 text-sm text-body">{{ summary.retry_history ?? 'Unknown' }}</dd></div>
+                    {% if summary.shard is defined %}
+                        <div><dt class="text-sm font-medium text-heading">Shard</dt><dd class="mt-1 text-sm text-body" data-xorgate-shard="{{ summary.shard is null ? 'unknown' : (summary.shard is iterable ? summary.shard.current ~ '/' ~ summary.shard.total : summary.shard) }}">{{ summary.shard is null ? 'Not declared by the report' : (summary.shard is iterable ? summary.shard.current ~ ' of ' ~ summary.shard.total : summary.shard) }}</dd></div>
+                    {% endif %}
+                    {% if (summary.shard_label ?? null) is not null %}
+                        <div><dt class="text-sm font-medium text-heading">Producer shard label</dt><dd class="mt-1 break-all text-sm text-body" data-xorgate-shard-label="{{ summary.shard_label }}">{{ summary.shard_label }}</dd></div>
+                    {% endif %}
+                    {% if summary.shard_completeness is defined and summary.shard_completeness is not null %}
+                        <div><dt class="text-sm font-medium text-heading">Shard completeness</dt><dd class="mt-1 text-sm text-body" data-xorgate-shard-completeness="{{ summary.shard_completeness.status }}">{{ summary.shard_completeness.status }}{% if (summary.shard_completeness.reason ?? null) is not null %} ({{ summary.shard_completeness.reason }}){% endif %}</dd></div>
+                    {% endif %}
+                    {% if summary.producer is defined and summary.producer is not null %}
+                        <div><dt class="text-sm font-medium text-heading">Producer status</dt><dd class="mt-1 break-all text-sm text-body" data-xorgate-producer-status="{{ summary.producer.status ?? 'unknown' }}">{{ summary.producer.status ?? 'Unknown' }}{% if (summary.producer.reason ?? null) is not null %}: {{ summary.producer.reason }}{% endif %}</dd></div>
+                    {% endif %}
+                    {% if operation.links is not null %}
+                        <div><dt class="text-sm font-medium text-heading">Annotation links</dt><dd class="mt-1 text-sm text-body" data-xorgate-links-linked="{{ operation.links.linked }}" data-xorgate-links-unmatched="{{ operation.links.unmatched }}" data-xorgate-links-ambiguous="{{ operation.links.ambiguous }}">{{ operation.links.linked }} linked · {{ operation.links.unmatched }} unmatched · {{ operation.links.ambiguous }} ambiguous · {{ operation.links.not_applicable }} not attempt-scoped</dd></div>
+                    {% endif %}
+                </dl>
+                {% if summary.global_errors is defined and summary.global_errors is not null %}
+                    <section class="mt-5" aria-labelledby="global-errors-heading" data-xorgate-global-errors="{{ summary.global_errors.count ?? 'unknown' }}">
+                        <h3 id="global-errors-heading" class="text-sm font-medium text-heading">Errors outside tests: {{ summary.global_errors.count ?? 'unknown' }}</h3>
+                        {% if (summary.global_errors.items ?? []) is not empty %}
+                            <ul class="mt-2 space-y-2">{% for error in summary.global_errors.items %}<li><pre class="overflow-x-auto whitespace-pre-wrap break-all text-xs text-body">{{ error.message ?? 'No message recorded' }}</pre>{% if (error.location ?? null) is not null %}<p class="text-xs text-body">{{ error.location.file ?? 'Unknown file' }}:{{ error.location.line ?? '?' }}</p>{% endif %}</li>{% endfor %}</ul>
+                        {% endif %}
+                        {% if summary.global_errors.truncated ?? false %}<p class="mt-2 text-xs text-body">Further errors are retained in the original artifact.</p>{% endif %}
+                    </section>
+                {% endif %}
+                <div class="mt-5 flex flex-wrap gap-3">
+                    <twig:Button as="a" variant="outline" href="{{ path('app_intake_attempts', {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}) }}" data-xorgate-attempts-link="{{ operation.operation_id }}">Native attempts</twig:Button>
+                    <twig:Button as="a" variant="outline" href="{{ path('app_intake_annotations', {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}) }}" data-xorgate-annotations-link="{{ operation.operation_id }}">Annotations</twig:Button>
+                    {% if operation.artifact.availability.available %}
+                        <twig:Button as="a" variant="outline" href="{{ path('app_report_log', {projectId: project.project_id, executionId: execution.execution_id, artifactId: operation.artifact.artifact_id}) }}" data-xorgate-log-link="{{ operation.artifact.artifact_id }}">Read original as text</twig:Button>
+                    {% endif %}
+                </div>
                 {% if operation.limitations is not empty %}
                     <ul class="mt-4 list-inside list-disc space-y-2 text-sm text-body">{% for limitation in operation.limitations %}<li>{{ limitation is iterable ? limitation|json_encode : limitation }}</li>{% endfor %}</ul>
                 {% endif %}
@@ -59,13 +99,13 @@
                         <twig:Table:Body>
                             {% for observation in observations.items %}
                                 <twig:Table:Row data-xorgate-observation-id="{{ observation.observation_id }}" data-xorgate-native-outcome="{{ observation.native_outcome }}">
-                                    <twig:Table:Head scope="row"><span>{{ observation.name is null ? 'Unknown' : observation.name }}</span><p class="mt-1 break-all text-xs font-normal text-body">{{ observation.classname is null ? 'Unknown class' : observation.classname }}</p></twig:Table:Head>
-                                    <twig:Table:Cell>{{ observation.native_outcome }}</twig:Table:Cell>
-                                    <twig:Table:Cell>{{ observation.duration_seconds is null ? 'Unknown' : observation.duration_seconds ~ ' seconds' }}</twig:Table:Cell>
+                                    <twig:Table:Head scope="row"><span>{{ (observation.name ?? null) is null ? 'Unknown' : observation.name }}</span><p class="mt-1 break-all text-xs font-normal text-body">{% if (observation.classname ?? null) is not null %}{{ observation.classname }}{% elseif (observation.project ?? null) is not null %}{{ observation.project }}{% if (observation.file ?? null) is not null %} · {{ observation.file }}{% if (observation.line ?? null) is not null %}:{{ observation.line }}{% endif %}{% endif %}{% else %}Unknown class{% endif %}</p></twig:Table:Head>
+                                    <twig:Table:Cell>{{ observation.native_outcome }}{% if (observation.expected_status ?? null) is not null %}<p class="mt-1 text-xs text-body">expected {{ observation.expected_status }}{% if observation.expected_failure ?? false %} (expected failure){% endif %}</p>{% endif %}{% if (observation.attempt_count ?? null) is not null %}<p class="mt-1 text-xs text-body">{{ observation.attempt_count }} attempt{{ observation.attempt_count == 1 ? '' : 's' }}</p>{% endif %}</twig:Table:Cell>
+                                    <twig:Table:Cell>{% if (observation.duration_seconds ?? null) is not null %}{{ observation.duration_seconds }} seconds{% elseif (observation.duration_ms ?? null) is not null %}{{ observation.duration_ms }} ms{% else %}Unknown{% endif %}</twig:Table:Cell>
                                     <twig:Table:Cell>
                                         <details><summary class="cursor-pointer text-sm font-medium text-heading">Case evidence</summary>
-                                            <dl class="mt-3 space-y-2 text-xs text-body"><div><dt class="font-medium">Observation ID</dt><dd class="break-all">{{ observation.observation_id }}</dd></div><div><dt class="font-medium">Case key</dt><dd class="break-all">{{ observation.case_key }}</dd></div><div><dt class="font-medium">Suite key</dt><dd class="break-all">{{ observation.suite_key }}</dd></div><div><dt class="font-medium">Assertions</dt><dd>{{ observation.assertions is null ? 'Unknown' : observation.assertions }}</dd></div></dl>
-                                            <pre class="mt-3 whitespace-pre-wrap break-all text-xs text-body">{{ observation.diagnostics|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                                            <dl class="mt-3 space-y-2 text-xs text-body"><div><dt class="font-medium">Observation ID</dt><dd class="break-all">{{ observation.observation_id }}</dd></div><div><dt class="font-medium">Case key</dt><dd class="break-all">{{ observation.case_key }}</dd></div><div><dt class="font-medium">Suite key</dt><dd class="break-all">{{ observation.suite_key ?? 'Unknown' }}</dd></div>{% if observation.assertions is defined %}<div><dt class="font-medium">Assertions</dt><dd>{{ observation.assertions is null ? 'Unknown' : observation.assertions }}</dd></div>{% endif %}{% if observation.test_id is defined %}<div><dt class="font-medium">Native test ID</dt><dd class="break-all">{{ observation.test_id ?? 'Unknown' }}</dd></div>{% endif %}{% if observation.annotation_count is defined %}<div><dt class="font-medium">Linked annotations</dt><dd>{{ observation.annotation_count }}</dd></div>{% endif %}</dl>
+                                            {% if observation.diagnostics is defined %}<pre class="mt-3 whitespace-pre-wrap break-all text-xs text-body">{{ observation.diagnostics|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>{% else %}<p class="mt-3 text-xs text-body">Per-attempt errors and output are listed on the native attempts page.</p>{% endif %}
                                         </details>
                                     </twig:Table:Cell>
                                 </twig:Table:Row>

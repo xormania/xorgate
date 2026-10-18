@@ -50,6 +50,7 @@ final class ReportIntakeController extends AbstractController
             'action' => $this->generateUrl('app_report_upload', ['projectId' => $projectId, 'executionId' => $executionId]),
             'csrf_token_id' => 'report_upload_'.$executionId,
             'max_bytes' => $maxBytes,
+            'formats' => array_keys($this->intake->formats()),
         ]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK;
@@ -136,6 +137,67 @@ final class ReportIntakeController extends AbstractController
         ]);
     }
 
+    #[Route('/intake/{operationId}/attempts', name: 'app_intake_attempts', requirements: ['operationId' => self::UUID_ROUTE], methods: ['GET'])]
+    public function attempts(string $projectId, string $executionId, string $operationId, Request $request): Response
+    {
+        try {
+            $context = $this->context($projectId, $executionId);
+            $operation = $this->intake->getOperation($projectId, $executionId, $operationId);
+            [$limit, $cursor] = $this->pagination($request);
+            $attempts = $this->intake->listAttempts($projectId, $executionId, $operationId, $limit, $cursor);
+        } catch (\InvalidArgumentException|\RuntimeException $error) {
+            return $this->errorResponse($error);
+        }
+
+        return $this->render('reports/attempts.html.twig', $context + ['operation' => $operation, 'attempts' => $attempts, 'cursor' => $cursor]);
+    }
+
+    #[Route('/intake/{operationId}/annotations', name: 'app_intake_annotations', requirements: ['operationId' => self::UUID_ROUTE], methods: ['GET'])]
+    public function annotations(string $projectId, string $executionId, string $operationId, Request $request): Response
+    {
+        try {
+            $context = $this->context($projectId, $executionId);
+            $operation = $this->intake->getOperation($projectId, $executionId, $operationId);
+            [$limit, $cursor] = $this->pagination($request);
+            $annotations = $this->intake->listAnnotations($projectId, $executionId, $operationId, $limit, $cursor);
+        } catch (\InvalidArgumentException|\RuntimeException $error) {
+            return $this->errorResponse($error);
+        }
+
+        return $this->render('reports/annotations.html.twig', $context + ['operation' => $operation, 'annotations' => $annotations, 'cursor' => $cursor]);
+    }
+
+    #[Route('/artifacts/{artifactId}/log', name: 'app_report_log', requirements: ['artifactId' => self::UUID_ROUTE], methods: ['GET'])]
+    public function log(string $projectId, string $executionId, string $artifactId, Request $request): Response
+    {
+        try {
+            $context = $this->context($projectId, $executionId);
+            $offset = $this->byteQuery($request, 'offset', '0', 0, 2147483647);
+            $limit = $this->byteQuery($request, 'limit', (string) ReportIntake::LOG_WINDOW_MAXIMUM, 1, ReportIntake::LOG_WINDOW_MAXIMUM);
+            $window = $this->intake->readLogWindow($projectId, $executionId, $artifactId, $offset, $limit);
+        } catch (\InvalidArgumentException|\RuntimeException $error) {
+            return $this->errorResponse($error);
+        }
+
+        // Twig escapes markup. C0 controls such as terminal escapes are shown as control pictures; C1 controls and
+        // bidirectional controls (ALM, LRM/RLM, embeddings, overrides, isolates), which could reorder the displayed
+        // text, are shown as their code points.
+        $display = preg_replace_callback('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x{80}-\x{9F}\x{061C}\x{200E}\x{200F}\x{202A}-\x{202E}\x{2066}-\x{2069}]/u', static function (array $match): string {
+            $code = mb_ord($match[0], 'UTF-8');
+
+            return match (true) {
+                0x7F === $code => "\u{2421}",
+                $code < 0x20 => mb_chr(0x2400 + $code, 'UTF-8'),
+                default => sprintf('<U+%04X>', $code),
+            };
+        }, $window['content_text']);
+        if (null === $display) {
+            return $this->errorResponse(new \RuntimeException('The log window could not be prepared for display.'));
+        }
+
+        return $this->render('reports/log.html.twig', $context + ['window' => $window, 'limit' => $limit, 'display_text' => $display]);
+    }
+
     #[Route('/artifacts/{artifactId}', name: 'app_report_artifact', requirements: ['artifactId' => self::UUID_ROUTE], methods: ['GET'])]
     public function artifact(string $projectId, string $executionId, string $artifactId): Response
     {
@@ -167,7 +229,9 @@ final class ReportIntakeController extends AbstractController
             }
         });
         $response->headers->set('Content-Type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $artifact['artifact_id'].'.xml'));
+        // The client filename is display metadata; only a short alphanumeric extension is reused.
+        $extension = null !== $artifact['filename'] && preg_match('/\.([A-Za-z0-9]{1,8})\z/', $artifact['filename'], $match) ? strtolower($match[1]) : 'bin';
+        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $artifact['artifact_id'].'.'.$extension));
         $response->headers->set('Cache-Control', 'private, no-store');
         $response->headers->set('X-Content-Type-Options', 'nosniff');
 
@@ -192,6 +256,16 @@ final class ReportIntakeController extends AbstractController
         }
 
         return [(int) $limit, $cursor];
+    }
+
+    private function byteQuery(Request $request, string $name, string $default, int $minimum, int $maximum): int
+    {
+        $value = $request->query->all()[$name] ?? $default;
+        if (!is_string($value) || !preg_match('/^(?:0|[1-9][0-9]{0,9})$/D', $value) || (int) $value < $minimum || (int) $value > $maximum) {
+            throw new \InvalidArgumentException('The '.$name.' must be an integer from '.$minimum.' to '.$maximum.'.');
+        }
+
+        return (int) $value;
     }
 
     private function errorResponse(\InvalidArgumentException|\RuntimeException $error): Response

@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "status": "not-reached",
+  "reason": "tests not reached: setup failed at Start the demo",
+  "sha": null,
+  "ref": null,
+  "runUrl": null,
+  "runAttempt": null,
+  "shard": "chromium 1/2",
+  "projects": [],
+  "runtime": {
+    "Node": "v22.22.0"
+  },
+  "counts": null,
+  "tests": [],
+  "attempts": [],
+  "globalErrors": []
+}

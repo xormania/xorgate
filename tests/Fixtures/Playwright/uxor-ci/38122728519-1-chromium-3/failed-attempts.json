@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "status": "not-reached",
+  "reason": "tests not reached: setup failed at Plan the shard's tests",
+  "sha": "f932602c4bde5c02c2295826c1fb121d2d67dbd8",
+  "ref": "claude/release-security",
+  "runUrl": "https://github.com/xormania/uxor/actions/runs/38122728519",
+  "runAttempt": 1,
+  "shard": "chromium 3/4",
+  "projects": [],
+  "runtime": {
+    "Node": "v22.23.3",
+    "PHP": "8.5.11",
+    "Symfony": "8.1.8",
+    "Turbo": "8.0.23"
+  },
+  "counts": null,
+  "tests": [],
+  "attempts": [],
+  "globalErrors": []
+}

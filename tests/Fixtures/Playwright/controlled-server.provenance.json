@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "fixture": "controlled-server.log",
+  "classification": "controlled-native-producer-report",
+  "sourceRepo": null,
+  "sourceSHA": null,
+  "producerSources": {
+    "producer/playwright.config.js": "dfde923c1192413abddd142303ed0546a3494e0a9a995526acfd20e637ac3e95",
+    "producer/tests/controlled.spec.js": "664fbb212dcc92c29b93061d910a8e5dd58afe224078be7c0029abe49967907e",
+    "producer/companion/companion.spec.js": "3364b8871022dc5a7a98b013b3979f43ab08622b74d6d6518b7965eda42e1600"
+  },
+  "workflow": null,
+  "runId": null,
+  "runAttempt": null,
+  "jobId": null,
+  "jobName": null,
+  "shard": {
+    "current": 1,
+    "total": 2
+  },
+  "origin": {
+    "kind": "local-execution",
+    "workingDirectory": "/workspace/controlled-playwright",
+    "command": [
+      "npx",
+      "playwright",
+      "test",
+      "--shard=1/2"
+    ],
+    "configFile": "playwright.config.js (retained as producer/playwright.config.js)",
+    "environment": {
+      "PLAYWRIGHT_BROWSERS_PATH": "/opt/pw-browsers",
+      "CI": null,
+      "FORCE_COLOR": null
+    },
+    "stdoutStderr": "redirected together to a file (not a TTY)",
+    "exitStatus": 1,
+    "exitStatusMeaning": "Expected: two deliberately always-failing tests are unexpected failures.",
+    "startedAt": "2026-10-18T03:26:29.291538+00:00",
+    "reportWrittenAt": "2026-10-18T03:26:45.824264+00:00",
+    "endedAt": "2026-10-18T03:26:45.857804+00:00",
+    "producerStatsStartTime": "2026-10-18T03:26:31.108Z",
+    "capture": "combined stdout and stderr of the run that wrote controlled-results.json"
+  },
+  "runtime": {
+    "node": "v22.22.0",
+    "npm": "10.9.4",
+    "playwright": "1.58.2",
+    "platform": "linux",
+    "browser": "Chromium from the preinstalled /opt/pw-browsers/chromium-1194 build, selected with launchOptions.executablePath (not the revision bundled with @playwright/test 1.58.2)"
+  },
+  "producer": {
+    "name": "Playwright list reporter",
+    "version": "1.58.2",
+    "language": "JavaScript",
+    "sourceURL": "https://github.com/microsoft/playwright/blob/v1.58.2/packages/playwright/src/reporters/list.ts"
+  },
+  "artifact": {
+    "provider": null,
+    "id": null,
+    "filename": "run1-list.log",
+    "archiveSHA256": null,
+    "sha256": "ac08814879b0dfda99cf6a34db2d9794397906b39ca28dca0dd611bae9eee32d",
+    "bytes": 7586
+  },
+  "originalReport": {
+    "filename": "run1-list.log",
+    "bytes": 7586,
+    "sha256": "ac08814879b0dfda99cf6a34db2d9794397906b39ca28dca0dd611bae9eee32d"
+  },
+  "retainedReport": {
+    "filename": "controlled-server.log",
+    "bytes": 7214,
+    "sha256": "bd5ac8081fc1006ab03ea120174760e5fcdd546ae35a76adaed327df47d771a5"
+  },
+  "minimization": {
+    "kind": "none",
+    "description": "The whole captured output of a single run; no second run was appended (the single run exceeded 3 KiB)."
+  },
+  "redaction": {
+    "kind": "path-prefix-replacement",
+    "description": "Replaced only the transient absolute scratch directory prefix with the symbolic prefix /workspace/controlled-playwright. All other bytes are unchanged.",
+    "symbolicPrefix": "/workspace/controlled-playwright",
+    "affectedPathOccurrences": 6
+  },
+  "observed": {
+    "bytes": 7214,
+    "lines": 147,
+    "lineEnding": "lf",
+    "trailingNewline": true,
+    "ansiEscapes": true,
+    "containsTestStdoutStderr": true
+  },
+  "limitations": [
+    "Controlled local producer run with deliberately induced outcomes; not a UXor CI run artifact and not evidence about UXor, Xorgate or any managed project.",
+    "This is a controlled local producer run. Genuine UXor CI artifacts for a retry-recovered run, a red run and a setup failure are retained separately under tests/Fixtures/Playwright/uxor-ci/ with their own provenance.",
+    "No provider, run, attempt or job metadata exists for a local run; these stay null.",
+    "Despite the fixture name required by the WO-003 contract, this is the Playwright list reporter output of the controlled run, not a web server log; no server ran.",
+    "It contains ANSI colour escapes from Playwright error formatting; consumers must escape them for display."
+  ]
+}

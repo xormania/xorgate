@@ -1,0 +1,372 @@
+{
+  "schema_version": 1,
+  "fixture": "uxor-ci/38195645868-1-chromium-3/",
+  "classification": "genuine-github-actions-artifact",
+  "role": "retry-recovered: green run, one test failed on its first attempt (retry 0) and passed on retry 1",
+  "repository": "xormania/uxor",
+  "head_sha": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+  "head_branch": "main",
+  "event": "push",
+  "display_title": "release: UXor 0.2.0 (#123)",
+  "workflow": ".github/workflows/ci.yml",
+  "workflowURL": "https://github.com/xormania/uxor/blob/9b2fa7309786cee435503de87cf0cd5f0a9d9782/.github/workflows/ci.yml",
+  "run_id": 38195645868,
+  "run_attempt": 1,
+  "run_html_url": "https://github.com/xormania/uxor/actions/runs/38195645868",
+  "run_conclusion": "success",
+  "run_created_at": "2026-10-12T02:24:17Z",
+  "run_updated_at": "2026-10-12T02:34:13Z",
+  "runAttempts": [
+    {
+      "run_attempt": 1,
+      "conclusion": "success",
+      "note": "The run has one attempt; the retry is Playwright's in-job retry, not a re-run of the workflow."
+    }
+  ],
+  "job": {
+    "id": 114637652679,
+    "name": "Demo + Playwright (chromium 3/4)",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "html_url": "https://github.com/xormania/uxor/actions/runs/38195645868/job/114637652679",
+    "started_at": "2026-10-12T02:24:49Z",
+    "completed_at": "2026-10-12T02:32:28Z",
+    "head_sha": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+    "labels": [
+      "ubuntu-latest"
+    ],
+    "nonSuccessSteps": [
+      {
+        "number": 6,
+        "name": "Log in to the build cache's registry",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 13,
+        "name": "The sync leaves tracked files unchanged",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 14,
+        "name": "The demo's composer.json and composer.lock are valid",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 15,
+        "name": "sync-demo copies what ux:install copies",
+        "conclusion": "skipped"
+      },
+      {
+        "number": 23,
+        "name": "Demo logs",
+        "conclusion": "skipped"
+      }
+    ],
+    "source": "https://api.github.com/repos/xormania/uxor/actions/runs/38195645868/jobs?per_page=100&filter=all"
+  },
+  "shard": "chromium 3/4",
+  "artifacts": {
+    "results": {
+      "provider": "GitHub Actions",
+      "id": 11723661692,
+      "name": "playwright-results-chromium-3",
+      "url": "https://api.github.com/repos/xormania/uxor/actions/artifacts/11723661692",
+      "archive_download_url": "https://api.github.com/repos/xormania/uxor/actions/artifacts/11723661692/zip",
+      "size_in_bytes": 74272,
+      "digest": "sha256:5d8bf8d1dccefc50606fdac474e61154d82e0ea3f87b604efe3d3b27da1909be",
+      "created_at": "2026-10-12T02:32:20Z",
+      "expires_at": "2026-11-11T02:32:19Z",
+      "downloadedZipSHA256": "5d8bf8d1dccefc50606fdac474e61154d82e0ea3f87b604efe3d3b27da1909be",
+      "downloadedZipBytes": 74272,
+      "zipDigestVerified": true,
+      "files": [
+        {
+          "path": "durations.json",
+          "bytes": 139538,
+          "sha256": "c8332abc67bc390fb8332245fe09b93d9f8a4b81f5e1a14a8de8e9d10ee082d3",
+          "retainedAs": "38195645868-1-chromium-3/durations.json"
+        },
+        {
+          "path": "failed-attempts.json",
+          "bytes": 1959,
+          "sha256": "054cb95a8ec01a3e61f73284fff97451740bd1e1288743d75ab9be1d726f10cf",
+          "retainedAs": "38195645868-1-chromium-3/failed-attempts.json"
+        },
+        {
+          "path": "job-metrics.json",
+          "bytes": 676,
+          "sha256": "5d6451d58dea2597380a5628609c09c9702ed420b54d586764fc0dde862a8cac",
+          "retainedAs": null
+        },
+        {
+          "path": "results.json",
+          "bytes": 630380,
+          "sha256": "a91b34c85ed97cbfdaeda52685fa048d754450bf68212b216ccf0b444b43dcab",
+          "retainedAs": "38195645868-1-chromium-3/results.json"
+        },
+        {
+          "path": "shard-plan.json",
+          "bytes": 199163,
+          "sha256": "8e6cd5afc9b961aadc735561de0190d9deddf37978c05fcf13949078f1dda653",
+          "retainedAs": null
+        },
+        {
+          "path": "summary.md",
+          "bytes": 5045,
+          "sha256": "0145a1122fe38e0f90961c04ee6e27c8a9b86e3e0ec287707fc0b0f136a3b71a",
+          "retainedAs": "38195645868-1-chromium-3/summary.md"
+        }
+      ]
+    },
+    "jev": {
+      "provider": "GitHub Actions",
+      "id": 11723223196,
+      "name": "jev-chromium-3-38195645868-1",
+      "url": "https://api.github.com/repos/xormania/uxor/actions/artifacts/11723223196",
+      "archive_download_url": "https://api.github.com/repos/xormania/uxor/actions/artifacts/11723223196/zip",
+      "size_in_bytes": 3400,
+      "digest": "sha256:fa8471c710bd247d821fc345c6801aa88db9e95324c8611ad9a89039af1ea1a6",
+      "created_at": "2026-10-12T02:32:23Z",
+      "expires_at": "2026-11-11T02:32:23Z",
+      "downloadedZipSHA256": "fa8471c710bd247d821fc345c6801aa88db9e95324c8611ad9a89039af1ea1a6",
+      "downloadedZipBytes": 3400,
+      "zipDigestVerified": true,
+      "files": [
+        {
+          "path": "attempts/01-smoke-editor-retry0/assessment.json",
+          "bytes": 9324,
+          "sha256": "06dc27d0d57979bb34aa357db71ce0ede7fc70bacdbcbde99f91f407d44ffcb3",
+          "retainedAs": "38195645868-1-chromium-3/jev/attempts/01-smoke-editor-retry0/assessment.json"
+        },
+        {
+          "path": "summary.md",
+          "bytes": 885,
+          "sha256": "3fecbe100a1ce1ffcf3dcaecb872f07da3895a9598db7eefcd878f86898676d2",
+          "retainedAs": "38195645868-1-chromium-3/jev/summary.md"
+        }
+      ]
+    }
+  },
+  "otherArtifactsOfThisShard": [
+    {
+      "id": 11723711536,
+      "name": "playwright-report-chromium-3",
+      "size_in_bytes": 1650038,
+      "expires_at": "2026-10-19T02:32:20Z",
+      "retained": false,
+      "reason": "HTML report and traces (7-day retention); not an input of the Xorgate adapters and not downloaded."
+    },
+    {
+      "path": "job-metrics.json",
+      "inArtifact": "playwright-results-chromium-3",
+      "retained": false,
+      "reason": "CI timing metrics, not an adapter input; recorded by digest under artifacts.results.files."
+    },
+    {
+      "path": "shard-plan.json",
+      "inArtifact": "playwright-results-chromium-3",
+      "retained": false,
+      "reason": "UXor's shard timing plan (mode 'timings'); recorded by digest under artifacts.results.files."
+    }
+  ],
+  "absentFiles": [],
+  "retrieval": {
+    "method": "GitHub REST API through the session proxy: runs, attempts/<n>/jobs and artifacts listings, then GET /actions/artifacts/<id>/zip (302 to blob storage), unzip.",
+    "retrievedAt": "2026-10-18T15:14Z",
+    "zipVerification": "sha256 of the downloaded ZIP equals the artifact's API digest; each retained file equals the extracted bytes."
+  },
+  "redaction": {
+    "kind": "none",
+    "description": "Retained bytes are exactly the extracted artifact files. Runner paths (/home/runner/work/uxor/uxor) are kept as written by the producer."
+  },
+  "secretScan": {
+    "patterns": [
+      "TYPESAFE",
+      "token",
+      "ghp_",
+      "Bearer",
+      "password",
+      "secret",
+      "api_key/api-key",
+      "authorization",
+      "credential"
+    ],
+    "caseInsensitive": true,
+    "findings": [
+      "No credential or token value found.",
+      "jev assessment: policy.connection.credential is '[REDACTED]' as UXor's tool writes it; endpoint https://api.typesafe.ai/v1/systemone and adapter 'typesafe' are configuration names; response.usage input_tokens/output_tokens are token counts.",
+      "results.json/durations.json: 'password' and 'secret' occur only in test titles (forgot-password) and in rendered README/changelog text of the demo."
+    ]
+  },
+  "observed": {
+    "results": {
+      "playwrightVersion": "1.58.2",
+      "configShard": null,
+      "configShardNote": "null: UXor ran this shard from its own timing plan (shard-plan.json mode 'timings', Playwright --test-list), not with Playwright's --shard, so the native report names no shard; the shard is named only by the UXor summaries' label.",
+      "rootDir": "/home/runner/work/uxor/uxor",
+      "workers": {
+        "configured": 2,
+        "actual": 2
+      },
+      "configProjects": [
+        "smoke",
+        "examples",
+        "smoke-firefox",
+        "examples-firefox",
+        "smoke-webkit",
+        "examples-webkit"
+      ],
+      "testProjects": {
+        "smoke": 296,
+        "examples": 131
+      },
+      "stats": {
+        "startTime": "2026-10-12T02:26:03.168Z",
+        "duration": 375396.396,
+        "expected": 426,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 1
+      },
+      "globalErrors": 0,
+      "tests": 427,
+      "results": 428,
+      "nativeOutcomes": {
+        "expected": 426,
+        "flaky": 1
+      },
+      "resultStatuses": {
+        "passed": 427,
+        "failed": 1
+      },
+      "expectedStatuses": {
+        "passed": 427
+      },
+      "notableTests": [
+        {
+          "specId": "d2f56d7d370f0ba02e91-8d02256f9849e5216112",
+          "project": "smoke",
+          "file": "tests/e2e/editor.spec.ts",
+          "line": 105,
+          "titlePath": [],
+          "title": "the link dialog sets allowed links, refuses other schemes, and removes links",
+          "expectedStatus": "passed",
+          "nativeOutcome": "flaky",
+          "results": [
+            {
+              "retry": 0,
+              "status": "failed",
+              "durationMs": 1842,
+              "startTime": "2026-10-12T02:28:49.014Z",
+              "attachments": 2
+            },
+            {
+              "retry": 1,
+              "status": "passed",
+              "durationMs": 1810,
+              "startTime": "2026-10-12T02:28:51.947Z",
+              "attachments": 0
+            }
+          ]
+        }
+      ]
+    },
+    "failedAttempts": {
+      "schema": 1,
+      "status": "valid",
+      "reason": null,
+      "sha": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+      "ref": "main",
+      "runUrl": "https://github.com/xormania/uxor/actions/runs/38195645868",
+      "runAttempt": 1,
+      "shard": "chromium 3/4",
+      "projects": [
+        "smoke",
+        "examples"
+      ],
+      "runtime": {
+        "Node": "v22.23.3",
+        "PHP": "8.5.11",
+        "Symfony": "8.1.8",
+        "Turbo": "8.0.23",
+        "Playwright": "1.58.2"
+      },
+      "counts": {
+        "passed": 426,
+        "failed": 0,
+        "flaky": 1,
+        "skipped": 0
+      },
+      "testsListed": 1,
+      "attempts": [
+        {
+          "testId": "d2f56d7d370f0ba02e91-8d02256f9849e5216112@smoke",
+          "project": "smoke",
+          "title": "the link dialog sets allowed links, refuses other schemes, and removes links",
+          "retry": 0,
+          "status": "failed",
+          "outcome": "flaky",
+          "durationMs": 1842,
+          "startTime": "2026-10-12T02:28:49.014Z"
+        }
+      ],
+      "globalErrors": 0
+    },
+    "jevAssessments": [
+      {
+        "version": 1,
+        "status": "assessed",
+        "reason": null,
+        "likely_cause": "unknown",
+        "job": "Demo + Playwright (chromium 3/4)",
+        "context": {
+          "GITHUB_REPOSITORY": "xormania/uxor",
+          "GITHUB_SHA": "9b2fa7309786cee435503de87cf0cd5f0a9d9782",
+          "GITHUB_RUN_ID": "38195645868",
+          "GITHUB_RUN_ATTEMPT": "1",
+          "shard": "chromium 3/4"
+        },
+        "attempt": {
+          "testId": "d2f56d7d370f0ba02e91-8d02256f9849e5216112@smoke",
+          "project": "smoke",
+          "retry": 0,
+          "status": "failed",
+          "outcome": "flaky"
+        },
+        "model": "jev-1.13.0",
+        "min_confidence": 0.65,
+        "credentialField": "[REDACTED]",
+        "answers": {
+          "failure_kind": {
+            "choice": "product_defect",
+            "confidence": 0.6
+          },
+          "causal_excerpt": {
+            "choice": "excerpt_0",
+            "confidence": 0.98
+          }
+        },
+        "selected_excerpt": {
+          "id": "excerpt_0",
+          "source": "test_error",
+          "line_start": 1,
+          "line_end": 4,
+          "partial": false
+        },
+        "input_sha256": "f083d40632dd246ffcaf39e35d32ae65f3fd125849e75e4fc15deaf2bda7c40e",
+        "elapsed_seconds": 0.239,
+        "requestAndResponseRetained": true,
+        "path": "jev/attempts/01-smoke-editor-retry0/assessment.json"
+      }
+    ]
+  },
+  "limitations": [
+    "Genuine UXor CI artifact; it says nothing about Xorgate or any other managed project, and its pass counts are not a coverage claim.",
+    "The retry recovery is Playwright's in-job retry (retries within one job), so the workflow run itself has a single attempt that concluded success.",
+    "The native report carries no config.shard (UXor's own timing plan selected the shard's tests), so a shard {current,total} cannot be recorded from results.json; only failed-attempts.json/summary.md name the shard label 'chromium 3/4'.",
+    "The shard's test selection depends on shard-plan.json, which is not retained, so shard completeness cannot be judged from the retained files.",
+    "The HTML report and traces (playwright-report-chromium-3) and the demo server log were not retained.",
+    "Only one of the run's ten demo shards is retained; the other shards' artifacts are not part of this fixture.",
+    "The Jev assessment is the advisory output of an external classifier (model jev-1.13.0) at the time of the run; it is evidence of what that tool said, not of the cause."
+  ]
+}

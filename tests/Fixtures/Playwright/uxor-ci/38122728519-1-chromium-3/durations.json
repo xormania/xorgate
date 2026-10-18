@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "not-reached",
+  "sha": "f932602c4bde5c02c2295826c1fb121d2d67dbd8",
+  "ref": "claude/release-security",
+  "runUrl": "https://github.com/xormania/uxor/actions/runs/38122728519",
+  "runAttempt": 1,
+  "shard": "chromium 3/4",
+  "projects": [],
+  "runtime": {
+    "Node": "v22.23.3",
+    "PHP": "8.5.11",
+    "Symfony": "8.1.8",
+    "Turbo": "8.0.23"
+  },
+  "wallMs": null,
+  "summedTestMs": null,
+  "attempts": 0,
+  "untimedAttempts": 0,
+  "workers": null,
+  "slowest": [],
+  "files": [],
+  "tests": [],
+  "unavailable": "no report"
+}

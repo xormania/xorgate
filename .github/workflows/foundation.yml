@@ -119,6 +119,11 @@ jobs:
           python3 tests/smoke/intake.py complete
           python3 tests/smoke/development.py worker-log
 
+      - name: Prove Playwright attempts, derived annotations and bounded log windows
+        run: |
+          python3 tests/smoke/playwright.py submit
+          python3 tests/smoke/playwright.py verify
+
       - name: Prove ordinary container restart preserves records and artifacts
         run: |
           docker compose restart
@@ -126,6 +131,7 @@ jobs:
           python3 tests/smoke/foundation.py persist
           python3 tests/smoke/registry.py persist
           python3 tests/smoke/intake.py persist
+          python3 tests/smoke/playwright.py persist
 
       - name: Collect diagnostic output
         if: always()

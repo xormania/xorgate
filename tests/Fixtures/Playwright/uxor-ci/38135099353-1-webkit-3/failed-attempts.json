@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "status": "valid",
+  "reason": null,
+  "sha": "71f7dffe771b932e3158026146db093f7bc9bb50",
+  "ref": "dev",
+  "runUrl": "https://github.com/xormania/uxor/actions/runs/38135099353",
+  "runAttempt": 1,
+  "shard": "webkit 3/3",
+  "projects": [
+    "smoke-webkit",
+    "examples-webkit"
+  ],
+  "runtime": {
+    "Node": "v22.23.3",
+    "PHP": "8.5.11",
+    "Symfony": "8.1.8",
+    "Turbo": "8.0.23",
+    "Playwright": "1.58.2"
+  },
+  "counts": {
+    "passed": 250,
+    "failed": 1,
+    "flaky": 0,
+    "skipped": 0
+  },
+  "tests": [
+    {
+      "project": "smoke-webkit",
+      "title": "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 298,
+      "outcome": "failed",
+      "attempts": 2,
+      "attemptMs": [
+        8752,
+        10849
+      ],
+      "passedOnRetry": null
+    }
+  ],
+  "attempts": [
+    {
+      "testId": "ef579179509eb381a0ba-38dd12d15db225582da2@smoke-webkit",
+      "specId": "ef579179509eb381a0ba-38dd12d15db225582da2",
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 298,
+      "title": "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico",
+      "titlePath": [
+        "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico"
+      ],
+      "shard": "webkit 3/3",
+      "retry": 0,
+      "status": "failed",
+      "outcome": "failed",
+      "durationMs": 8752,
+      "startTime": "2026-10-11T11:22:07.001Z",
+      "workerIndex": 1,
+      "error": "Error: console errors, page errors, CSP violations or failed requests\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 3\n\n- Array []\n+ Array [\n+   \"requestfailed: GET https://localhost/assets/vendor/@kurkle/color/color.index-8p4uYqP.js Load request cancelled\",\n+ ]",
+      "errorLocation": {
+        "file": "tests/e2e/fixtures.ts",
+        "line": 224,
+        "column": 98
+      }
+    },
+    {
+      "testId": "ef579179509eb381a0ba-38dd12d15db225582da2@smoke-webkit",
+      "specId": "ef579179509eb381a0ba-38dd12d15db225582da2",
+      "project": "smoke-webkit",
+      "file": "tests/e2e/demo-app.spec.ts",
+      "line": 298,
+      "title": "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico",
+      "titlePath": [
+        "every page of the gallery and of the demo names an icon, so a browser asks for no /favicon.ico"
+      ],
+      "shard": "webkit 3/3",
+      "retry": 1,
+      "status": "failed",
+      "outcome": "failed",
+      "durationMs": 10849,
+      "startTime": "2026-10-11T11:22:17.840Z",
+      "workerIndex": 2,
+      "error": "Error: console errors, page errors, CSP violations or failed requests\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 8\n\n- Array []\n+ Array [\n+   \"requestfailed: GET https://localhost/assets/vendor/@kurkle/color/color.index-8p4uYqP.js Load request cancelled\",\n+   \"requestfailed: GET https://localhost/assets/vendor/@orchidjs/sifter/sifter.index-dBmLgbU.js Load request cancelled\",\n+   \"requestfailed: GET https://localhost/assets/vendor/@orchidjs/unicode-variants/unicode-variants.index-q9Od8gP.js Load request cancelled\",\n+   \"requestfailed: GET https://localhost/assets/vendor/@orchidjs/sifter/sifter.index-dBmLgbU.js Load request cancelled\",\n+   \"requestfailed: GET https://localhost/assets/vendor/@kurkle/color/color.index-8p4uYqP.js Load request cancelled\",\n+   \"requestfailed: GET https://localhost/assets/vendor/@orchidjs/unicode-variants/unicode-variants.index-q9Od8gP.js Load request cancelled\",\n+ ]",
+      "errorLocation": {
+        "file": "tests/e2e/fixtures.ts",
+        "line": 224,
+        "column": 98
+      }
+    }
+  ],
+  "globalErrors": []
+}

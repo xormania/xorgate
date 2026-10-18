@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "fixture": "global-error-results.json",
+  "classification": "controlled-native-producer-report",
+  "sourceRepo": null,
+  "sourceSHA": null,
+  "producerSources": {
+    "producer/global-error/playwright.config.js": "2853fb98353a1aeb17c01c3889473a89de8a32ed1a94d1618c54ebd90ed8e526",
+    "producer/global-error/tests/loads.spec.js": "7ae669d1d0978b6cb38ee9349bd5f750c9fb8237d262a53aec8f947406a9c703",
+    "producer/global-error/tests/throws-at-load.spec.js": "2da37212f4860af655fba74c69f56139630e7b47a10386fae7fab3e6e731042d"
+  },
+  "workflow": null,
+  "runId": null,
+  "runAttempt": null,
+  "jobId": null,
+  "jobName": null,
+  "shard": null,
+  "origin": {
+    "kind": "local-execution",
+    "workingDirectory": "/workspace/controlled-playwright/global-error",
+    "command": [
+      "npx",
+      "playwright",
+      "test"
+    ],
+    "environment": {
+      "PLAYWRIGHT_BROWSERS_PATH": "/opt/pw-browsers",
+      "CI": null
+    },
+    "exitStatus": 1,
+    "exitStatusMeaning": "Expected: a spec file throws while loading.",
+    "startedAt": "2026-10-18T03:27:02.991739+00:00",
+    "reportWrittenAt": "2026-10-18T03:27:04.653187+00:00",
+    "endedAt": "2026-10-18T03:27:04.686247+00:00",
+    "producerStatsStartTime": "2026-10-18T03:27:04.619Z"
+  },
+  "install": {
+    "command": [
+      "npm",
+      "install",
+      "--save-exact",
+      "@playwright/test@1.58.2"
+    ],
+    "environment": {
+      "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1"
+    },
+    "registry": "https://registry.npmjs.org (through the session proxy)",
+    "integrity": "sha512-akea+6bHYBBfA9uQqSYmlJXn61cTa+jbO87xVLCWbTqbWadRVmhxlXATaOjOgcBaWU4ePo0wB41KMFv3o35IXA==",
+    "matchesUxorLock": true
+  },
+  "runtime": {
+    "node": "v22.22.0",
+    "npm": "10.9.4",
+    "playwright": "1.58.2",
+    "platform": "linux",
+    "browser": "Chromium from the preinstalled /opt/pw-browsers/chromium-1194 build, selected with launchOptions.executablePath (not the revision bundled with @playwright/test 1.58.2)"
+  },
+  "producer": {
+    "name": "Playwright JSON reporter",
+    "version": "1.58.2",
+    "language": "JavaScript",
+    "sourceURL": "https://github.com/microsoft/playwright/blob/v1.58.2/packages/playwright/src/reporters/json.ts"
+  },
+  "artifact": {
+    "provider": null,
+    "id": null,
+    "filename": "results.json",
+    "archiveSHA256": null,
+    "sha256": "68d74ee61a47a7f76938752a0df8a7de72ab0ff5863a6e635fa868647c827acf",
+    "bytes": 2621
+  },
+  "originalReport": {
+    "filename": "playwright-results/results.json",
+    "bytes": 2621,
+    "sha256": "68d74ee61a47a7f76938752a0df8a7de72ab0ff5863a6e635fa868647c827acf"
+  },
+  "retainedReport": {
+    "filename": "global-error-results.json",
+    "bytes": 2249,
+    "sha256": "0c84c69c6e7ef75f9c0dde02c8911c00764387ef0db5a48743a63ab88864ad94"
+  },
+  "minimization": {
+    "kind": "none",
+    "description": "Complete reporter output."
+  },
+  "redaction": {
+    "kind": "path-prefix-replacement",
+    "description": "Replaced only the transient absolute scratch directory prefix with the symbolic prefix /workspace/controlled-playwright. All other bytes are unchanged.",
+    "symbolicPrefix": "/workspace/controlled-playwright",
+    "affectedPathOccurrences": 6
+  },
+  "observed": {
+    "playwrightVersion": "1.58.2",
+    "shard": null,
+    "configProjects": [
+      "controlled"
+    ],
+    "retries": 1,
+    "stats": {
+      "expected": 0,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0,
+      "durationMs": 33.804
+    },
+    "suites": 0,
+    "tests": 0,
+    "attempts": 0,
+    "globalErrors": 1,
+    "globalError": {
+      "message": "Error: controlled error while loading the spec file",
+      "location": {
+        "file": "/workspace/controlled-playwright/global-error/tests/throws-at-load.spec.js",
+        "line": 4,
+        "column": 7
+      }
+    }
+  },
+  "limitations": [
+    "Controlled local producer run with deliberately induced outcomes; not a UXor CI run artifact and not evidence about UXor, Xorgate or any managed project.",
+    "This is a controlled local producer run. Genuine UXor CI artifacts for a retry-recovered run, a red run and a setup failure are retained separately under tests/Fixtures/Playwright/uxor-ci/ with their own provenance.",
+    "No provider, run, attempt or job metadata exists for a local run; these stay null.",
+    "When a spec file fails to load, Playwright 1.58.2 runs no test at all: the passing file loads.spec.js is not reported, suites is empty and all stats are 0. The only evidence is errors[] and the exit status 1.",
+    "The global error location is an absolute producer path (symbolic here), outside any rootDir-relative form."
+  ]
+}

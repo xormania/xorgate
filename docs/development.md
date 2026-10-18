@@ -112,8 +112,8 @@ For a changed behaviour, run the smallest check that actually exercises it, then
 | `src/Service/FoundationStatus.php` | Shared web/MCP runtime snapshot |
 | `src/Service/ProjectRegistry.php` | Shared project commands, queries and immutable execution context |
 | `src/Service/ReportIntake.php`, `src/Service/ReportArtifactStore.php` | Durable report admission, retained bytes, operation/evidence queries and recovery |
-| `src/Report/`, `src/MessageHandler/` | Bounded report adapter and Messenger normalization |
-| `src/Controller/Artifact/`, `templates/reports/` | Native upload forms and UXor evidence inspection |
+| `src/Report/`, `src/MessageHandler/` | Bounded JUnit, Playwright, UXor-derived, Jev assessment and text-log adapters and Messenger normalization |
+| `src/Controller/Artifact/`, `templates/reports/` | Native upload forms and UXor evidence, attempt, annotation and log-window inspection |
 | `src/Controller/ProjectController.php`, `templates/projects/` | UXor operator registry and native Symfony forms |
 | `src/Security/CspNonce.php` | Main-request script/style nonces compatible with persistent workers |
 | `src/EventListener/SecurityHeadersListener.php` | Browser response headers and CSP |
@@ -124,6 +124,8 @@ For a changed behaviour, run the smallest check that actually exercises it, then
 | `bin/setup`, `bin/install-ui`, `bin/check`, `bin/check-dev` | Reproducible setup, UI installation and focused/full verification |
 | `bin/mate`, `mate/` | Native Mate CLI wrapper, project configuration and generated instructions |
 | `bin/serena`, `.serena/` | Checkout-bound source tooling and private index cache |
+| `tests/smoke/playwright.py` | Live Playwright attempt, annotation-link and log-window agreement across UI, MCP and CLI, including after restart |
+| `tests/Fixtures/Playwright/` | Controlled Playwright producer output and UXor tool-derived files with provenance |
 | `tests/smoke/development.py` | Observed Mate, profiler, shared worker-log and Serena consumer checks |
 
 `FoundationStatus::snapshot()` returns the application identity, timestamp and readiness checks for the database, artifact storage and queue. The dashboard and `xorgate_runtime_status` tool consume that result. A check's failure detail should describe the capability that is unavailable without returning credentials or exception text.

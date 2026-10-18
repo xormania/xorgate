@@ -215,15 +215,26 @@ final class ReportIntakeTest extends KernelTestCase
         // redeliver when the five-minute processing lease expires, without ACKing
         // a fresh competing claim or waiting its former one-hour default.
         self::assertCount(1, iterator_to_array(self::getContainer()->get('messenger.transport.async')->get()));
-        $this->connection->executeStatement("UPDATE report_import SET started_at = CURRENT_TIMESTAMP - INTERVAL '301 seconds' WHERE id = ?", [$queued['operation_id']]);
-        $this->connection->executeStatement("UPDATE messenger_messages SET delivered_at = CURRENT_TIMESTAMP - INTERVAL '301 seconds' WHERE queue_name = 'async'");
+        // delivered_at has whole-second precision and PostgreSQL rounds it, while the consumer truncates its
+        // redelivery limit, so a one-second margin lets a consumer booting within the same second miss the row
+        // and then wait on NOTIFY for its 60-second delayed-message interval. Use a margin well beyond a second.
+        $this->connection->executeStatement("UPDATE report_import SET started_at = CURRENT_TIMESTAMP - INTERVAL '330 seconds' WHERE id = ?", [$queued['operation_id']]);
+        $this->connection->executeStatement("UPDATE messenger_messages SET delivered_at = CURRENT_TIMESTAMP - INTERVAL '330 seconds' WHERE queue_name = 'async'");
         // Recovery belongs to a fresh worker process. Reusing the abandoned
         // PostgreSQL receiver also reuses its LISTEN/NOTIFY and idle polling state.
-        $worker = $this->cliProcess(['messenger:consume', 'async', '--limit=1', '--time-limit=5', '--sleep=0.01', '--no-interaction']);
+        // The shared doctrine://default transport runs on this connection; an open transaction here would
+        // hold the fetched row's lock and hide it from the restarted consumer.
+        self::assertFalse($this->connection->isTransactionActive(), 'The test connection left a transaction open (nesting '.$this->connection->getTransactionNestingLevel().').');
+        $sessions = $this->connection->fetchAllAssociative("SELECT pid, state, xact_start, wait_event_type, left(query, 160) AS query FROM pg_stat_activity WHERE datname = current_database() AND pid <> pg_backend_pid()");
+        $locks = $this->connection->fetchAllAssociative("SELECT l.pid, l.locktype, l.mode, l.granted FROM pg_locks l WHERE l.relation = 'messenger_messages'::regclass");
+        // The consumer log is kept in the failure message so an unconsumed redelivery explains itself.
+        $worker = $this->cliProcess(['messenger:consume', 'async', '--limit=1', '--time-limit=20', '--sleep=0.01', '--no-interaction', '-vv']);
+        $worker->setTimeout(30);
         $worker->run();
-        self::assertSame(0, $worker->getExitCode(), substr($worker->getOutput().$worker->getErrorOutput(), 0, 2000));
+        $workerLog = substr($worker->getOutput().$worker->getErrorOutput(), 0, 4000);
+        self::assertSame(0, $worker->getExitCode(), $workerLog);
         $completed = $this->operation($queued);
-        self::assertSame('completed', $completed['status']);
+        self::assertSame('completed', $completed['status'], 'The restarted worker did not recover the expired lease. Queue rows: '.json_encode($this->connection->fetchAllAssociative('SELECT id, queue_name, delivered_at, available_at FROM messenger_messages')).'; other sessions before the consumer: '.json_encode($sessions).'; messenger_messages locks before the consumer: '.json_encode($locks).'; consumer log: '.$workerLog);
         self::assertSame(2, $completed['summary']['cases']);
         self::assertSame(0, $this->countRows('messenger_messages'), 'The restarted worker must ACK the recovered original message.');
         $this->intake->process($queued['operation_id']);
@@ -497,7 +508,7 @@ PHP;
     private function service(IntakeLimits $limits, ?MessageBusInterface $bus = null): ReportIntake
     {
         return new ReportIntake($this->connection, self::getContainer()->get(ProjectRegistry::class), $this->store,
-            $bus ?? self::getContainer()->get(MessageBusInterface::class), $limits, self::getContainer()->get(JUnitAdapter::class), new NullLogger());
+            $bus ?? self::getContainer()->get(MessageBusInterface::class), $limits, [new JUnitAdapter()], new NullLogger());
     }
 
     private function metadata(): array { return ['request_id' => self::id(), 'source' => ['tested_revision' => 'fixture-source-revision']]; }
@@ -522,7 +533,7 @@ PHP;
         try { return stream_get_meta_data($stream)['uri']; } finally { fclose($stream); }
     }
     private function countRows(string $table): int { return (int) $this->connection->fetchOne('SELECT COUNT(*) FROM '.$table); }
-    private function resetReports(): void { foreach (['messenger_messages', 'report_case', 'report_suite', 'report_import', 'report_artifact'] as $table) { $this->connection->executeStatement('DELETE FROM '.$table); } }
+    private function resetReports(): void { foreach (['messenger_messages', 'report_annotation', 'report_attempt', 'report_case', 'report_suite', 'report_import', 'report_artifact'] as $table) { $this->connection->executeStatement('DELETE FROM '.$table); } }
     private function resetRecords(): void { $this->resetReports(); foreach (['registry_request', 'execution_record', 'managed_project'] as $table) { $this->connection->executeStatement('DELETE FROM '.$table); } }
     private function consumeOne(): void
     {

@@ -1,0 +1,333 @@
+{
+  "schema": 1,
+  "status": "valid",
+  "sha": null,
+  "ref": null,
+  "runUrl": null,
+  "runAttempt": null,
+  "shard": "chromium 1/2",
+  "projects": [
+    "controlled",
+    "controlled-dark"
+  ],
+  "runtime": {
+    "Node": "v22.22.0",
+    "Playwright": "1.58.2"
+  },
+  "wallMs": 14713,
+  "summedTestMs": 1182,
+  "attempts": 18,
+  "untimedAttempts": 0,
+  "workers": {
+    "configured": 1,
+    "actual": 1
+  },
+  "slowest": [
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 4,
+      "title": "passes",
+      "outcome": "passed",
+      "durationMs": 757,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        757
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 4,
+      "title": "passes",
+      "outcome": "passed",
+      "durationMs": 344,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        344
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 13,
+      "title": "always fails",
+      "outcome": "failed",
+      "durationMs": 14,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5,
+        9
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 9,
+      "title": "flaky: fails on the first attempt, passes on retry",
+      "outcome": "flaky",
+      "durationMs": 13,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        8,
+        5
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 13,
+      "title": "always fails",
+      "outcome": "failed",
+      "durationMs": 12,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5,
+        7
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 9,
+      "title": "flaky: fails on the first attempt, passes on retry",
+      "outcome": "flaky",
+      "durationMs": 10,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4,
+        6
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 17,
+      "title": "expected failure",
+      "outcome": "passed",
+      "durationMs": 10,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        10
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 17,
+      "title": "expected failure",
+      "outcome": "passed",
+      "durationMs": 9,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        9
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 26,
+      "title": "writes stdout and stderr",
+      "outcome": "passed",
+      "durationMs": 3,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 22,
+      "title": "skipped",
+      "outcome": "skipped",
+      "durationMs": 2,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "tests/controlled.spec.js",
+      "tests": 14,
+      "durationMs": 1182,
+      "untimedAttempts": 0
+    }
+  ],
+  "tests": [
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 4,
+      "title": "passes",
+      "outcome": "passed",
+      "durationMs": 757,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        757
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 4,
+      "title": "passes",
+      "outcome": "passed",
+      "durationMs": 344,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        344
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 9,
+      "title": "flaky: fails on the first attempt, passes on retry",
+      "outcome": "flaky",
+      "durationMs": 10,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        4,
+        6
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 9,
+      "title": "flaky: fails on the first attempt, passes on retry",
+      "outcome": "flaky",
+      "durationMs": 13,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        8,
+        5
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 13,
+      "title": "always fails",
+      "outcome": "failed",
+      "durationMs": 14,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5,
+        9
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 13,
+      "title": "always fails",
+      "outcome": "failed",
+      "durationMs": 12,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        5,
+        7
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 17,
+      "title": "expected failure",
+      "outcome": "passed",
+      "durationMs": 10,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        10
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 17,
+      "title": "expected failure",
+      "outcome": "passed",
+      "durationMs": 9,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        9
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 22,
+      "title": "skipped",
+      "outcome": "skipped",
+      "durationMs": 2,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 22,
+      "title": "skipped",
+      "outcome": "skipped",
+      "durationMs": 2,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 26,
+      "title": "writes stdout and stderr",
+      "outcome": "passed",
+      "durationMs": 3,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        3
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 26,
+      "title": "writes stdout and stderr",
+      "outcome": "passed",
+      "durationMs": 2,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2
+      ]
+    },
+    {
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 35,
+      "title": "outer describe › inner describe › nested passes",
+      "outcome": "passed",
+      "durationMs": 2,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2
+      ]
+    },
+    {
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 35,
+      "title": "outer describe › inner describe › nested passes",
+      "outcome": "passed",
+      "durationMs": 2,
+      "untimedAttempts": 0,
+      "attemptMs": [
+        2
+      ]
+    }
+  ]
+}

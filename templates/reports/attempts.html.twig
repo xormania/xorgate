@@ -1,0 +1,78 @@
+{% extends 'layouts/management.html.twig' %}
+
+{% block title %}Xorgate · Native attempts{% endblock %}
+{% block page_title %}Native attempts{% endblock %}
+{% block page_description %}{{ project.name }} · {{ operation.report_role }}{% endblock %}
+{% block page_before %}<a href="{{ path('app_intake_operation', {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}) }}" class="mb-2 inline-block text-sm text-fg-brand hover:underline">Back to report intake</a>{% endblock %}
+
+{% block content %}
+    <div class="space-y-6" data-xorgate-intake-operation-id="{{ operation.operation_id }}" data-xorgate-attempts-state="{{ attempts.items is empty ? 'empty' : 'populated' }}" data-xorgate-attempt-count="{{ operation.attempt_count ?? 'unknown' }}">
+        <p class="text-sm text-body">Each row is one native result recorded by the report, in report order, including failed first attempts that a later retry recovered. Matching the expected status distinguishes expected failures from unexpected ones. Derived annotations are references to these attempts; they never add attempts or change native outcomes.</p>
+        {% if attempts.items is empty %}
+            <twig:EmptyState title="{{ cursor is null ? 'No native attempts recorded' : 'No more attempts' }}" description="{{ operation.status in ['queued', 'running'] ? 'The worker has not committed this import yet. Refresh the operation to inspect its progress.' : (cursor is null ? 'This import recorded no native attempts. Formats other than Playwright JSON do not carry retry history.' : 'You have reached the end of this attempt listing.') }}" class="rounded-base border border-default bg-neutral-primary-soft" />
+        {% else %}
+            <div class="overflow-x-auto rounded-base border border-default bg-neutral-primary-soft">
+                <twig:Table>
+                    <twig:Table:Caption>Native attempts from this report</twig:Table:Caption>
+                    <twig:Table:Header><twig:Table:Row>
+                        <twig:Table:Head>Test / project</twig:Table:Head>
+                        <twig:Table:Head>Retry</twig:Table:Head>
+                        <twig:Table:Head>Native status</twig:Table:Head>
+                        <twig:Table:Head>Expected</twig:Table:Head>
+                        <twig:Table:Head>Duration</twig:Table:Head>
+                        <twig:Table:Head>Details</twig:Table:Head>
+                    </twig:Table:Row></twig:Table:Header>
+                    <twig:Table:Body>
+                        {% for attempt in attempts.items %}
+                            <twig:Table:Row data-xorgate-attempt-id="{{ attempt.attempt_id }}" data-xorgate-attempt-key="{{ attempt.attempt_key }}" data-xorgate-attempt-retry="{{ attempt.retry ?? 'unknown' }}" data-xorgate-attempt-status="{{ attempt.status }}" data-xorgate-attempt-matches-expected="{{ (attempt.matches_expected ?? null) is null ? 'unknown' : (attempt.matches_expected ? 'true' : 'false') }}" data-xorgate-attempt-annotations="{{ attempt.annotation_count }}">
+                                <twig:Table:Head scope="row">
+                                    <span>{{ attempt.case.full_title ?? attempt.case.name ?? 'Unknown test' }}</span>
+                                    <p class="mt-1 break-all text-xs font-normal text-body">{{ attempt.case.project ?? 'Unknown project' }} · {{ attempt.case.file ?? 'Unknown file' }}{% if attempt.case.line is not null %}:{{ attempt.case.line }}{% endif %}</p>
+                                    <p class="mt-1 text-xs font-normal text-body">Test outcome: {{ attempt.case.native_outcome ?? 'unknown' }}{% if attempt.case.expected_failure %} · expected failure{% endif %}</p>
+                                </twig:Table:Head>
+                                <twig:Table:Cell>{{ attempt.retry is null ? 'Unknown' : attempt.retry }}</twig:Table:Cell>
+                                <twig:Table:Cell>{{ attempt.status }}</twig:Table:Cell>
+                                <twig:Table:Cell>{{ attempt.case.expected_status ?? 'Unknown' }} · {{ (attempt.matches_expected ?? null) is null ? 'match unknown' : (attempt.matches_expected ? 'as expected' : 'unexpected') }}</twig:Table:Cell>
+                                <twig:Table:Cell>{{ (attempt.duration_ms ?? null) is null ? 'Not timed' : attempt.duration_ms ~ ' ms' }}</twig:Table:Cell>
+                                <twig:Table:Cell>
+                                    <details><summary class="cursor-pointer text-sm font-medium text-heading">Attempt evidence</summary>
+                                        <dl class="mt-3 space-y-2 text-xs text-body">
+                                            <div><dt class="font-medium">Attempt ID</dt><dd class="break-all">{{ attempt.attempt_id }}</dd></div>
+                                            <div><dt class="font-medium">Attempt key</dt><dd class="break-all">{{ attempt.attempt_key }}</dd></div>
+                                            <div><dt class="font-medium">Spec / test ID</dt><dd class="break-all">{{ attempt.case.spec_id ?? 'Unknown' }} / {{ attempt.case.test_id ?? 'Unknown' }}</dd></div>
+                                            <div><dt class="font-medium">Started</dt><dd>{{ attempt.start_time ?? 'Unknown' }}</dd></div>
+                                            <div><dt class="font-medium">Worker / parallel index</dt><dd>{{ attempt.worker_index ?? 'Unknown' }} / {{ attempt.parallel_index ?? 'Unknown' }}</dd></div>
+                                            <div><dt class="font-medium">Errors</dt><dd>{{ attempt.errors_count ?? 'Unknown' }}</dd></div>
+                                            <div><dt class="font-medium">Attachments</dt><dd>{{ attempt.attachments_count ?? 'Unknown' }}</dd></div>
+                                        </dl>
+                                        {% if (attempt.error ?? null) is not null %}
+                                            <p class="mt-3 text-xs font-medium text-heading">Error excerpt{% if attempt.error.truncated ?? false %} (truncated){% endif %}</p>
+                                            <pre class="mt-1 whitespace-pre-wrap break-all text-xs text-body">{{ attempt.error.message ?? '' }}</pre>
+                                        {% endif %}
+                                        {% for stream in ['stdout', 'stderr'] %}
+                                            {% set output = attempt[stream] ?? null %}
+                                            {% if output is not null and (output.bytes ?? 0) > 0 %}
+                                                <p class="mt-3 text-xs font-medium text-heading">{{ stream }}: {{ output.bytes }} bytes{% if output.truncated ?? false %}, excerpt truncated{% endif %}</p>
+                                                <pre class="mt-1 whitespace-pre-wrap break-all text-xs text-body">{{ output.text ?? '' }}</pre>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if attempt.annotations is not empty %}
+                                            <p class="mt-3 text-xs font-medium text-heading">Linked annotations: {{ attempt.annotation_count }}</p>
+                                            <ul class="mt-1 space-y-1 text-xs text-body">
+                                                {% for reference in attempt.annotations %}
+                                                    <li data-xorgate-attempt-annotation-id="{{ reference.annotation_id }}"><a class="text-fg-brand hover:underline" href="{{ path('app_intake_annotations', {projectId: project.project_id, executionId: execution.execution_id, operationId: reference.operation_id}) }}">{{ reference.kind }}</a> · {{ reference.match_status }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </details>
+                                </twig:Table:Cell>
+                            </twig:Table:Row>
+                        {% endfor %}
+                    </twig:Table:Body>
+                </twig:Table>
+            </div>
+        {% endif %}
+        {% include 'projects/_pagination.html.twig' with {page: attempts, cursor: cursor, route: 'app_intake_attempts', route_parameters: {projectId: project.project_id, executionId: execution.execution_id, operationId: operation.operation_id}} only %}
+        {% include 'reports/_artifact.html.twig' with {artifact: operation.artifact} only %}
+    </div>
+{% endblock %}

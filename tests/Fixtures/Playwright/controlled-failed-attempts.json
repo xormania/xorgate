@@ -1,0 +1,225 @@
+{
+  "schema": 1,
+  "status": "valid",
+  "reason": null,
+  "sha": null,
+  "ref": null,
+  "runUrl": null,
+  "runAttempt": null,
+  "shard": "chromium 1/2",
+  "projects": [
+    "controlled",
+    "controlled-dark"
+  ],
+  "runtime": {
+    "Node": "v22.22.0",
+    "Playwright": "1.58.2"
+  },
+  "counts": {
+    "passed": 8,
+    "failed": 2,
+    "flaky": 2,
+    "skipped": 2
+  },
+  "tests": [
+    {
+      "project": "controlled",
+      "title": "flaky: fails on the first attempt, passes on retry",
+      "file": "tests/controlled.spec.js",
+      "line": 9,
+      "outcome": "flaky",
+      "attempts": 2,
+      "attemptMs": [
+        4,
+        6
+      ],
+      "passedOnRetry": 1
+    },
+    {
+      "project": "controlled-dark",
+      "title": "flaky: fails on the first attempt, passes on retry",
+      "file": "tests/controlled.spec.js",
+      "line": 9,
+      "outcome": "flaky",
+      "attempts": 2,
+      "attemptMs": [
+        8,
+        5
+      ],
+      "passedOnRetry": 1
+    },
+    {
+      "project": "controlled",
+      "title": "always fails",
+      "file": "tests/controlled.spec.js",
+      "line": 13,
+      "outcome": "failed",
+      "attempts": 2,
+      "attemptMs": [
+        5,
+        9
+      ],
+      "passedOnRetry": null
+    },
+    {
+      "project": "controlled-dark",
+      "title": "always fails",
+      "file": "tests/controlled.spec.js",
+      "line": 13,
+      "outcome": "failed",
+      "attempts": 2,
+      "attemptMs": [
+        5,
+        7
+      ],
+      "passedOnRetry": null
+    }
+  ],
+  "attempts": [
+    {
+      "testId": "9dbaf9aafbe4b60d2403-1b948b5bbbad0134a9e6@controlled",
+      "specId": "9dbaf9aafbe4b60d2403-1b948b5bbbad0134a9e6",
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 9,
+      "title": "flaky: fails on the first attempt, passes on retry",
+      "titlePath": [
+        "flaky: fails on the first attempt, passes on retry"
+      ],
+      "shard": "chromium 1/2",
+      "retry": 0,
+      "status": "failed",
+      "outcome": "flaky",
+      "durationMs": 4,
+      "startTime": "2026-10-18T03:26:35.606Z",
+      "workerIndex": 0,
+      "error": "Error: controlled first-attempt failure\n\nexpect(received).toBeGreaterThan(expected)\n\nExpected: > 0\nReceived:   0",
+      "errorLocation": {
+        "file": "tests/controlled.spec.js",
+        "line": 10,
+        "column": 64
+      }
+    },
+    {
+      "testId": "9dbaf9aafbe4b60d2403-1b948b5bbbad0134a9e6@controlled-dark",
+      "specId": "9dbaf9aafbe4b60d2403-1b948b5bbbad0134a9e6",
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 9,
+      "title": "flaky: fails on the first attempt, passes on retry",
+      "titlePath": [
+        "flaky: fails on the first attempt, passes on retry"
+      ],
+      "shard": "chromium 1/2",
+      "retry": 0,
+      "status": "failed",
+      "outcome": "flaky",
+      "durationMs": 8,
+      "startTime": "2026-10-18T03:26:41.596Z",
+      "workerIndex": 4,
+      "error": "Error: controlled first-attempt failure\n\nexpect(received).toBeGreaterThan(expected)\n\nExpected: > 0\nReceived:   0",
+      "errorLocation": {
+        "file": "tests/controlled.spec.js",
+        "line": 10,
+        "column": 64
+      }
+    },
+    {
+      "testId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef@controlled",
+      "specId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef",
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 13,
+      "title": "always fails",
+      "titlePath": [
+        "always fails"
+      ],
+      "shard": "chromium 1/2",
+      "retry": 0,
+      "status": "failed",
+      "outcome": "failed",
+      "durationMs": 5,
+      "startTime": "2026-10-18T03:26:37.021Z",
+      "workerIndex": 1,
+      "error": "Error: controlled persistent failure\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 3\nReceived: 2",
+      "errorLocation": {
+        "file": "tests/controlled.spec.js",
+        "line": 14,
+        "column": 52
+      }
+    },
+    {
+      "testId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef@controlled",
+      "specId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef",
+      "project": "controlled",
+      "file": "tests/controlled.spec.js",
+      "line": 13,
+      "title": "always fails",
+      "titlePath": [
+        "always fails"
+      ],
+      "shard": "chromium 1/2",
+      "retry": 1,
+      "status": "failed",
+      "outcome": "failed",
+      "durationMs": 9,
+      "startTime": "2026-10-18T03:26:38.248Z",
+      "workerIndex": 2,
+      "error": "Error: controlled persistent failure\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 3\nReceived: 2",
+      "errorLocation": {
+        "file": "tests/controlled.spec.js",
+        "line": 14,
+        "column": 52
+      }
+    },
+    {
+      "testId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef@controlled-dark",
+      "specId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef",
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 13,
+      "title": "always fails",
+      "titlePath": [
+        "always fails"
+      ],
+      "shard": "chromium 1/2",
+      "retry": 0,
+      "status": "failed",
+      "outcome": "failed",
+      "durationMs": 5,
+      "startTime": "2026-10-18T03:26:43.060Z",
+      "workerIndex": 5,
+      "error": "Error: controlled persistent failure\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 3\nReceived: 2",
+      "errorLocation": {
+        "file": "tests/controlled.spec.js",
+        "line": 14,
+        "column": 52
+      }
+    },
+    {
+      "testId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef@controlled-dark",
+      "specId": "9dbaf9aafbe4b60d2403-2cc53055cb70d265adef",
+      "project": "controlled-dark",
+      "file": "tests/controlled.spec.js",
+      "line": 13,
+      "title": "always fails",
+      "titlePath": [
+        "always fails"
+      ],
+      "shard": "chromium 1/2",
+      "retry": 1,
+      "status": "failed",
+      "outcome": "failed",
+      "durationMs": 7,
+      "startTime": "2026-10-18T03:26:44.409Z",
+      "workerIndex": 6,
+      "error": "Error: controlled persistent failure\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: 3\nReceived: 2",
+      "errorLocation": {
+        "file": "tests/controlled.spec.js",
+        "line": 14,
+        "column": 52
+      }
+    }
+  ],
+  "globalErrors": []
+}
