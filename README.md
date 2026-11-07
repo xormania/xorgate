@@ -103,6 +103,7 @@ Open an execution's report page to upload and inspect evidence manually. Agents 
 ## Development and design
 
 - [Development workflow](docs/development.md)
+- [Repository stability and dependency updates](docs/repository-stability.md)
 - [Implementation plan and work orders](docs/implementation-plan.md)
 - [Project registry and execution provenance](docs/project-registry.md)
 - [Artifact and report intake](docs/artifact-intake.md)

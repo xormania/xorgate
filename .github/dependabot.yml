@@ -1,0 +1,69 @@
+version: 2
+
+updates:
+  # Refresh reviewed Composer constraints together, including indirect dependencies.
+  # Exact Mate/Toolkit pins and Symfony's release line stay in composer.json.
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: America/Port-au-Prince
+    versioning-strategy: lockfile-only
+    allow:
+      - dependency-type: all
+    open-pull-requests-limit: 2
+    groups:
+      composer:
+        patterns: ['*']
+    commit-message:
+      prefix: 'deps(composer)'
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: America/Port-au-Prince
+    open-pull-requests-limit: 2
+    groups:
+      github-actions:
+        patterns: ['*']
+    commit-message:
+      prefix: 'deps(actions)'
+
+  # Keep the FrankenPHP 1 / PHP 8.5 channel; the existing digest stays explicit.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: America/Port-au-Prince
+    open-pull-requests-limit: 1
+    allow:
+      - dependency-name: dunglas/frankenphp
+    ignore:
+      - dependency-name: dunglas/frankenphp
+        update-types: ['version-update:semver-major']
+    commit-message:
+      prefix: 'deps(runtime)'
+
+  # Tagless developer-image digests would follow latest. Update those deliberately.
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: America/Port-au-Prince
+    open-pull-requests-limit: 1
+    allow:
+      - dependency-name: postgres
+    ignore:
+      - dependency-name: postgres
+        update-types: ['version-update:semver-major']
+    commit-message:
+      prefix: 'deps(database)'
