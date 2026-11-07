@@ -7,7 +7,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1 PHP_INI_SCAN_DIR=":/usr/local/etc/php/app.conf.d"
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git unzip \
-    && install-php-extensions @composer intl zip pdo_pgsql pcntl opcache mbstring dom xml xmlreader xmlwriter simplexml curl sodium \
+    && install-php-extensions @composer-2.10.3 intl zip pdo_pgsql pcntl opcache mbstring dom xml xmlreader xmlwriter simplexml curl sodium \
     && rm -rf /var/lib/apt/lists/*
 
 COPY frankenphp/conf.d/10-app.ini /usr/local/etc/php/app.conf.d/10-app.ini

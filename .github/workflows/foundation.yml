@@ -9,14 +9,18 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 concurrency:
   group: foundation-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   foundation:
     name: Docker foundation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       COMPOSE_PROJECT_NAME: xorgate-ci
@@ -28,6 +32,17 @@ jobs:
       XORDER_PHP_DEV_IMAGE: ghcr.io/xormania/php-dev@sha256:cd670b7c7b9624ce7dc7ee6b7b2a4d5b19ce36d6226f077a417667ae8505e000
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Require committed dependency inputs
+        run: |
+          git ls-files --error-unmatch composer.json composer.lock symfony.lock importmap.php
+          test -s composer.lock
+          test -s symfony.lock
+          mkdir -p var/ci
+          git rev-parse HEAD > var/ci/checkout-sha.txt
+          git status --porcelain=v1 > var/ci/checkout-status.txt
 
       - name: Check Docker and the selected xorder CLI runtime
         run: |
@@ -41,7 +56,7 @@ jobs:
               php --version
               php -r '\''foreach (["pdo_pgsql", "intl", "mbstring", "sodium"] as $extension) { if (!extension_loaded($extension)) { fwrite(STDERR, "Missing extension: ".$extension.PHP_EOL); exit(1); } }'\''
               composer --version
-              composer validate --no-check-lock --strict
+              composer validate --strict
             '
 
       - name: Verify locked production assets and boot without development tools
@@ -61,22 +76,15 @@ jobs:
             echo "Production kernel booted with application routes and no development tools.\n";
           '
 
-      - name: Bootstrap the development stack
-        run: |
-          mkdir -p var/ci
-          if test -f composer.lock; then
-            bin/setup
-          else
-            # Explicit, temporary initial-scaffold resolution. CI never commits it.
-            bin/setup --resolve
-          fi
+      - name: Bootstrap the development stack from committed locks
+        run: bin/setup
 
-      - name: Preserve resolved scaffold for maintainer review
+      - name: Preserve dependency and recipe inputs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: foundation-scaffold-${{ github.sha }}
-          retention-days: 7
+          name: foundation-inputs-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
           if-no-files-found: error
           path: |
             composer.lock
@@ -127,19 +135,46 @@ jobs:
           python3 tests/smoke/registry.py persist
           python3 tests/smoke/intake.py persist
 
+      - name: Verify installation did not change reviewed inputs
+        run: |
+          git diff --exit-code HEAD -- composer.json composer.lock symfony.lock importmap.php assets templates config
+          unexpected=$(git ls-files --others --exclude-standard -- assets templates config)
+          if [[ -n "$unexpected" ]]; then
+            printf 'Installation created unreviewed source files:\n%s\n' "$unexpected" >&2
+            exit 1
+          fi
+
       - name: Collect diagnostic output
         if: always()
         run: |
           mkdir -p var/ci
-          docker compose ps -a > var/ci/compose-status.txt
-          docker compose logs --no-color --timestamps > var/ci/compose.log 2>&1
+          docker compose ps -a > var/ci/compose-status.txt 2>&1 || true
+          docker compose logs --no-color --timestamps > var/ci/compose.log 2>&1 || true
+          mkdir -p var/ci/container
+          docker compose cp php:/app/var/ci/. var/ci/container/ > var/ci/copy-evidence.log 2>&1 || true
+          cat var/ci/copy-evidence.log
+          find var/ci/container -type f -printf '%P\n' | sort > var/ci/container-files.txt
+          cat var/ci/container-files.txt
+          docker compose images --format json > var/ci/compose-images.json 2>&1 || true
+          {
+            docker version
+            docker compose version
+            docker compose exec -T php php --version
+            docker compose exec -T php composer --version
+            docker compose exec -T database postgres --version
+            database_container=$(docker compose ps -q database)
+            database_image=$(docker inspect "$database_container" --format '{{.Image}}')
+            docker image inspect "$database_image" --format '{{json .RepoDigests}}'
+          } > var/ci/runtime-versions.txt 2>&1 || true
+          cat var/ci/runtime-versions.txt
 
       - name: Preserve foundation evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: foundation-evidence-${{ github.sha }}
-          retention-days: 7
+          name: foundation-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
           path: var/ci/
 
       - name: Remove this runner's disposable stack
