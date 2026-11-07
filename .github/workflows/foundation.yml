@@ -152,6 +152,9 @@ jobs:
           docker compose logs --no-color --timestamps > var/ci/compose.log 2>&1 || true
           mkdir -p var/ci/container
           docker compose cp php:/app/var/ci/. var/ci/container/ > var/ci/copy-evidence.log 2>&1 || true
+          cat var/ci/copy-evidence.log
+          find var/ci/container -type f -printf '%P\n' | sort > var/ci/container-files.txt
+          cat var/ci/container-files.txt
           docker compose images --format json > var/ci/compose-images.json 2>&1 || true
           {
             docker version
