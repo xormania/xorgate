@@ -56,7 +56,7 @@ Artifacts include the run ID and attempt number and are retained for 14 days:
 
 The final collector also copies `/app/var/ci` from the application container into a separate `container/` subdirectory. That path lives in a named volume and is not the checkout's `var/ci`; without the copy, Toolkit installation logs and comparison outputs do not reach the upload. Missing containers are recorded in collector output without preventing other evidence from being saved. Diagnostic collection does not mask a failing application check.
 
-The lease-recovery test uses the already-reviewed correction from [PR #11](https://github.com/xormania/xorgate/pull/11): rewind by 330 seconds against a 300-second lease, avoiding whole-second rounding at the boundary, and retain bounded worker/lock diagnostics. The fresh worker must still recover and ACK the original message. Whole-job retries are not used as a substitute for that assertion.
+The lease-recovery test uses the existing correction from [PR #11](https://github.com/xormania/xorgate/pull/11): rewind by 330 seconds against a 300-second lease, avoiding whole-second rounding at the boundary, and retain bounded worker/lock diagnostics. The fresh worker must still recover and ACK the original message. Whole-job retries are not used as a substitute for that assertion.
 
 PR #11 adds Playwright intake checks separately. Preserve its submit/verify and restart-persistence checks when combining the branches.
 

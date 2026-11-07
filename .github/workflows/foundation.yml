@@ -137,7 +137,7 @@ jobs:
 
       - name: Verify installation did not change reviewed inputs
         run: |
-          git diff --exit-code -- composer.json composer.lock symfony.lock importmap.php assets templates config
+          git diff --exit-code HEAD -- composer.json composer.lock symfony.lock importmap.php assets templates config
           unexpected=$(git ls-files --others --exclude-standard -- assets templates config)
           if [[ -n "$unexpected" ]]; then
             printf 'Installation created unreviewed source files:\n%s\n' "$unexpected" >&2
@@ -159,7 +159,9 @@ jobs:
             docker compose exec -T php php --version
             docker compose exec -T php composer --version
             docker compose exec -T database postgres --version
-            docker image inspect postgres:17-trixie --format '{{json .RepoDigests}}'
+            database_container=$(docker compose ps -q database)
+            database_image=$(docker inspect "$database_container" --format '{{.Image}}')
+            docker image inspect "$database_image" --format '{{json .RepoDigests}}'
           } > var/ci/runtime-versions.txt 2>&1 || true
           cat var/ci/runtime-versions.txt
 
